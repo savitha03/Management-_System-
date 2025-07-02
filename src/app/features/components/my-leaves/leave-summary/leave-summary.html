@@ -1,0 +1,8 @@
+<div class="container-fluid mt-3">
+  <div class="row g-3">
+    <div class="col-md-3 col-sm-6" *ngFor="let item of leaveSummary">
+      <app-leave-cards [count]="item.count" [label]="item.label" [gradient]="item.gradient" [iconClass]="item.icon">
+      </app-leave-cards>
+    </div>
+  </div>
+</div>

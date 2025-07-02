@@ -1,0 +1,48 @@
+<div class="bg-white border-end h-100 p-3 shadow-sm d-flex flex-column justify-content-between">
+
+  <div>
+    <h6 class="text-uppercase text-muted fw-bold mb-2 px-2" style="font-size: 0.75rem;">Menu</h6>
+    <ul class="nav flex-column custom-sidebar">
+      <ng-container *ngFor="let item of mainMenu; let i = index">
+        <!-- Render main menu items, similar as before -->
+        <li class="nav-item" *ngIf="!item.children">
+          <a [routerLink]="[item.link]" routerLinkActive="active"
+            class="nav-link d-flex align-items-center text-decoration-none">
+            <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="item.children">
+          <a class="nav-link d-flex align-items-center text-decoration-none" data-bs-toggle="collapse"
+            [attr.href]="'#submenu' + i" role="button" aria-expanded="false" [attr.aria-controls]="'submenu' + i">
+            <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
+            <i class="bi bi-chevron-down ms-auto small"></i>
+          </a>
+          <div class="collapse ps-2" [attr.id]="'submenu' + i">
+            <ul class="nav flex-column">
+              <li class="nav-item" *ngFor="let child of item.children">
+                <a [routerLink]="[child.link]" routerLinkActive="active"
+                  class="nav-link d-flex align-items-center text-decoration-none">
+                  <i [class]="child.icon + ' me-2'"></i> {{ child.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <div>
+    <hr />
+    <ul class="nav flex-column custom-sidebar">
+      <li class="nav-item" *ngFor="let item of bottomMenu">
+        <a [routerLink]="[item.link]" routerLinkActive="active"
+          class="nav-link d-flex align-items-center text-decoration-none">
+          <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</div>

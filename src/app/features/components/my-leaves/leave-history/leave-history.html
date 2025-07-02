@@ -1,0 +1,10 @@
+<div [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" style="width: 100%; height: 600px;">
+  <ag-grid-angular 
+          [rowData]="rowData" 
+          [columnDefs]="columnDefs" 
+          [pagination]="true" 
+          [defaultColDef]="defaultColDef"
+          style="width: 100%; height: 100%;" 
+          [suppressCellFocus]="true"
+    ></ag-grid-angular>
+</div>

@@ -1,0 +1,17 @@
+<div class="feature-wrapper"></div>
+
+<div class="container-fluid">
+  <app-top-nav (actionEmitter)="emitter($event)"></app-top-nav>
+
+  <div class="row" style="height: calc(100vh - 80px); overflow: hidden;">
+
+    <div class="col-md-2 p-0 h-100">
+      <app-side-nav></app-side-nav>
+    </div>
+
+    <div class="col-md-10 h-100 p-2">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>

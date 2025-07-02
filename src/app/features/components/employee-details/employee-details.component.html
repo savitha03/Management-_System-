@@ -1,0 +1,157 @@
+
+
+
+
+<div class="row justify-content-center mt-4">
+  <div class="col-md-12 d-flex justify-content-center mb-4">
+    <div class="text-center  d-flex justify-content-center w-50">
+      <a class="nav-link" [class.active]="activeTab === 'personal'" (click)="setActiveTab('personal')"
+        style="cursor: pointer;">
+        Personal Details
+      </a>
+    </div>
+    <div class="text-center  d-flex justify-content-center w-50">
+      <a class="nav-link" [class.active]="activeTab === 'contact'" (click)="setActiveTab('contact')"
+        style="cursor: pointer;">
+        Contact Details
+      </a>
+    </div>
+  </div>
+
+  <!-- <div class="col-md-6"> -->
+
+    <p class="text-danger text-center">Active Tab: {{ activeTab }}</p>
+  <div class="mt-4 personal" *ngIf="activeTab === 'personal'">
+    <form [formGroup]="personalForm" (ngSubmit)="onSubmitPersonal()">
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">FN/MN/LN</label>
+        <div class="col-md-8 d-flex gap-1">
+          <input class="form-control" formControlName="firstName" placeholder="First Name" required />
+          <input class="form-control" formControlName="middleName" placeholder="Middle Name" />
+          <input class="form-control" formControlName="lastName" placeholder="Last Name" required />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">DOB</label>
+        <div class="col-md-8">
+          <input type="date" class="form-control" formControlName="dob" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Gender</label>
+        <div class="col-md-8">
+          <select class="form-select" formControlName="gender" [disabled]="!isAdmin">
+            <option value="" disabled>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Email</label>
+        <div class="col-md-8">
+          <input type="text" class="form-control" formControlName="email" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Marital Status</label>
+        <div class="col-md-8">
+          <select class="form-select" formControlName="maritalStatus" [disabled]="!isAdmin">
+            <option value="" disabled>Select Marital Status</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Nationality</label>
+        <div class="col-md-8">
+          <input type="text" class="form-control" formControlName="nationality" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3" *ngIf="isAdmin">
+        <button type="submit" class="btn btn-primary">Save Personal Details</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Contact Details -->
+  <div class="mt-4 personal" *ngIf="activeTab === 'contact'">
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()">
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Phone</label>
+        <div class="col-md-8 d-flex gap-1">
+          <input type="tel" class="form-control" formControlName="phoneNumber" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+       <label class="col-md-3 col-form-label text-start">Alternate</label>
+        <div class="col-md-8">
+          <input type="tel" class="form-control" formControlName="alternateNumber" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Email</label>
+        <div class="col-md-8">
+                  <input type="email" class="form-control" formControlName="email" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Street</label>
+        <div class="col-md-8">
+          <input type="text" class="form-control" formControlName="street" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">City</label>
+        <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="city" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">State</label>
+        <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="state" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+       <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Zipcode</label>
+        <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="zipcode" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+          <div class="mb-3 row">
+        <label class="col-md-3 col-form-label text-start">Country</label>
+        <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="country" [readonly]="!isAdmin" />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3" *ngIf="isAdmin">
+        <button type="submit" class="btn btn-primary">Save Personal Details</button>
+      </div>
+
+
+    </form>
+  </div>
+</div>

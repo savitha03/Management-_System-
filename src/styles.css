@@ -1,0 +1,357 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@600&display=swap");
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+
+.background-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("assets/group-people-working-out-business-plan-office.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+}
+
+.background-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(13, 109, 253, 0.587);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.btn-primary {
+  background-color: #289ee4 !important;
+  border-color: #289ee4 !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1f7ec1 !important; /* a slightly darker blue */
+  border-color: #1f7ec1 !important;
+  box-shadow: 0 0 8px rgba(40, 158, 228, 0.6); /* subtle glow */
+}
+.feature-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f4f6fa !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1; /* ✅ Make sure your content is above this */
+}
+
+/* Import fonts from Google Fonts */
+
+/* Apply fonts globally */
+body {
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", Arial, sans-serif;
+  font-weight: 600;
+  color: #111;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Optional: style links */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+/* Sidebar container */
+body.dark-mode .bg-white {
+  background-color: #1e1e1e !important; /* dark bg for white backgrounds */
+  color: #ddd !important;
+  border-color: #333 !important;
+  box-shadow: none !important; /* optional: remove light shadows */
+}
+
+/* Text muted in dark mode */
+body.dark-mode .text-muted {
+  color: #888 !important;
+}
+
+/* Sidebar links */
+body.dark-mode .nav-link {
+  color: #ccc !important;
+}
+
+body.dark-mode .nav-link.active,
+body.dark-mode .nav-link:hover {
+  color: #0d6efd !important; /* bright accent color */
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  border-radius: 4px;
+}
+
+/* Sidebar submenu collapse bg */
+body.dark-mode .collapse {
+  background-color: transparent !important;
+}
+
+/* Top navbar */
+body.dark-mode .border-bottom {
+  border-color: #333 !important;
+}
+
+body.dark-mode .text-dark {
+  color: #ddd !important;
+}
+
+/* Button styles */
+body.dark-mode .btn-white {
+  background-color: #2c2c2c !important;
+  color: #ddd !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark-mode .btn-white:hover {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+/* Dropdown menu */
+body.dark-mode .dropdown-menu {
+  background-color: #2a2a2a !important;
+  color: #ddd !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark-mode .dropdown-menu a.dropdown-item {
+  color: #ddd !important;
+}
+
+body.dark-mode .dropdown-menu a.dropdown-item:hover,
+body.dark-mode .dropdown-menu a.dropdown-item:focus {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+/* Adjust avatar border or shadow if needed */
+body.dark-mode .rounded-circle {
+  border: 1px solid #555;
+}
+
+/* Button Primary (toggle button) */
+body.dark-mode .btn-primary {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: #fff !important;
+}
+
+body.dark-mode .btn-primary:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0b5ed7 !important;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.7);
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ddd !important;
+}
+
+body.dark-mode .leave-form-grid{
+  
+  color: #ddd !important;
+}
+
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #eee;
+}
+
+body.dark-mode a {
+  color: #66aaff;
+}
+
+body.dark-mode a:hover,
+body.dark-mode a:focus {
+  text-decoration: underline;
+  color: #99cfff;
+}
+
+body.dark-mode .background-wrapper::before {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .feature-wrapper {
+  background-color: #1e1e1e !important;
+}
+
+body.dark-mode .btn-primary {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: #fff !important;
+}
+
+body.dark-mode .btn-primary:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0b5ed7 !important;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.7);
+}
+
+/* Sidebar links default */
+body.dark-mode .custom-sidebar .nav-link {
+  color: #bbb; /* lighter gray for dark bg */
+  background-color: transparent;
+}
+
+/* Sidebar links hover */
+body.dark-mode .custom-sidebar .nav-link:hover {
+  background-color: #264a78; /* a darker blue background on hover */
+  color: #a9d1ff; /* lighter blue text */
+}
+
+body.dark-mode .custom-sidebar .nav-link.active {
+  background-color: #0d6efd; /* bright blue */
+  color: #ffffff; /* white text */
+  font-weight: 600; /* slightly bolder for emphasis */
+}
+
+.dark-mode-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  transition: background-color 0.4s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-mode-toggle i {
+  font-size: 1.25rem; /* Adjust as needed */
+  line-height: 1;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+}
+
+body.dark-mode .dark-mode-toggle i {
+  transform: rotate(180deg);
+  color: #ffc107; /* Sun icon color in dark mode */
+}
+
+.dark-mode-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #666; /* optional */
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle i {
+  font-size: 1.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  transform: translateY(1px); /* 👈 subtle nudge to center vertically */
+  transition: transform 0.5s ease, color 0.4s ease;
+}
+
+/* Dark mode override */
+.dark-mode .stat-card {
+  --card-text-color: #f1f1f1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* All input fields */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #2a2a2a !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #444 !important;
+  border-radius: 4px;
+  box-shadow: none !important;
+}
+
+/* Placeholder text */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #888 !important;
+}
+
+/* Focus effect */
+body.dark-mode input:focus,
+body.dark-mode textarea:focus,
+body.dark-mode select:focus {
+  outline: none;
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* All buttons */
+/* Base tab button (unselected) */
+body.dark-mode .tab-btn {
+  background-color: transparent !important;
+  color: #ccc !important;
+  border: none !important;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover state — same as sidebar hover */
+body.dark-mode .tab-btn:hover {
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  color: #0d6efd !important;
+}
+
+/* Active tab button — same as sidebar active */
+body.dark-mode .tab-btn.active {
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  color: #0d6efd !important;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+
+.cursor-pointer {
+  cursor: pointer !important;
+}

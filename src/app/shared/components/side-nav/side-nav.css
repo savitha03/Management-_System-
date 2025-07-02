@@ -1,0 +1,21 @@
+.custom-sidebar .nav-link {
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.custom-sidebar .nav-link:hover {
+  background-color: #f0f4f8;
+  color: #1f7ec1;
+}
+
+.custom-sidebar .nav-link.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+.custom-sidebar .nav-link.active i {
+  color: white !important;
+}

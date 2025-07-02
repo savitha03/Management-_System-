@@ -1,0 +1,58 @@
+<div class="m-5">
+    <div class="m-5">
+        <h4>Employment Details</h4>
+            <div class="tabs mb-3 mt-4">
+            <button class="tab-btn" [class.active]="activeTab === 'job'" (click)="switchTab('job')">
+                Job Details
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'salary'" (click)="switchTab('salary')">
+                Salary Details
+            </button>
+        </div>
+
+        <form [formGroup]="jobForm" *ngIf="activeTab==='job'" class="mt-4">
+            <div class="form-grid">
+                <div>
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle"/>
+                </div>
+                   <div>
+                    <label for="employmentStatus">Employment Status</label>
+                    <input type="text" name="employmentStatus" id="employmentStatus" formControlName="employmentStatus"/>
+                </div>
+                   <div>
+                    <label for="joinedDate">Join Date</label>
+                    <input type="Date" name="joinedDate" id="joinedDate" formControlName="joinedDate"/>
+                </div>
+                 <div>
+                    <label for="location">Location</label>
+                    <input type="text" name="location" id="location" formControlName="location"/>
+                </div>
+            </div>
+        </form>
+
+        <form [formGroup]="salaryForm" *ngIf="activeTab==='salary'" class="mt-4">
+            <div class="form-grid">
+                <div>
+                    <label for="payGrade">Pay Grade</label>
+                    <input type="text" name="payGrade" id="payGrade" formControlName="payGrade"/>
+                </div>
+                   <div>
+                    <label for="currency">Currency</label>
+                    <input type="text" name="currency" id="currency" formControlName="currency"/>
+                </div>
+                   <div>
+                    <label for="basicSalary">Basic Salary</label>
+                    <input type="text" name="basicSalary" id="basicSalary" formControlName="basicSalary"/>
+                </div>
+                   <div>
+                    <label for="payFrequency">Pay Frequency</label>
+                    <input type="text" name="payFrequency" id="payFrequency" formControlName="payFrequency"/>
+                </div>
+            </div>
+        </form>
+         <!-- <div class="buttons mt-4">
+            <button class="btn submit" (click)="onSubmit()">Submit</button>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,9 @@
+.ag-theme-alpine-dark {
+  --ag-background-color: #121212;
+  --ag-foreground-color: #e0e0e0;
+  --ag-header-background-color: #1f1f1f;
+  --ag-header-foreground-color: #e0e0e0;
+  --ag-border-color: #333333;
+  --ag-row-border-color: #333333;
+  /* add more overrides as needed */
+}

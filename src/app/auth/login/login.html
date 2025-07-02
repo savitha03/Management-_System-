@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-center align-items-center vh-100 position-relative" style="z-index: 10;">
+  <form [formGroup]="loginForm" class="bg-white p-5 rounded-4 custom-shadow" (ngSubmit)="login()"
+    style="width: 616px; max-width: 90vw; height: auto; min-height: 50%;">
+    <img src="assets/SimpleSolveLogo_trsp_100px.png" alt="Logo" class="img-fluid mb-4 d-block mx-auto"
+      style="width: 30%;" />
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" formControlName="userName" id="floatingInput"
+        placeholder="User Name" />
+      <label for="floatingInput">User Name</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" formControlName="password" id="floatingPassword"
+        placeholder="Password" />
+      <label for="floatingPassword">Password</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+    <!-- <div class="mb-3 text-center">
+      <a class="small text-decoration-none disabled">Forgot Password?</a>
+    </div> -->
+  </form>
+</div>

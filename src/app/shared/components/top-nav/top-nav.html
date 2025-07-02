@@ -1,0 +1,45 @@
+<div class="row bg-white border-bottom shadow-sm" style="height: 80px;">
+  <div class="col-12 px-4 d-flex align-items-center justify-content-between">
+
+    <img src="assets/SimpleSolveLogo_trsp_100px.png" alt="Logo" class="small-image" />
+
+    <!-- Wrap toggle button and dropdown inside a flex container -->
+    <div class="d-flex align-items-center gap-3">
+
+      <button (click)="toggleDarkMode()" class="dark-mode-toggle" aria-label="Toggle dark mode">
+        <i [class]="isDarkMode ? 'bi bi-sun-fill' : 'bi bi-moon-fill'"></i>
+        <span class="visually-hidden">
+          {{ isDarkMode ? 'Switch to light mode' : 'Switch to dark mode' }}
+        </span>
+      </button>
+
+      <div class="dropdown">
+        <button class="btn btn-white d-flex align-items-center" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false" style="min-width: 200px; gap: 0.75rem;">
+          <img src="assets/avatar.png" alt="Avatar" class="rounded-circle"
+            style="width: 40px; height: 40px; object-fit: cover;" />
+          <!-- <div class="circle-icon"><i class="fas fa-user-tie fa-2x"></i></div> -->
+          <div class="d-flex flex-column align-items-start">
+            <span class="text-dark fw-semibold">
+              {{profile?.firstName || 'Judah Sheegan Raj (ST1177)'}}
+            </span>
+            <small class="text-muted mt-1 fw-normal" style="font-size: 0.7rem; line-height: 1;">Software
+              Engineer</small>
+          </div>
+        </button>
+
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item text-decoration-none" href="#">My Profile</a></li>
+          <li><a class="dropdown-item text-decoration-none" href="#">Another action</a></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li><a class="dropdown-item text-danger fw-semibold text-decoration-none cursor-pointer" (click)="logout()"><i
+                class="bi bi-door-closed me-2"></i>Logout</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</div>
