@@ -49,11 +49,11 @@ export class SideNav {
           icon: 'bi bi-pencil-square small text-muted',
           link: 'leaves/apply-leave',
         },
-        {
-          label: 'My Leaves',
-          icon: 'bi bi-person-check small text-muted',
-          link: 'leaves/my-leaves',
-        },
+        // {
+        //   label: 'My Leaves',
+        //   icon: 'bi bi-person-check small text-muted',
+        //   link: 'leaves/my-leaves',
+        // },
         {
           label: 'Leave History',
           icon: 'bi bi-clock-history small text-muted',

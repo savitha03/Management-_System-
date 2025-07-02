@@ -39,16 +39,18 @@ export class PersonalDetailsComponent implements OnInit {
   // }
 
   formBuilder(){
-        this.employeeForm = this.fb.group({
+    this.employeeForm = this.fb.group({
       employeeId: ['', Validators.required],
       firstName: ['', Validators.required],
-      laststName: ['', Validators.required],
+      lastName: ['', Validators.required],
       dob:['',Validators.required],
-      gender:['',Validators.required],
+      gender:[{ value: '', disabled: true },Validators.required],
       email:['',[Validators.required,Validators.email]],
-      maritalStatus:['',Validators.required],
-      nationality:['',Validators.required]
+      maritalStatus:[{ value: '', disabled: true },Validators.required],
+      nationality:[{ value: '', disabled: true },Validators.required]
     });
+
+    // this.employeeForm.disable();
 
     this.contactForm=this.fb.group({
       employeeId:[null],
@@ -64,12 +66,10 @@ export class PersonalDetailsComponent implements OnInit {
 
     this.teamsForm=this.fb.group({
       employeeId:[null],
-      role:['',Validators.required],
-      developer:['',Validators.required],
-      qa:['',Validators.required],
-      teamManager:['',Validators.required],
-      projectManager:['',Validators.required],
-      teamLead:['',Validators.required]
+      role:[{ value: '', disabled: true },Validators.required],
+      teamManager:[{value:'',disabled:true},Validators.required],
+      projectManager:[{value:'',disabled:true},Validators.required],
+      teamLead:[{value:'',disabled:true},Validators.required]
     })
 
   }

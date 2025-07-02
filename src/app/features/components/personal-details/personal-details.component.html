@@ -17,47 +17,46 @@
             <div class="form-grid">
                 <div>
                     <label>Employee ID</label>
-                    <input type="text" formControlName="employeeId" />
+                    <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
                     <label>First Name</label>
-                    <input type="text" formControlName="firstName"/>
+                    <input type="text" readonly formControlName="firstName"/>
                 </div>
                 <div>
                     <label>Last Name</label>
-                    <input type="text" formControlName="lastName"/>
+                    <input type="text" readonly formControlName="lastName"/>
                 </div>
                 <div>
                     <label>Date of Birth</label>
-                    <input type="date" formControlName="dob" />
+                    <input type="date" readonly formControlName="dob" />
                 </div>
                 <div>
                     <label>Gender</label>
                     <select formControlName="gender">
-                        <option value="" disabled selected>Select Gender Type</option>
+                        <option value="" disabled >--Select Gender Type--</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                     </select>
-                    <!-- <input type="text" formControlName="gender" /> -->
                 </div>
                 <div>
                     <label>Email</label>
-                    <input type="email" formControlName="email" />
+                    <input type="email" readonly formControlName="email" />
                 </div>
                 <div>
                     <label>Marital Status</label>
                     <select formControlName="maritalStatus" >
-                        <option value="" disabled selected>Select Marital Status</option>
+                        <option value="" disabled >--Select Marital Status--</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
                     </select>
                 </div>
                 <div>
                     <label>Nationality</label>
-                    <select formControlName="maritalStatus">
-                        <option value="">Select Nationality</option>
-                        <option value="Indian">Indian</option>
+                    <select formControlName="nationality">
+                        <option value="" disabled class="dropdown">--Select Nationality--</option>
+                        <option value="Indian" class="dropdown">Indian</option>
                     </select>
                 </div>
             </div>
@@ -68,39 +67,39 @@
             <div class="form-grid">
                 <div>
                     <label>Employee ID</label>
-                    <input type="text" formControlName="employeeId" />
+                    <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
                     <label>Phone Number</label>
-                    <input type="text" formControlName="phoneNumber"/>
+                    <input type="text" readonly formControlName="phoneNumber"/>
                 </div>
                 <div>
                     <label>Alternate Number</label>
-                    <input type="text" formControlName="alternateNumber"/>
+                    <input type="text" readonly formControlName="alternateNumber"/>
                 </div>
                 <div>
                     <label>Email</label>
-                    <input type="email" formControlName="email"/>
+                    <input type="email" readonly formControlName="email"/>
                 </div>
                 <div>
                     <label>Street Address</label>
-                    <input type="text" formControlName="streetAddress"/>
+                    <input type="text" readonly formControlName="streetAddress"/>
                 </div>
                 <div>
                     <label>City</label>
-                    <input type="text" formControlName="city"/>
+                    <input type="text" readonly formControlName="city"/>
                 </div>
                 <div>
                     <label>State</label>
-                    <input type="text" formControlName="state"/>
+                    <input type="text" readonly formControlName="state"/>
                 </div>
                 <div>
                     <label>Zip Code</label>
-                    <input type="text" formControlName="zipCode">
+                    <input type="text" readonly formControlName="zipCode">
                 </div>
                 <div>
                     <label>Country</label>
-                    <input type="text" formControlName="country">
+                    <input type="text" readonly formControlName="country">
                 </div>
             </div>
         </form>
@@ -108,12 +107,12 @@
             <div class="form-grid">
                 <div>
                     <label>Employee ID</label>
-                    <input type="text" formControlName="employeeId" />
+                    <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
                     <label>Role</label>
                     <select formControlName="role">
-                        <option value="">Select Role</option>
+                        <option value="">--Select Role--</option>
                         <option value="developer">Developer</option>
                         <option value="qa">QA</option>
                         <option value="teamLead">Team Lead</option>
@@ -124,9 +123,9 @@
             </div>
              <div class="form-grid mt-4">
                 <div>
-                    <label>Team Manager</label>
+                    <label>Team and HR Head</label>
                     <select formControlName="teamManager">
-                        <option value="">Select Team Manager</option>
+                        <option value="" disabled>--Select Team Manager--</option>
                         <option value="">Manikandan Natarajan</option>
                         <option value="">Krishnakumar Gajain</option>
                         <option value="">Rajesh Doraiappa</option>
@@ -135,15 +134,16 @@
                  <div>
                     <label>Project Manager</label>
                     <select formControlName="projectManager">
-                        <option value="">Select Project Manager</option>
+                        <option value="" disabled>--Select Project Manager--</option>
                         <option value="">Ramesh Thulasingam</option>
                         <option value="">Dinesh Vidhyasagar</option>
+                        <option value="">Ganesh Gunasekaran</option>
                     </select>
                 </div>
                    <div>
                     <label>Team Lead</label>
                     <select formControlName="teamLead">
-                        <option value="">Select Team Lead</option>
+                        <option value="" disabled>--Select Team Lead--</option>
                         <option value="">TL1</option>
                         <option value="">TL2</option>
                         <option value="">TL3</option>

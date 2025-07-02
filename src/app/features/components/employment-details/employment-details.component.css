@@ -73,3 +73,15 @@ input[type="date"] {
 } 
 
 
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+
+.tab-btn.active i {
+  color: white !important;
+}    
+
+

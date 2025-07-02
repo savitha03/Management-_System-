@@ -13,7 +13,7 @@ export class EmploymentDetailsComponent implements OnInit {
   activeTab='job';
   jobForm!: FormGroup;
   salaryForm!: FormGroup;
-  employeeId: number = 0;
+  
 
   
   constructor(private fb:FormBuilder){}
@@ -32,19 +32,19 @@ export class EmploymentDetailsComponent implements OnInit {
 
   formBuilder(){
      this.jobForm = this.fb.group({
-      employeeId: [this.employeeId],
+      empId: [''],
       jobTitle: ['', Validators.required],
-      employmentStatus: ['', Validators.required],
+      employmentStatus:[{value:'', disabled:'true'},Validators.required],
       joinedDate: ['', Validators.required],
-      location: ['', Validators.required]
+      skillset: ['', Validators.required]
     });
 
     this.salaryForm=this.fb.group({
-      employeeId:[this.employeeId],
+      empId:[''],
       payGrade:['',Validators.required],
-      currency:['',Validators.required],
+      currency:[{value:'',disabled:'true'},Validators.required],
       basicSalary:['',Validators.required],
-      payFrequency:['',Validators.required]
+      payFrequency:[{value:'',disabled:'true'},Validators.required]
     })
   }
 

@@ -1,8 +1,41 @@
 <div class="container-fluid mt-3">
   <div class="row g-3">
-    <div class="col-md-3 col-sm-6" *ngFor="let item of leaveSummary">
-      <app-leave-cards [count]="item.count" [label]="item.label" [gradient]="item.gradient" [iconClass]="item.icon">
-      </app-leave-cards>
+    <div class="col-md-3 col-sm-6" *ngFor="let item of leaveSummary; let i = index" [ngClass]="{
+        'selected-card': selectedIndex === i,
+        'unselected-card': selectedIndex !== null && selectedIndex !== i
+      }" (click)="selectCard(i)">
+      <app-leave-cards [count]="item.count" [label]="item.label" [gradient]="item.lightGradient"
+        [iconClass]="item.icon"></app-leave-cards>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-5" *ngIf="selectedLeave">
+    <div class="col-md-10 col-lg-8 mt-5">
+      <div class="selected-details" [ngStyle]="{ '--gradient': selectedLeave.lightGradient }">
+        <div class="selected-details-content p-4 text-white">
+          <div class="d-flex align-items-center mb-4">
+            <i [class]="selectedLeave.icon + ' display-5 me-3'"></i>
+            <div>
+              <h3 class="mb-0 fw-bold">{{ selectedLeave.label }}</h3>
+              <small class="text-light">Summary</small>
+            </div>
+          </div>
+          <div class="details-grid">
+            <div class="detail-box">
+              <p class="label">Total Leaves Available</p>
+              <p class="value">{{ selectedLeave.count }}</p>
+            </div>
+            <div class="detail-box">
+              <p class="label">Taken</p>
+              <p class="value">{{ selectedLeave.taken }}</p>
+            </div>
+            <div class="detail-box">
+              <p class="label">Scheduled</p>
+              <p class="value">{{ selectedLeave.scheduled }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

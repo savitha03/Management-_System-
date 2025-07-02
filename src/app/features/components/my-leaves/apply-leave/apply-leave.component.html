@@ -4,7 +4,7 @@
     <form [formGroup]="leaveForm" (ngSubmit)="apply()">
       <div class="leave-form-grid">
         <!-- Leave Type -->
-        <div class="mt-4"></div>
+        <div class="mt-4">
           <label for="typeName" class="form-label">Leave Type</label>
           <select id="typeName" formControlName="typeName" class="form-select flex-grow-1 text-start form-control"
             required>
@@ -14,7 +14,6 @@
             <option value="LOP">LOP</option>
           </select>
         </div>
-
 
         <!-- Start Date -->
         <div class="mt-4">
@@ -38,6 +37,7 @@
             Required
           </small> -->
         </div>
+      </div>
     </form>
     <div class="buttons mt-4 justify-content-center">
       <button type="submit" class="btn submit" [disabled]="leaveForm.invalid">

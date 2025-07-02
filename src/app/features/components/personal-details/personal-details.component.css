@@ -127,7 +127,6 @@ input[type="date"] {
   background-color: #289ee4;
   color: white;
 }
-
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -184,7 +183,6 @@ background-color:#f99700 !important;
 .tab-btn.active i {
   color: white !important;
 }    
-
 /* Add this to your component's CSS */
 /* .mandatory {
   border: 2px solid red;
