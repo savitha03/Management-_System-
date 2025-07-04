@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { EmploymentDetailsComponent } from '../../../features/components/employment-details/employment-details.component';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter } from 'rxjs';
 
 export interface MenuItem {
   label: string;
@@ -12,27 +12,50 @@ export interface MenuItem {
 
 @Component({
   selector: 'app-side-nav',
+  standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './side-nav.html',
   styleUrl: './side-nav.css',
 })
-export class SideNav {
+export class SideNav implements OnInit {
   isCollapsed = false;
+  isLeaveMenuOpen = false;
+
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const currentUrl = event.urlAfterRedirects;
+        this.isLeaveMenuOpen = currentUrl.includes('/leaves/');
+        this.saveState(); // persist current state
+      });
+  }
+
+  ngOnInit(): void {
+    // Restore saved state from localStorage
+    const saved = localStorage.getItem('isLeaveMenuOpen');
+    this.isLeaveMenuOpen = saved === 'true';
+  }
+
+  toggleLeaveMenu(): void {
+    this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
+    this.saveState();
+  }
+
+  saveState(): void {
+    localStorage.setItem('isLeaveMenuOpen', String(this.isLeaveMenuOpen));
+  }
+
   mainMenu: MenuItem[] = [
-    // {
-    //   label: 'Dashboard',
-    //   icon: 'bi bi-grid-fill',
-    //   link: 'dashboard',
-    // },
     {
-      label:'Personal-Details',
-      icon:'	bi bi-card-heading',
-      link:'personal-details'
+      label: 'Personal-Details',
+      icon: 'bi bi-card-heading',
+      link: 'personal-details',
     },
     {
-      label:'Employement Details',
-      icon:'bi bi-person-badge',
-      link:'employement-details'
+      label: 'Employement Details',
+      icon: 'bi bi-person-badge',
+      link: 'employement-details',
     },
     {
       label: 'Employees List ',
@@ -42,26 +65,25 @@ export class SideNav {
     {
       label: 'Leave Management',
       icon: 'bi bi-kanban-fill',
-      link: 'leave',
       children: [
         {
           label: 'Apply Leave',
           icon: 'bi bi-pencil-square small text-muted',
           link: 'leaves/apply-leave',
         },
-        // {
-        //   label: 'My Leaves',
-        //   icon: 'bi bi-person-check small text-muted',
-        //   link: 'leaves/my-leaves',
-        // },
         {
           label: 'Leave History',
           icon: 'bi bi-clock-history small text-muted',
           link: 'leaves/history',
         },
         {
+          label: 'Users Leave History',
+          icon: 'bi bi-person-check small text-muted',
+          link: 'leaves/users-leave-history',
+        },
+        {
           label: 'Leave Summary',
-          icon: '	bi bi-file-earmark-text-fill small text-muted',
+          icon: 'bi bi-file-earmark-text-fill small text-muted',
           link: 'leaves/leave-summary',
         },
       ],
@@ -85,8 +107,4 @@ export class SideNav {
       link: 'settings',
     },
   ];
-
-  toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-  }
 }

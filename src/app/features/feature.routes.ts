@@ -13,6 +13,7 @@ import { EmployeeDetailsComponent } from './components/employee-details/employee
 import { EmployeesComponent } from './components/employees/employees.component';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details.component';
 import { EmploymentDetailsComponent } from './components/employment-details/employment-details.component';
+import {UsersLeaveHistoryComponent} from './components/my-leaves/users-leave-history/users-leave-history.component';
 
 export const FeatureRoutes: Routes = [
   {
@@ -43,9 +44,13 @@ export const FeatureRoutes: Routes = [
             path: 'apply-leave',
             component: ApplyLeaveComponent,
           },
+          // {
+          //   path: 'my-leaves',
+          //   component: LeaveSummary,
+          // },
           {
-            path: 'my-leaves',
-            component: LeaveSummary,
+            path:'users-leave-history',
+            component:UsersLeaveHistoryComponent
           },
           {
             path: 'history',
@@ -59,7 +64,7 @@ export const FeatureRoutes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'personal-details',
         pathMatch: 'full',
       },
     ],
