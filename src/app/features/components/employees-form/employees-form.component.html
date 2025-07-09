@@ -1,1 +1,63 @@
-<p>employees-form works!</p>
+<div class="container bg-light border rounded-3 shadow-sm">
+    <div class="tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'personal'" (click)="switchTab('personal')">
+            Personal Details
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'employment'" disabled (click)="switchTab('contact')">
+            Employment Details
+        </button>
+    </div>
+    <div class="mt-4">
+        <ng-scrollbar style="height: 55vh;">
+            <h5>Employee Details</h5>
+            <form [formGroup]="detailsForm" *ngIf="activeTab === 'personal'" class="mt-4">
+                <div class="form-grid">
+                    <div>
+                        <label>Employee ID</label>
+                        <input type="text"  formControlName="employeeId" />
+                    </div>
+                    <div>
+                        <label>First Name</label>
+                        <input type="text"  formControlName="firstName" />
+                    </div>
+                    <div>
+                        <label>Last Name</label>
+                        <input type="text"  formControlName="lastName" />
+                    </div>
+                    <div>
+                        <label>Date of Birth</label>
+                        <input type="date"  formControlName="dob" />
+                    </div>
+                    <div>
+                        <label>Gender</label>
+                        <select formControlName="gender">
+                            <option value="" disabled>--Select Gender Type--</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Marital Status</label>
+                        <select formControlName="maritalStatus">
+                            <option value="" disabled>--Select Marital Status--</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Nationality</label>
+                        <select formControlName="nationality">
+                            <option value="" disabled class="dropdown">--Select Nationality--</option>
+                            <option value="Indian" class="dropdown">Indian</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </ng-scrollbar>
+    </div>
+    <div class="buttons mt-4">
+        <button class="btn submit">Next</button>
+    </div>
+</div>

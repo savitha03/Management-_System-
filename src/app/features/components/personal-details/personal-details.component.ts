@@ -45,7 +45,7 @@ export class PersonalDetailsComponent implements OnInit {
       lastName: ['', Validators.required],
       dob:['',Validators.required],
       gender:[{ value: '', disabled: true },Validators.required],
-      email:['',[Validators.required,Validators.email]],
+
       maritalStatus:[{ value: '', disabled: true },Validators.required],
       nationality:[{ value: '', disabled: true },Validators.required]
     });

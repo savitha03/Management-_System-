@@ -3,7 +3,7 @@
         <h4>Personal Details</h4>
 
         <div class="tabs mb-3 mt-4">
-            <button class="tab-btn" [class.active]="activeTab === 'employee'" (click)="switchTab('employee')">
+            <button class="tab-btn"  [class.active]="activeTab === 'employee'" (click)="switchTab('employee')">
                 Employee Details
             </button>
             <button class="tab-btn" [class.active]="activeTab === 'contact'" (click)="switchTab('contact')">
@@ -40,10 +40,7 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <div>
-                    <label>Email</label>
-                    <input type="email" readonly formControlName="email" />
-                </div>
+              
                 <div>
                     <label>Marital Status</label>
                     <select formControlName="maritalStatus" >

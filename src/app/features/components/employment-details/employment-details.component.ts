@@ -32,7 +32,7 @@ export class EmploymentDetailsComponent implements OnInit {
 
   formBuilder(){
      this.jobForm = this.fb.group({
-      empId: [''],
+      employeeId: [''],
       jobTitle: ['', Validators.required],
       employmentStatus:[{value:'', disabled:true},Validators.required],
       joinedDate: ['', Validators.required],
@@ -40,7 +40,7 @@ export class EmploymentDetailsComponent implements OnInit {
     });
 
     this.salaryForm=this.fb.group({
-      empId:[''],
+      employeeId:[''],
       payGrade:['',Validators.required],
       currency:[{value:'',disabled:true},Validators.required],
       basicSalary:['',Validators.required],

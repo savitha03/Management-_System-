@@ -1,12 +1,26 @@
-<div  style="width: 100%; height: 600px;">
-    <ag-grid-angular
-    [columnDefs]="columnDefs"
-    [rowData]="rowData"
-    [pagination]="true" 
-    [defaultColDef]="defaultColDef"
-    style="width: 100%; height: 100%;" 
-    [suppressCellFocus]="true"
-    ></ag-grid-angular>
+
+ <div class="mb-4">
+    <label for="employeeSelect">Select Employee <span class="text-danger">*</span></label> 
+    
+            <ng-select id="employeeSelect" [items]="filteredEmployees" bindLabel="name" bindValue="id"
+        placeholder="Search by Employee" [(ngModel)]="selectedEmployeeId" [typeahead]="employeeInput$"
+        [searchFn]="customSearchFn" (change)="onEmployeeSelect()" class="ng-select-input">
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.id }} - {{ item.name }} 
+        </ng-template>
+    </ng-select>
+ </div>
+<div style="width: 100%; height: 490px;" class="mt-5">
+    <ag-grid-angular [columnDefs]="columnDefs" [rowData]="filteredRowData" [pagination]="true"
+        [defaultColDef]="defaultColDef" style="width: 100%; height: 100%;" [suppressCellFocus]="true">
+    </ag-grid-angular>
 </div>
+
+<!-- AG Grid -->
+<!-- <div style="width: 100%; height: 350px;" class="mt-5">
+    <ag-grid-angular [columnDefs]="columnDefs" [rowData]="filteredRowData" [pagination]="true"
+        [defaultColDef]="defaultColDef" style="width: 100%; height: 100%;" [suppressCellFocus]="true">
+    </ag-grid-angular>
+</div> -->
 
 <!-- [ngClass]="isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"  -->

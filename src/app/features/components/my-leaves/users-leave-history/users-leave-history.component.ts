@@ -5,18 +5,29 @@ import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ThemeService } from '../../../../shared/services/theme.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule, NgModel } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'app-leave-history',
   standalone: true,
-  imports: [AgGridModule, CommonModule],
+  imports: [AgGridModule, CommonModule,NgSelectModule,FormsModule],
   templateUrl: './users-leave-history.component.html',
   styleUrls: ['./users-leave-history.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class UsersLeaveHistoryComponent implements OnInit {
   isDarkMode = false;
+
+  dropdownList = [
+  { id: 'ST1176', name: 'Vigneshwaran T' },
+  { id: 'T2506', name: 'Savitha B' },
+  { id: 'T2503', name: 'Ravishankar S' }
+];
+
+selectedEmployeeId: string | null = null;
 
   columnDefs: ColDef[] = [
     { headerName: 'Emp. ID', field: 'empId', width: 110 },
@@ -43,44 +54,11 @@ export class UsersLeaveHistoryComponent implements OnInit {
     {
       headerName: 'Reason',
       field: 'reason',
-      width: 300,
+      width: 260,
       wrapText: true, // optional but recommended for wrapping
       autoHeight: true,
       filter:false,
       cellStyle: { whiteSpace: 'normal', overflowWrap: 'break-word' },
-    },
-    {
-      headerName: 'Actions',
-      field: 'actions',
-      width: 120,
-      cellClass: 'ag-center',
-      cellRenderer: (params: any) => {
-        const container = document.createElement('div');
-        container.style.textAlign = 'center';
-
-        if (params.data.status === 'Pending') {
-          const editBtn = document.createElement('button');
-          editBtn.className = 'btn btn-outline-success btn-sm me-3';
-          editBtn.title = 'Edit';
-          editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
-          editBtn.addEventListener('click', () =>
-            this.editPendingLeave(params.data)
-          );
-
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'btn btn-outline-danger btn-sm';
-          deleteBtn.title = 'Delete';
-          deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
-          deleteBtn.addEventListener('click', () =>
-            this.deletePendingLeave(params.data)
-          );
-
-          container.appendChild(editBtn);
-          container.appendChild(deleteBtn);
-        }
-
-        return container;
-      },
     },
   ];
 
@@ -145,11 +123,44 @@ export class UsersLeaveHistoryComponent implements OnInit {
 
   constructor(private themeService: ThemeService) {}
 
+ filteredRowData: {
+  empId: string;
+  empName: string;
+  leaveType: string;
+  fromDate: string;
+  toDate: string;
+  duration: string;
+  status: string;
+  reason: string;
+}[] = [];
+
+  employeeInput$ = new Subject<string>();
+  filteredEmployees = this.dropdownList;
+
   ngOnInit(): void {
+    this.employeeInput$.subscribe(searchText => {
+      this.filteredEmployees = this.dropdownList.filter(emp =>
+        (emp.name + ' ' + emp.id).toLowerCase().includes(searchText.toLowerCase())
+      );
+    });
+     this.filteredRowData = this.rowData;
     this.themeService.darkMode$.subscribe((isDark: any) => {
       this.isDarkMode = isDark;
     });
   }
+
+  onEmployeeSelect() {
+  if (this.selectedEmployeeId) {
+    this.filteredRowData = this.rowData.filter(row => row.empId === this.selectedEmployeeId);
+  } else {
+    this.filteredRowData = this.rowData;
+  }
+}
+
+customSearchFn(term: string, item: any) {
+  term = term.toLowerCase();
+  return item.id.toLowerCase().includes(term) || item.name.toLowerCase().includes(term);
+}
 
   editPendingLeave(rowData: any) {
     console.log('Editing row:', rowData);

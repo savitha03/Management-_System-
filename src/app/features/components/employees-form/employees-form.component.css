@@ -1,0 +1,86 @@
+
+/* .container {
+  width: 90%;
+  max-width: 1000px;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+} */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.75rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 90%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  height: 40px; /* Make all input and select fields the same height */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  
+}
+
+.tab-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+.tab-btn:hover {
+  background-color: #f0f4f8;
+  color: #1f7ec1;
+} 
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+
+.tab-btn.active i {
+  color: white !important;
+}    
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+
+.submit {
+background-color:#f99700 !important;
+   color: white;
+}

@@ -1,7 +1,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-5">
-            <app-employees-list [colDefs]="colDefs" [rowData]="rowData"></app-employees-list>
+            <app-employees-list [filterType]="filterType"[colDefs]="colDefs" [rowData]="rowData"
+            [defaultColDefs]="defaultColDefs" [gridApi]="gridApi"[gridColumnApi]="gridColumnApi"[gridOptions]="gridOptions"
+            (applicationEventService)="handleAppEvent($event)"
+            ></app-employees-list>
         </div>
         <div class="col-md-7">
             <app-employees-form></app-employees-form>
