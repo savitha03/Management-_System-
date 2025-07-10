@@ -42,6 +42,7 @@ export class EmployeesListComponent implements OnInit {
   @Input() gridApi: any;
   @Input() gridColumnApi: any;
   @Input() gridOptions!: GridOptions;
+  @Input() onGridReadyFn: any;
 
   @Output() applicationEventService = new EventEmitter<any>();
 
@@ -80,17 +81,5 @@ export class EmployeesListComponent implements OnInit {
     this.applicationEventService.emit(event);
   }
 
-  onGridReady(params: any) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    const event: any = {
-      name: 'AG_GRID_READY',
-      component: 'EmployeeUsersComponent',
-      value: {
-        gridApi: params.api,
-        gridColumnApi: params.columnApi,
-      },
-    };
-    this.applicationEventService.emit(event);
-  }
+
 }

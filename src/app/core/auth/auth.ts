@@ -8,7 +8,7 @@ import { SharedService } from '../../shared/services/shared.service';
   providedIn: 'root',
 })
 export class Auth {
-  private loginApi = `${environment.socketUrl}/api/Employee`;
+  private loginApi = `${environment.socketUrl}/api/Login`;
 
   
 
@@ -16,7 +16,7 @@ export class Auth {
 
   login(payLoad: any) {
     return this.http
-      .post(`${this.loginApi}/login`, payLoad)
+      .post(`${this.loginApi}`, payLoad)
       .pipe(
         map((data: any) => {
           if (data) {

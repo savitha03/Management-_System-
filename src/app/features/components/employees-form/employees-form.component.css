@@ -49,19 +49,20 @@ input[type="date"] {
   border: none;
   background-color: #f1f1f1;
   border-radius: 5px;
-  cursor: pointer;
+  
   color: #6c757d;
 }
 
 .tab-btn.active {
   background-color: #289ee4;
   color: white;
+  cursor: pointer;
 }
 
-.tab-btn:hover {
+/* .tab-btn:hover {
   background-color: #f0f4f8;
   color: #1f7ec1;
-} 
+}  */
 
 .tab-btn.active {
   background-color: #289ee4;
@@ -84,3 +85,34 @@ input[type="date"] {
 background-color:#f99700 !important;
    color: white;
 }
+
+
+.scroll-wrapper {
+  position: relative;
+  height: 55vh;
+  border-radius: 7px; /* Adjust as needed */
+  overflow: hidden;
+}
+
+
+.scroll-wrapper::before,
+.scroll-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scroll-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), transparent);
+}
+
+.scroll-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.04), transparent);
+}
+

@@ -1,5 +1,4 @@
-
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { EmployeesFormComponent } from '../../components/employees-form/employees-form.component';
 import { EmployeesListComponent } from '../../components/employees-list/employees-list.component';
 import { ColDef, GridOptions } from 'ag-grid-community';
@@ -21,6 +20,8 @@ export class EmployeesComponent {
   selectedRow: any = null;
   filterType: 'all' | 'active' | 'closed' = 'all';
 
+  public activeTab = 'personal';
+
   gridApi: any;
   gridColumnApi: any;
   rowSelection = 'single';
@@ -29,17 +30,16 @@ export class EmployeesComponent {
       componentParent: this,
     },
   };
+  detailsForm!: FormGroup;
   newEmployee: any;
-
-  employeeForm!: FormGroup;
 
   colDefs: ColDef[] = [
     {
       headerName: '',
       field: 'diceId',
       width: 50,
-      resizable:false,
-      sortable:false,
+      resizable: false,
+      sortable: false,
       filter: false,
       cellRenderer: DiceComponentComponent,
       cellRendererParams: (params: any) => ({
@@ -48,19 +48,22 @@ export class EmployeesComponent {
         hostComponent: 'EmployeesListComponent',
       }),
     },
-    { headerName: 'Emp Code', field: 'empCode', width: 120, filter: true },
+    { headerName: 'Emp Code', field: 'employeeId', width: 120, filter: true },
     {
       headerName: 'Emp Name',
-      field: 'empName',
+      field: 'fullName',
       width: 260,
       resizable: true,
       cellRenderer: (params: any) => {
+       
         const isActive =
           params.data.empStatus === 'Active'
             ? true
             : params.data.empStatus === 'Closed'
             ? false
             : null;
+        console.log(isActive);
+
         const icon =
           isActive === true
             ? '<i class="bi bi-bookmark-check-fill text-success me-2"></i>'
@@ -72,20 +75,101 @@ export class EmployeesComponent {
     },
   ];
 
+ 
+
   allRowData = [
     {
-      empCode: 'ST1176',
-      empName: 'Vigneshwaran Thiruselvam',
+      employeeId: 'ST1176',
       empStatus: 'Active',
+      firstName: 'Vigneshwaran',
+      lastName: 'Thiruselvam',
+      fullName: 'Vigneshwaran Thiruselvam',
+      dob: '1990-05-12',
+      gender: 'Male',
+      maritalStatus: 'Single',
+      nationality: 'Indian',
+      phoneNumber: '9876543210',
+      alternateNumber: '9123456780',
+      email: 'vignesh@example.com',
+      streetAddress: '123 Main Street',
+      city: 'Chennai',
+      state: 'Tamil Nadu',
+      zipCode: '600001',
+      country: 'India',
+      role: 'developer',
+      teamManager: 'Manikandan Natarajan',
+      projectManager: 'Ramesh Thulasingam',
+      teamLead: 'TL1',
+      jobTitle: 'Frontend Developer',
+      employmentStatus: 'Active',
+      joinedDate: '2021-06-15',
+      skillset: 'Angular, TypeScript',
+      payGrade: 'PG1',
+      currency: 'INR',
+      basicSalary: '500000',
+      payFrequency: 'Monthly',
     },
     {
-      empCode: 'T2506',
-      empName: 'Savitha',
+      employeeId: 'T2506',
       empStatus: 'Closed',
-    },  {
-      empCode: 'T2503',
-      empName: 'Ravishankar',
+      firstName: 'Savitha',
+      lastName: 'S',
+      fullName: 'Savitha S',
+      dob: '1995-08-20',
+      gender: 'Female',
+      maritalStatus: 'Married',
+      nationality: 'Indian',
+      phoneNumber: '9988776655',
+      alternateNumber: '9887766554',
+      email: 'savitha@example.com',
+      streetAddress: '456 Park Avenue',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      zipCode: '560001',
+      country: 'India',
+      role: 'qa',
+      teamManager: 'Krishnakumar Gajain',
+      projectManager: 'Dinesh Vidhyasagar',
+      teamLead: 'TL2',
+      jobTitle: 'QA Engineer',
+      employmentStatus: 'Closed',
+      joinedDate: '2020-01-10',
+      skillset: 'Testing, Selenium',
+      payGrade: 'PG2',
+      currency: 'INR',
+      basicSalary: '450000',
+      payFrequency: 'Monthly',
+    },
+    {
+      employeeId: 'T2503',
       empStatus: 'Active',
+      firstName: 'Ravishankar',
+      lastName: 'R',
+      fullName: 'Ravishankar R',
+      dob: '1992-03-11',
+      gender: 'Male',
+      maritalStatus: 'Single',
+      nationality: 'Indian',
+      phoneNumber: '9012345678',
+      alternateNumber: '9090909090',
+      email: 'ravi@example.com',
+      streetAddress: '789 MG Road',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      zipCode: '500081',
+      country: 'India',
+      role: 'teamLead',
+      teamManager: 'Rajesh Doraiappa',
+      projectManager: 'Ganesh Gunasekaran',
+      teamLead: 'TL3',
+      jobTitle: 'Team Lead',
+      employmentStatus: 'Active',
+      joinedDate: '2019-07-01',
+      skillset: 'React, Node.js',
+      payGrade: 'PG3',
+      currency: 'INR',
+      basicSalary: '700000',
+      payFrequency: 'Monthly',
     },
   ];
 
@@ -100,16 +184,8 @@ export class EmployeesComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.toggleActiveFilter('all');
-  }
-
-  initForm() {
-    this.employeeForm = this.fb.group({
-      empId: [{ value: '', disabled: true }],
-      empName: ['', Validators.required],
-      empStatus: ['', Validators.required],
-    });
+    this.formBuilder();
   }
 
   toggleActiveFilter(status: 'all' | 'active' | 'closed') {
@@ -130,10 +206,41 @@ export class EmployeesComponent {
 
   onRowSelected(row: any) {
     this.selectedRow = row;
-    this.employeeForm.patchValue({
-      empId: row.empId,
-      empName: row.empName,
-      empStatus: row.empStatus,
+    this.detailsForm.patchValue(row);
+    this.activeTab = 'personal';
+  }
+
+  formBuilder() {
+    this.detailsForm = this.fb.group({
+      employeeId: ['', Validators.required],
+      fullName: [''],
+      empStatus: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      dob: ['', Validators.required],
+      gender: [{ value: '' }, Validators.required],
+      maritalStatus: [{ value: '' }, Validators.required],
+      nationality: [{ value: '' }, Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      alternateNumber: ['', [Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      streetAddress: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      zipCode: ['', Validators.required],
+      country: ['', Validators.required],
+      role: [{ value: '' }, Validators.required],
+      teamManager: [{ value: '' }, Validators.required],
+      projectManager: [{ value: '' }, Validators.required],
+      teamLead: [{ value: '' }, Validators.required],
+      jobTitle: ['', Validators.required],
+      employmentStatus: [{ value: '' }, Validators.required],
+      joinedDate: ['', Validators.required],
+      skillset: ['', Validators.required],
+      payGrade: ['', Validators.required],
+      currency: [{ value: '' }, Validators.required],
+      basicSalary: ['', Validators.required],
+      payFrequency: [{ value: '' }, Validators.required],
     });
   }
 
@@ -148,14 +255,14 @@ export class EmployeesComponent {
         break;
       }
       case 'VALIDATE_NEW_EMPLOYEE': {
-        if (this.employeeForm.invalid) {
+        if (this.detailsForm.invalid) {
           console.warn('Form invalid');
           return;
         }
-        if (this.employeeForm.dirty && this.employeeForm.valid) {
-          console.log('Saving employee...', this.employeeForm.getRawValue());
+        if (this.detailsForm.dirty && this.detailsForm.valid) {
+          console.log('Saving employee...', this.detailsForm.getRawValue());
         }
-        this.employeeForm.controls['empId'].enable();
+        this.detailsForm.controls['empId'].enable();
         this.handleAppEvent({
           name: 'NEW_EMPLOYEE',
           component: 'UserInfoComponent',
@@ -163,35 +270,48 @@ export class EmployeesComponent {
         });
         break;
       }
-
       case 'NEW_EMPLOYEE': {
-        // 1. Create a blank record
-        const newRow = {
-          empCode: '',
-          empName: '',
-          empStatus: '',
-        };
+        const newRow = this.getDefaultEmployee();
 
-        // 2. Insert at top
         this.allRowData = [newRow, ...this.allRowData];
-        this.toggleActiveFilter(this.filterType); // re-apply filter -> updates this.rowData
-
-        // 3. Tell the list which row we want selected
+        this.toggleActiveFilter(this.filterType);
         this.selectedRow = newRow;
+        this.detailsForm.reset(newRow); // Fill default values
+        this.detailsForm.controls['employeeId'].enable();
 
-        // 4. Reset & prime the form
-        this.employeeForm.reset({
-          empId: '',
-          empName: '',
-          empStatus: '',
-        });
-        this.employeeForm.controls['empId'].enable();
-
+        if (this.gridApi) {
+          setTimeout(() => {
+            this.gridApi.forEachNode((node: any) => {
+              if (node.rowIndex === 0) {
+                node.setSelected(true);
+              }
+            });
+          }, 50);
+        }
         break;
       }
     }
   }
+
+  getDefaultEmployee(): any {
+    const defaultEmployee: any = {};
+    Object.keys(this.detailsForm.controls).forEach((key) => {
+      defaultEmployee[key] = '';
+    });
+
+    // Optionally set default values
+    defaultEmployee.empStatus = '';
+
+    return defaultEmployee;
+  }
+
+  activeTabEmit(event: any) {
+    this.activeTab = event;
+    console.log(this.activeTab);
+  }
+
+  onGridReady(params: any) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+  }
 }
-
-
-

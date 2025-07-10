@@ -16,7 +16,7 @@
         <form [formGroup]="employeeForm" *ngIf="activeTab === 'employee'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label>Employee ID</label>
+                    <label>Employee Code</label>
                     <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
@@ -63,7 +63,7 @@
         <form [formGroup]="contactForm" *ngIf="activeTab === 'contact'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label>Employee ID</label>
+                    <label>Employee Code</label>
                     <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
@@ -100,10 +100,10 @@
                 </div>
             </div>
         </form>
-        <form [formGroup]="teamsForm" *ngIf="activeTab ==='team' ">
+        <form [formGroup]="teamsForm" *ngIf="activeTab==='team'" class="mt-4" >
             <div class="form-grid">
                 <div>
-                    <label>Employee ID</label>
+                    <label>Employee Code</label>
                     <input type="text" readonly formControlName="employeeId" />
                 </div>
                 <div>
