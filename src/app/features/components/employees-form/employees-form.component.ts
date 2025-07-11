@@ -20,6 +20,8 @@ export class EmployeesFormComponent implements OnInit{
    constructor(){}
 
   ngOnInit(): void {
+    this.detailsForm.get('employeeId').setErrors(true);
+    console.log(this.detailsForm);
     
   }
   navButtons(value:any){

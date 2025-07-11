@@ -355,3 +355,8 @@ body.dark-mode .tab-btn.active {
 .cursor-pointer {
   cursor: pointer !important;
 }
+
+
+.required{
+  border-left: 5px solid red !important;
+}

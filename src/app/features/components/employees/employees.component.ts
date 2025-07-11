@@ -57,9 +57,9 @@ export class EmployeesComponent {
       cellRenderer: (params: any) => {
        
         const isActive =
-          params.data.empStatus === 'Active'
+          params.data.empStatus === 'ACTIVE'
             ? true
-            : params.data.empStatus === 'Closed'
+            : params.data.empStatus === 'CLOSED'
             ? false
             : null;
         console.log(isActive);
@@ -80,7 +80,7 @@ export class EmployeesComponent {
   allRowData = [
     {
       employeeId: 'ST1176',
-      empStatus: 'Active',
+      empStatus: 'ACTIVE',
       firstName: 'Vigneshwaran',
       lastName: 'Thiruselvam',
       fullName: 'Vigneshwaran Thiruselvam',
@@ -111,7 +111,7 @@ export class EmployeesComponent {
     },
     {
       employeeId: 'T2506',
-      empStatus: 'Closed',
+      empStatus: 'CLOSED',
       firstName: 'Savitha',
       lastName: 'S',
       fullName: 'Savitha S',
@@ -142,7 +142,7 @@ export class EmployeesComponent {
     },
     {
       employeeId: 'T2503',
-      empStatus: 'Active',
+      empStatus: 'ACTIVE',
       firstName: 'Ravishankar',
       lastName: 'R',
       fullName: 'Ravishankar R',
@@ -192,11 +192,11 @@ export class EmployeesComponent {
     this.filterType = status;
     if (status === 'active') {
       this.rowData = this.allRowData.filter(
-        (emp) => emp.empStatus === 'Active'
+        (emp) => emp.empStatus === 'ACTIVE'
       );
     } else if (status === 'closed') {
       this.rowData = this.allRowData.filter(
-        (emp) => emp.empStatus === 'Closed'
+        (emp) => emp.empStatus === 'CLOSED'
       );
     } else {
       this.rowData = [...this.allRowData];
@@ -214,7 +214,7 @@ export class EmployeesComponent {
     this.detailsForm = this.fb.group({
       employeeId: ['', Validators.required],
       fullName: [''],
-      empStatus: ['', Validators.required],
+      empStatus: ['ACTIVE', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob: ['', Validators.required],
@@ -262,7 +262,7 @@ export class EmployeesComponent {
         if (this.detailsForm.dirty && this.detailsForm.valid) {
           console.log('Saving employee...', this.detailsForm.getRawValue());
         }
-        this.detailsForm.controls['empId'].enable();
+        this.detailsForm.controls['employeeId'].enable();
         this.handleAppEvent({
           name: 'NEW_EMPLOYEE',
           component: 'UserInfoComponent',
@@ -300,7 +300,7 @@ export class EmployeesComponent {
     });
 
     // Optionally set default values
-    defaultEmployee.empStatus = '';
+    defaultEmployee.empStatus = 'ACTIVE';
 
     return defaultEmployee;
   }

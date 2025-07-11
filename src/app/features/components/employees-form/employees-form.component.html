@@ -1,9 +1,9 @@
 <div class="container my-4 p-4 bg-light border rounded-3 shadow-sm" style="height: 80vh;">
     <div class="tabs mt-1">
-        <button class="tab-btn"  [class.active]="activeTab === 'personal'" disabled >
+        <button class="tab-btn" [class.active]="activeTab === 'personal'" disabled>
             Personal Details
         </button>
-        <button class="tab-btn" [class.active]="activeTab === 'employment'" disabled >
+        <button class="tab-btn" [class.active]="activeTab === 'employment'" disabled>
             Employment Details
         </button>
     </div>
@@ -15,7 +15,16 @@
                     <div class="form-grid">
                         <div>
                             <label>Employee Code</label>
-                            <input type="text" formControlName="employeeId" />
+                            <input [ngClass]="{ required: detailsForm.controls['employeeId'].errors }" type="text"
+                                formControlName="employeeId" />
+                        </div>
+                         <div>
+                            <label>Employee Status</label>
+                            <select formControlName="empStatus">
+                                <!-- <option value=""></option> -->
+                                <option value="ACTIVE">Active</option>
+                                <option value="CLOSED">Closed</option>
+                            </select>
                         </div>
                         <div>
                             <label>First Name</label>
@@ -38,7 +47,6 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-
                         <div>
                             <label>Marital Status</label>
                             <select formControlName="maritalStatus">
@@ -163,7 +171,7 @@
                                 <option value="contract">Contract</option>
                                 <option value="permanent">Permanent</option>
                             </select>
-                          
+
                         </div>
                         <div>
                             <label for="joinedDate">Join Date</label>

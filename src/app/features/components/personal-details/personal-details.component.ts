@@ -44,10 +44,10 @@ export class PersonalDetailsComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       dob:['',Validators.required],
-      gender:[{ value: '', disabled: true },Validators.required],
+      gender:['',Validators.required],
 
-      maritalStatus:[{ value: '', disabled: true },Validators.required],
-      nationality:[{ value: '', disabled: true },Validators.required]
+      maritalStatus:['',Validators.required],
+      nationality:['',Validators.required]
     });
 
     // this.employeeForm.disable();
@@ -66,10 +66,10 @@ export class PersonalDetailsComponent implements OnInit {
 
     this.teamsForm=this.fb.group({
       employeeId:[null],
-      role:[{ value: '', disabled: true },Validators.required],
-      teamManager:[{value:'',disabled:true},Validators.required],
-      projectManager:[{value:'',disabled:true},Validators.required],
-      teamLead:[{value:'',disabled:true},Validators.required]
+      role:['',Validators.required],
+      teamManager:['',Validators.required],
+      projectManager:['',Validators.required],
+      teamLead:['',Validators.required]
     })
 
   }
