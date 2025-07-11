@@ -21,26 +21,25 @@
                          <div>
                             <label>Employee Status</label>
                             <select formControlName="empStatus">
-                                <!-- <option value=""></option> -->
                                 <option value="ACTIVE">Active</option>
                                 <option value="CLOSED">Closed</option>
                             </select>
                         </div>
                         <div>
                             <label>First Name</label>
-                            <input type="text" formControlName="firstName" />
+                            <input [ngClass]="{ required: detailsForm.controls['firstName'].errors }" type="text" formControlName="firstName" />
                         </div>
                         <div>
                             <label>Last Name</label>
-                            <input type="text" formControlName="lastName" />
+                            <input [ngClass]="{ required: detailsForm.controls['lastName'].errors }" type="text" formControlName="lastName" />
                         </div>
                         <div>
                             <label>Date of Birth</label>
-                            <input type="date" formControlName="dob" />
+                            <input [ngClass]="{ required: detailsForm.controls['dob'].errors }" type="date" formControlName="dob" />
                         </div>
                         <div>
                             <label>Gender</label>
-                            <select formControlName="gender">
+                            <select formControlName="gender" [ngClass]="{ required: detailsForm.controls['gender'].errors }">
                                 <option value="" disabled>--Select Gender Type--</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -49,7 +48,7 @@
                         </div>
                         <div>
                             <label>Marital Status</label>
-                            <select formControlName="maritalStatus">
+                            <select formControlName="maritalStatus" [ngClass]="{ required: detailsForm.controls['maritalStatus'].errors }" >
                                 <option value="" disabled>--Select Marital Status--</option>
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
@@ -57,7 +56,7 @@
                         </div>
                         <div>
                             <label>Nationality</label>
-                            <select formControlName="nationality">
+                            <select formControlName="nationality" [ngClass]="{ required: detailsForm.controls['nationality'].errors }">
                                 <option value="" disabled class="dropdown">--Select Nationality--</option>
                                 <option value="Indian" class="dropdown">Indian</option>
                             </select>
@@ -71,35 +70,35 @@
 
                                 <div>
                                     <label>Phone Number</label>
-                                    <input type="text" formControlName="phoneNumber" />
+                                    <input type="text" formControlName="phoneNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" [ngClass]="{ required: detailsForm.controls['phoneNumber'].errors }" />
                                 </div>
                                 <div>
                                     <label>Alternate Number</label>
-                                    <input type="text" formControlName="alternateNumber" />
+                                    <input type="text" formControlName="alternateNumber" [ngClass]="{ required: detailsForm.controls['alternateNumber'].errors }" />
                                 </div>
                                 <div>
                                     <label>Email</label>
-                                    <input type="email" formControlName="email" />
+                                    <input type="email" formControlName="email" [ngClass]="{ required: detailsForm.controls['email'].errors }"/>
                                 </div>
                                 <div>
                                     <label>Street Address</label>
-                                    <input type="text" formControlName="streetAddress" />
+                                    <input type="text" formControlName="streetAddress" [ngClass]="{ required: detailsForm.controls['streetAddress'].errors }"/>
                                 </div>
                                 <div>
                                     <label>City</label>
-                                    <input type="text" formControlName="city" />
+                                    <input type="text" formControlName="city" [ngClass]="{ required: detailsForm.controls['city'].errors }" />
                                 </div>
                                 <div>
                                     <label>State</label>
-                                    <input type="text" formControlName="state" />
+                                    <input type="text" formControlName="state" [ngClass]="{ required: detailsForm.controls['state'].errors }" />
                                 </div>
                                 <div>
                                     <label>Zip Code</label>
-                                    <input type="text" formControlName="zipCode">
+                                    <input type="text" formControlName="zipCode" [ngClass]="{ required: detailsForm.controls['zipCode'].errors }"/>
                                 </div>
                                 <div>
                                     <label>Country</label>
-                                    <input type="text" formControlName="country">
+                                    <input type="text" formControlName="country" [ngClass]="{ required: detailsForm.controls['country'].errors }"/>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +110,7 @@
                             <div class="form-grid mt-4 mb-3">
                                 <div>
                                     <label>Role</label>
-                                    <select formControlName="role">
+                                    <select formControlName="role"  [ngClass]="{ required: detailsForm.controls['role'].errors }">
                                         <option value="">--Select Role--</option>
                                         <option value="developer">Developer</option>
                                         <option value="qa">QA</option>
@@ -122,30 +121,30 @@
                                 </div>
                                 <div>
                                     <label>Team and HR Head</label>
-                                    <select formControlName="teamManager">
-                                        <option value="" disabled>--Select Team Manager--</option>
-                                        <option value="">Manikandan Natarajan</option>
-                                        <option value="">Krishnakumar Gajain</option>
-                                        <option value="">Rajesh Doraiappa</option>
+                                    <select formControlName="teamManager" [ngClass]="{required: detailsForm.controls['teamManager'].errors}">
+                                        <option value="" >--Select Team Manager--</option>
+                                        <option value="TM1">Manikandan Natarajan</option>
+                                        <option value="TM2">Krishnakumar Gajain</option>
+                                        <option value="TM3">Rajesh Doraiappa</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label>Project Manager</label>
-                                    <select formControlName="projectManager">
+                                    <select formControlName="projectManager"  [ngClass]="{ required: detailsForm.controls['projectManager'].errors }">
                                         <option value="" disabled>--Select Project Manager--</option>
-                                        <option value="">Ramesh Thulasingam</option>
-                                        <option value="">Dinesh Vidhyasagar</option>
-                                        <option value="">Ganesh Gunasekaran</option>
+                                        <option value="PM1">Ramesh Thulasingam</option>
+                                        <option value="PM2">Dinesh Vidhyasagar</option>
+                                        <option value="PM3">Ganesh Gunasekaran</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label>Team Lead</label>
-                                    <select formControlName="teamLead">
+                                    <select formControlName="teamLead"  [ngClass]="{ required: detailsForm.controls['teamLead'].errors }">
                                         <option value="" disabled>--Select Team Lead--</option>
-                                        <option value="">TL1</option>
-                                        <option value="">TL2</option>
-                                        <option value="">TL3</option>
-                                        <option value="">TL4</option>
+                                        <option value="TL1">TL1</option>
+                                        <option value="TL2">TL2</option>
+                                        <option value="TL3">TL3</option>
+                                        <option value="TL4">TL4</option>
                                     </select>
                                 </div>
                             </div>
@@ -161,11 +160,11 @@
                     <div class="form-grid">
                         <div>
                             <label for="jobTitle">Job Title</label>
-                            <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle" />
+                            <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle" [ngClass]="{ required: detailsForm.controls['jobTitle'].errors }" />
                         </div>
                         <div>
                             <label for="employmentStatus">Employment Status</label>
-                            <select class="form-select text-start" formControlName="employmentStatus">
+                            <select class="form-select text-start" formControlName="employmentStatus" [ngClass]="{ required: detailsForm.controls['employmentStatus'].errors }">
                                 <option value="" disabled>--Select Employment Status--</option>
                                 <option value="trainee">Trainee</option>
                                 <option value="contract">Contract</option>
@@ -175,11 +174,11 @@
                         </div>
                         <div>
                             <label for="joinedDate">Join Date</label>
-                            <input type="Date" name="joinedDate" id="joinedDate" formControlName="joinedDate" />
+                            <input type="Date" name="joinedDate" id="joinedDate" formControlName="joinedDate" [ngClass]="{ required: detailsForm.controls['joinedDate'].errors }" />
                         </div>
                         <div>
                             <label for="skillset">Skillset</label>
-                            <input type="text" name="skillset" id="skillset" formControlName="skillset" />
+                            <input type="text" name="skillset" id="skillset" formControlName="skillset" [ngClass]="{ required: detailsForm.controls['skillset'].errors }" />
                         </div>
                     </div>
                     <hr>
@@ -189,11 +188,11 @@
                             <div class="form-grid mb-3">
                                 <div>
                                     <label for="payGrade">Pay Grade</label>
-                                    <input type="text" name="payGrade" id="payGrade" formControlName="payGrade" />
+                                    <input type="text" name="payGrade" id="payGrade" formControlName="payGrade" [ngClass]="{ required: detailsForm.controls['payGrade'].errors }"/>
                                 </div>
                                 <div>
                                     <label>Currency</label>
-                                    <select class="form-select text-start" formControlName="currency">
+                                    <select class="form-select text-start" formControlName="currency" [ngClass]="{ required: detailsForm.controls['currency'].errors }">
                                         <option value="" disabled>--Select Currency--</option>
                                         <option value="Rupee">Rupee</option>
                                         <option value="Dollar">Dollar</option>
@@ -203,11 +202,11 @@
                                 <div>
                                     <label for="basicSalary">Basic Salary</label>
                                     <input type="text" name="basicSalary" id="basicSalary"
-                                        formControlName="basicSalary" />
+                                        formControlName="basicSalary" [ngClass]="{ required: detailsForm.controls['basicSalary'].errors }" />
                                 </div>
                                 <div>
                                     <label>Pay Frequency</label>
-                                    <select class="form-select text-start" formControlName="payFrequency">
+                                    <select class="form-select text-start" formControlName="payFrequency" [ngClass]="{ required: detailsForm.controls['payFrequency'].errors }" >
                                         <option value="" disabled>--Select Pay Frequency--</option>
                                         <option value="Daily">Daily</option>
                                         <option value="Weekly">Weekly</option>
