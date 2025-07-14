@@ -20,11 +20,13 @@ export class EmployeesFormComponent implements OnInit {
   @Input() activeTab: any;
   @Input() isEdit:any;
   @Output() activeTabEmit = new EventEmitter();
+  @Output() activeViewOrEdit = new EventEmitter();
 
   // personalForm!:FormGroup;
   // employeeForm!:FormGroup;
 
   employmentTabEnabled: boolean = false;
+  currentMode:'Edit'|'View' = 'View';
 
   constructor() {}
 
@@ -49,6 +51,10 @@ export class EmployeesFormComponent implements OnInit {
   activatePersonalTab() {
     this.activeTab = 'personal';
   }
+
+   viewOrEdit(mode: 'Edit' | 'View'): void {
+    this.currentMode = mode;
+    this.isEdit      = mode === 'View';
 
   // get isPersonalDetailsValid():boolean{
   //   const personalControls=[
@@ -79,4 +85,4 @@ export class EmployeesFormComponent implements OnInit {
   // }
 
 
-}
+   }}

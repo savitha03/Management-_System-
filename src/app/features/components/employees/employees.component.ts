@@ -364,4 +364,8 @@ export class EmployeesComponent {
     this.activeTab = event;
     console.log(this.activeTab);
   }
+
+  activeViewOrEdit(event:any){
+    
+  }
 }

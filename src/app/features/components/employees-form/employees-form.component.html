@@ -9,10 +9,10 @@
             </button>
         </div>
         <div>
-            <button class="btn btn-danger" *ngIf="isEdit">
+            <button class="btn btn-danger" *ngIf="isEdit" (click)="viewOrEdit('Edit')">
               <i class="bi bi-pencil-square"></i>  Edit
             </button>
-            <button class="btn btn-secondary" *ngIf="!isEdit">
+            <button class="btn btn-secondary" *ngIf="!isEdit" (click)="viewOrEdit('View')">
               <i class="bi bi-binoculars"></i>  View 
             </button>
         </div>
