@@ -32,7 +32,6 @@ export class EmployeesFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.detailsForm.get('employeeId').setErrors(true);
-    console.log(this.detailsForm);
   }
   navButtons(value: any) {
     if (value === 'next') {
@@ -52,9 +51,13 @@ export class EmployeesFormComponent implements OnInit {
     this.activeTab = 'personal';
   }
 
+
+
    viewOrEdit(mode: 'Edit' | 'View'): void {
     this.currentMode = mode;
     this.isEdit      = mode === 'View';
+
+    this.activeViewOrEdit.emit(this.isEdit)
 
   // get isPersonalDetailsValid():boolean{
   //   const personalControls=[

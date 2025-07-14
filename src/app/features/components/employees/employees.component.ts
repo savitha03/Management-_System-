@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { EmployeesFormComponent } from '../../components/employees-form/employees-form.component';
 import { EmployeesListComponent } from '../../components/employees-list/employees-list.component';
 import { ColDef, GridOptions } from 'ag-grid-community';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
-export class EmployeesComponent {
+export class EmployeesComponent  implements OnInit{
 
   isEdit=false;
   selectedRow: any = null;
@@ -219,6 +219,12 @@ export class EmployeesComponent {
   ngOnInit(): void {
     this.toggleActiveFilter('all');
     this.formBuilder();
+
+    if(this.isEdit){
+      this.detailsForm.enable();
+    }else{
+      this.detailsForm.disable();
+    }
   }
 
   toggleActiveFilter(status: 'all' | 'active' | 'closed') {
@@ -362,10 +368,15 @@ export class EmployeesComponent {
 
   activeTabEmit(event: any) {
     this.activeTab = event;
-    console.log(this.activeTab);
   }
 
   activeViewOrEdit(event:any){
+    this.isEdit=event
+    if(this.isEdit){
+      this.detailsForm.enable()
+    }else{
+      this.detailsForm.disable()
+    }
     
   }
 }
