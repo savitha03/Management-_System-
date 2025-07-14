@@ -1,0 +1,44 @@
+
+.right-panel {
+  position: fixed;
+  top: 0;
+  right: -370px;
+  width: 370px;
+  height: 100%;
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1050;
+}
+
+.right-panel.open {
+  right: 0;
+}
+
+.circle-toggle-btn {
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    transform: translateY(-50%);
+    transform: translateX(-54%);
+    width: 43px;
+    height: 36px;
+    background-color: #1b65a8;
+    color: white;
+    border: none;
+    border-radius: 50% 1% 0% 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 1060;
+}
+
+.circle-toggle-btn:hover {
+  background-color: #154c7a;
+}

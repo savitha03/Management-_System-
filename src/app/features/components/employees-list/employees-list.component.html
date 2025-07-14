@@ -22,7 +22,7 @@
  
   <ag-grid-angular class="ag-theme-alpine w-100 mt-2" style="height: 77% !important;" [rowData]="rowData"
     [columnDefs]="colDefs" [defaultColDef]="defaultColDefs" rowSelection="single"
-    [suppressCellFocus]="true" (rowClicked)="onRowClicked($event)" (gridReady)="onGridReadyFn?.($event)"></ag-grid-angular>
+    [suppressCellFocus]="true" (rowClicked)="onRowClicked($event)" (gridReady)="gridReady.emit($event)"></ag-grid-angular>
 
   <div class="my-3">
     <label class="form-label fw-semibold d-block mb-2">Filter by Status:</label>

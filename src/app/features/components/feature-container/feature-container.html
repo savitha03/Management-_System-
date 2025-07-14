@@ -11,6 +11,21 @@
 
     <div class="col-md-10 h-100 p-2">
       <router-outlet></router-outlet>
+      <div class="right-panel" [class.open]="isOpen">
+
+  <button class="circle-toggle-btn" (click)="togglePanel()">
+    <span class="fs-2 mb-2" *ngIf="isOpen">&laquo;</span>
+    <span class="fs-2 mb-2" *ngIf="!isOpen">&raquo;</span>
+  </button>
+
+  <div class="panel-header px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+    <strong>Validations</strong>
+    <button class="btn-close" (click)="isOpen = false" aria-label="Close"></button>
+  </div>
+  <div class="panel-body p-3">
+  </div>
+
+</div>
     </div>
   </div>
 

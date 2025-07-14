@@ -42,13 +42,23 @@ export class EmployeesListComponent implements OnInit {
   @Input() gridApi: any;
   @Input() gridColumnApi: any;
   @Input() gridOptions!: GridOptions;
-  @Input() onGridReadyFn: any;
+  @Output() gridReady = new EventEmitter<any>();
+  
 
   @Output() applicationEventService = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit(): void {}
+
+
+  private emitRowClicked(rowData: any) {
+    this.applicationEventService.emit({
+      name: 'ROW_CLICKED',
+      component: 'EmployeesListComponent',
+      value: { selectedRow: rowData },
+    });
+  }
 
   onRowClicked(events: any): void {
     const event: any = {

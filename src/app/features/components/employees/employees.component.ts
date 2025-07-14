@@ -7,8 +7,10 @@ import {
   FormBuilder,
   FormGroup,
   FormsModule,
+  NgModel,
   Validators,
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-employees',
@@ -17,6 +19,8 @@ import {
   styleUrl: './employees.component.css',
 })
 export class EmployeesComponent {
+
+  isEdit=false;
   selectedRow: any = null;
   filterType: 'all' | 'active' | 'closed' = 'all';
 
@@ -55,7 +59,6 @@ export class EmployeesComponent {
       width: 260,
       resizable: true,
       cellRenderer: (params: any) => {
-       
         const isActive =
           params.data.empStatus === 'ACTIVE'
             ? true
@@ -75,9 +78,39 @@ export class EmployeesComponent {
     },
   ];
 
- 
-
   allRowData = [
+    {
+      employeeId: 'T2504',
+      empStatus: 'CLOSED',
+      firstName: 'Aparna',
+      lastName: 'Kumar',
+      fullName: 'Aparna Kumar',
+      dob: '1993-09-20',
+      gender: 'Female',
+      maritalStatus: 'Married',
+      nationality: 'Indian',
+      phoneNumber: '9812345678',
+      alternateNumber: '9988776655',
+      email: 'aparna.kumar@example.com',
+      streetAddress: '45 Green Park Avenue',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      zipCode: '560001',
+      country: 'India',
+      role: 'developer',
+      teamManager: 'Rahul Menon',
+      projectManager: 'Sneha Rajan',
+      teamLead: 'TL3',
+      jobTitle: 'Backend Developer',
+      employmentStatus: 'Active',
+      joinedDate: '2022-02-10',
+      skillset: 'Node.js, Express, SQL',
+      payGrade: 'PG2',
+      currency: 'INR',
+      basicSalary: '600000',
+      payFrequency: 'Monthly',
+    },
+
     {
       employeeId: 'ST1176',
       empStatus: 'ACTIVE',
@@ -202,6 +235,28 @@ export class EmployeesComponent {
       this.rowData = [...this.allRowData];
     }
     this.selectedRow = null;
+    if (this.gridApi) {
+      this.gridApi.refreshClientSideRowModel();
+      setTimeout(() => {
+        const firstNode = this.gridApi?.getDisplayedRowAtIndex(0);
+        if (firstNode) {
+          firstNode?.setSelected(true); // highlights the row
+          // this.emitRowClicked(firstNode.data); // send data upward
+          this.onRowSelected(firstNode.data);
+        }
+      }, 100);
+    }
+  }
+
+  onGridReady(params: any) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+
+    const firstNode = this.gridApi?.getDisplayedRowAtIndex(0);
+    if (firstNode) {
+      firstNode.setSelected(true); // highlights first row
+      this.onRowSelected(firstNode.data); // directly trigger
+    }
   }
 
   onRowSelected(row: any) {
@@ -308,10 +363,5 @@ export class EmployeesComponent {
   activeTabEmit(event: any) {
     this.activeTab = event;
     console.log(this.activeTab);
-  }
-
-  onGridReady(params: any) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
   }
 }
