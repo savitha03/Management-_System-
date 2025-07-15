@@ -31,7 +31,7 @@ export class EmployeesFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.detailsForm.get('employeeId').setErrors(true);
+    // this.detailsForm.get('employeeId').setErrors(true);
   }
   navButtons(value: any) {
     if (value === 'next') {

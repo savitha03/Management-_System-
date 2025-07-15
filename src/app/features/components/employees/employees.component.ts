@@ -11,6 +11,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { detailsFormObject } from '../../forms/employee-details.forms';
+import { FormUtilServiceService } from '../../../shared/services/form-util-service.service';
 
 @Component({
   selector: 'app-employees',
@@ -21,6 +23,7 @@ import { CommonModule } from '@angular/common';
 export class EmployeesComponent  implements OnInit{
 
   isEdit=false;
+  isNewEmployee=false;
   selectedRow: any = null;
   filterType: 'all' | 'active' | 'closed' = 'all';
 
@@ -34,7 +37,11 @@ export class EmployeesComponent  implements OnInit{
       componentParent: this,
     },
   };
+
+
   detailsForm!: FormGroup;
+  detailsFormEntity:any=detailsFormObject;
+
   newEmployee: any;
 
   colDefs: ColDef[] = [
@@ -65,7 +72,6 @@ export class EmployeesComponent  implements OnInit{
             : params.data.empStatus === 'CLOSED'
             ? false
             : null;
-        console.log(isActive);
 
         const icon =
           isActive === true
@@ -214,7 +220,7 @@ export class EmployeesComponent  implements OnInit{
     filter: true,
   };
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder , private FormUtilServiceService:FormUtilServiceService) {}
 
   ngOnInit(): void {
     this.toggleActiveFilter('all');
@@ -269,41 +275,55 @@ export class EmployeesComponent  implements OnInit{
     this.selectedRow = row;
     this.detailsForm.patchValue(row);
     this.activeTab = 'personal';
+
+
+    if(!this.isNewEmployee){
+      this.isEdit=false;
+    this.detailsForm.disable();
+    }
   }
 
-  formBuilder() {
-    this.detailsForm = this.fb.group({
-      employeeId: ['', Validators.required],
-      fullName: [''],
-      empStatus: ['ACTIVE', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      dob: ['', Validators.required],
-      gender: ['', Validators.required],
-      maritalStatus: ['', Validators.required],
-      nationality: ['', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      alternateNumber: ['', [Validators.pattern(/^\d{10}$/)]],
-      email: ['', Validators.required],
-      streetAddress: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      zipCode: ['', Validators.required],
-      country: ['', Validators.required],
-      role: ['', Validators.required],
-      teamManager: ['', Validators.required],
-      projectManager: ['', Validators.required],
-      teamLead: ['', Validators.required],
-      jobTitle: ['', Validators.required],
-      employmentStatus: ['', Validators.required],
-      joinedDate: ['', Validators.required],
-      skillset: ['', Validators.required],
-      payGrade: ['', Validators.required],
-      currency: ['', Validators.required],
-      basicSalary: ['', Validators.required],
-      payFrequency: ['', Validators.required],
-    });
+  formBuilder(){
+    this.detailsForm=this.FormUtilServiceService.buildReactiveForm(
+      this.detailsFormEntity,
+    );
+    console.log(this.detailsForm);
+    
   }
+
+  // formBuilder() {
+  //   this.detailsForm = this.fb.group({
+  //     employeeId: ['', Validators.required],
+  //     fullName: [''],
+  //     empStatus: ['ACTIVE', Validators.required],
+  //     firstName: ['', Validators.required],
+  //     lastName: ['', Validators.required],
+  //     dob: ['', Validators.required],
+  //     gender: ['', Validators.required],
+  //     maritalStatus: ['', Validators.required],
+  //     nationality: ['', Validators.required],
+  //     phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+  //     alternateNumber: ['', [Validators.pattern(/^\d{10}$/)]],
+  //     email: ['', Validators.required],
+  //     streetAddress: ['', Validators.required],
+  //     city: ['', Validators.required],
+  //     state: ['', Validators.required],
+  //     zipCode: ['', Validators.required],
+  //     country: ['', Validators.required],
+  //     role: ['', Validators.required],
+  //     teamManager: ['', Validators.required],
+  //     projectManager: ['', Validators.required],
+  //     teamLead: ['', Validators.required],
+  //     jobTitle: ['', Validators.required],
+  //     employmentStatus: ['', Validators.required],
+  //     joinedDate: ['', Validators.required],
+  //     skillset: ['', Validators.required],
+  //     payGrade: ['', Validators.required],
+  //     currency: ['', Validators.required],
+  //     basicSalary: ['', Validators.required],
+  //     payFrequency: ['', Validators.required],
+  //   });
+  // }
 
   handleAppEvent(event: any) {
     switch (event.name) {
@@ -317,11 +337,9 @@ export class EmployeesComponent  implements OnInit{
       }
       case 'VALIDATE_NEW_EMPLOYEE': {
         if (this.detailsForm.invalid) {
-          console.warn('Form invalid');
           return;
         }
         if (this.detailsForm.dirty && this.detailsForm.valid) {
-          console.log('Saving employee...', this.detailsForm.getRawValue());
         }
         this.detailsForm.controls['employeeId'].enable();
         this.handleAppEvent({
@@ -339,6 +357,19 @@ export class EmployeesComponent  implements OnInit{
         this.selectedRow = newRow;
         this.detailsForm.reset(newRow); // Fill default values
         this.detailsForm.controls['employeeId'].enable();
+
+        this.isEdit = true;
+        this.isNewEmployee=true;
+        this.detailsForm.enable();
+
+        Object.keys(this.detailsForm.controls).forEach(key=>{
+          const control=this.detailsForm.controls[key];
+          control.markAsTouched();
+          control.updateValueAndValidity();
+        });
+
+        this.detailsForm.get('employeeId')!.setErrors({reqired:true});
+        this.detailsForm.get('employeeId')!.markAsTouched();
 
         if (this.gridApi) {
           setTimeout(() => {
@@ -379,4 +410,33 @@ export class EmployeesComponent  implements OnInit{
     }
     
   }
-}
+
+
+//   formBuilder(){
+//     const group:any={};
+//     Object.keys(detailsFormObject).forEach((key) => {
+//     const field = detailsFormObject[key];
+//     const validators = [];
+
+//     if (field.validations?.includes('required')) {
+//       validators.push(Validators.required);
+//     }
+
+//     if (field.validations?.some((v:string) => v.startsWith('pattern:'))) {
+//       const pattern = field.validations.find((v:string) => v.startsWith('pattern:'))?.split(':')[1];
+//       validators.push(Validators.pattern(new RegExp(pattern!)));
+//     }
+
+//     if (field.validations?.includes('email')) {
+//       validators.push(Validators.email);
+//     }
+
+//     group[key] = this.fb.control({ value: field.value, disabled: field.disabled }, validators);
+//   });
+
+//   this.detailsForm = this.fb.group(group);
+// }
+
+
+  }
+
