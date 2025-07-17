@@ -25,6 +25,14 @@ import { FormBuilder, ValidatorFn, Validators } from '@angular/forms';
   validations: any;
   disabled: boolean | any;
 }
+class InputError {
+  name: string;
+  content: string;
+  constructor(name: string, content: string) {
+    this.name = name;
+    this.content = content;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -111,4 +119,37 @@ export class FormUtilServiceService {
       }
     }
   }
+
+    parseValidationErrors(formControls: any, formObject: IFormObject): Array<any> {
+    const errors: Array<any> = [];
+    for (const key in formControls) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (formControls.hasOwnProperty(key)) {
+        if (formControls[key].errors !== null) {
+          for (const item in formControls[key].errors) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (formControls[key].errors.hasOwnProperty(item)) {
+              if (formObject[key].validations !== null) {
+                const validations: any = formObject[key].validations;
+                validations.forEach((er: any) => {
+                  if (item.toLowerCase() === er.validator?.toLowerCase()) {
+                    errors.push(
+                      new InputError(
+                        key,
+                        `${
+                           er.message
+                        }`,
+                      ),
+                    );
+                  }
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+    return errors;
+  }
+
 }

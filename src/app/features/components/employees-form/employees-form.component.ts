@@ -40,11 +40,15 @@ export class EmployeesFormComponent implements OnInit {
       this.activeTab = 'personal';
     } else {
     }
-    this.activeTabEmitter();
+    this.activeTabEmitter(value);
   }
 
-  activeTabEmitter() {
-    this.activeTabEmit.emit(this.activeTab);
+  activeTabEmitter(value:any) {
+    const payload={
+      btnValue:value,
+      activeTab:this.activeTab
+    }
+    this.activeTabEmit.emit(payload);
   }
 
   activatePersonalTab() {

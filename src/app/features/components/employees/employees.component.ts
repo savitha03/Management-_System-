@@ -20,10 +20,9 @@ import { FormUtilServiceService } from '../../../shared/services/form-util-servi
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
-export class EmployeesComponent  implements OnInit{
-
-  isEdit=false;
-  isNewEmployee=false;
+export class EmployeesComponent implements OnInit {
+  isEdit = false;
+  isNewEmployee = false;
   selectedRow: any = null;
   filterType: 'all' | 'active' | 'closed' = 'all';
 
@@ -38,9 +37,8 @@ export class EmployeesComponent  implements OnInit{
     },
   };
 
-
   detailsForm!: FormGroup;
-  detailsFormEntity:any=detailsFormObject;
+  detailsFormEntity: any = detailsFormObject;
 
   newEmployee: any;
 
@@ -219,16 +217,20 @@ export class EmployeesComponent  implements OnInit{
     sortable: true,
     filter: true,
   };
+  pageErrors: any[]=[];
 
-  constructor(private fb: FormBuilder , private FormUtilServiceService:FormUtilServiceService) {}
+  constructor(
+    private fb: FormBuilder,
+    private FormUtilServiceService: FormUtilServiceService
+  ) {}
 
   ngOnInit(): void {
     this.toggleActiveFilter('all');
     this.formBuilder();
 
-    if(this.isEdit){
+    if (this.isEdit) {
       this.detailsForm.enable();
-    }else{
+    } else {
       this.detailsForm.disable();
     }
   }
@@ -276,19 +278,17 @@ export class EmployeesComponent  implements OnInit{
     this.detailsForm.patchValue(row);
     this.activeTab = 'personal';
 
-
-    if(!this.isNewEmployee){
-      this.isEdit=false;
-    this.detailsForm.disable();
+    if (!this.isNewEmployee) {
+      this.isEdit = false;
+      this.detailsForm.disable();
     }
   }
 
-  formBuilder(){
-    this.detailsForm=this.FormUtilServiceService.buildReactiveForm(
-      this.detailsFormEntity,
+  formBuilder() {
+    this.detailsForm = this.FormUtilServiceService.buildReactiveForm(
+      this.detailsFormEntity
     );
     console.log(this.detailsForm);
-    
   }
 
   // formBuilder() {
@@ -349,27 +349,39 @@ export class EmployeesComponent  implements OnInit{
         });
         break;
       }
+      case 'SHOW_ERRORS': {
+            this.pageErrors = this.FormUtilServiceService.parseValidationErrors(
+              event.value.controls,
+              event.value.objects,
+            );
+            console.log(this.pageErrors);
+            
+          break;
+        }
       case 'NEW_EMPLOYEE': {
         const newRow = this.getDefaultEmployee();
+
+        this.isNewEmployee = true;
+        this.isEdit = true;
 
         this.allRowData = [newRow, ...this.allRowData];
         this.toggleActiveFilter(this.filterType);
         this.selectedRow = newRow;
         this.detailsForm.reset(newRow); // Fill default values
-        this.detailsForm.controls['employeeId'].enable();
-
-        this.isEdit = true;
-        this.isNewEmployee=true;
         this.detailsForm.enable();
+        // this.detailsForm.controls['employeeId'].enable();
 
-        Object.keys(this.detailsForm.controls).forEach(key=>{
-          const control=this.detailsForm.controls[key];
-          control.markAsTouched();
-          control.updateValueAndValidity();
-        });
+        this.detailsForm.markAllAsTouched();
+        // this.detailsForm.updateValueAndValidity();
 
-        this.detailsForm.get('employeeId')!.setErrors({reqired:true});
-        this.detailsForm.get('employeeId')!.markAsTouched();
+        // Object.keys(this.detailsForm.controls).forEach(key=>{
+        //   const control=this.detailsForm.controls[key];
+        //   control.markAsTouched();
+        //   control.updateValueAndValidity();
+        // });
+
+        this.detailsForm.get('employeeId')!.setErrors({ required: true });
+        // this.detailsForm.get('employeeId')!.markAsTouched();
 
         if (this.gridApi) {
           setTimeout(() => {
@@ -380,6 +392,8 @@ export class EmployeesComponent  implements OnInit{
             });
           }, 50);
         }
+        console.log(this.detailsForm);
+        
         break;
       }
     }
@@ -398,45 +412,50 @@ export class EmployeesComponent  implements OnInit{
   }
 
   activeTabEmit(event: any) {
-    this.activeTab = event;
+    this.activeTab = event.activeTab;
+
+     this.pageErrors = this.FormUtilServiceService.parseValidationErrors(
+              this.detailsForm.controls,
+              this.detailsFormEntity,
+            );
+            console.log(this.pageErrors);
   }
 
-  activeViewOrEdit(event:any){
-    this.isEdit=event
-    if(this.isEdit){
-      this.detailsForm.enable()
-    }else{
-      this.detailsForm.disable()
+  activeViewOrEdit(event: any) {
+    this.isEdit = event;
+    if (this.isEdit) {
+      this.detailsForm.enable();
+    } else {
+      this.detailsForm.disable();
     }
-    
   }
 
-
-//   formBuilder(){
-//     const group:any={};
-//     Object.keys(detailsFormObject).forEach((key) => {
-//     const field = detailsFormObject[key];
-//     const validators = [];
-
-//     if (field.validations?.includes('required')) {
-//       validators.push(Validators.required);
-//     }
-
-//     if (field.validations?.some((v:string) => v.startsWith('pattern:'))) {
-//       const pattern = field.validations.find((v:string) => v.startsWith('pattern:'))?.split(':')[1];
-//       validators.push(Validators.pattern(new RegExp(pattern!)));
-//     }
-
-//     if (field.validations?.includes('email')) {
-//       validators.push(Validators.email);
-//     }
-
-//     group[key] = this.fb.control({ value: field.value, disabled: field.disabled }, validators);
-//   });
-
-//   this.detailsForm = this.fb.group(group);
-// }
-
-
+  onSumbit() {
+    this.isNewEmployee=false;
   }
 
+  //   formBuilder(){
+  //     const group:any={};
+  //     Object.keys(detailsFormObject).forEach((key) => {
+  //     const field = detailsFormObject[key];
+  //     const validators = [];
+
+  //     if (field.validations?.includes('required')) {
+  //       validators.push(Validators.required);
+  //     }
+
+  //     if (field.validations?.some((v:string) => v.startsWith('pattern:'))) {
+  //       const pattern = field.validations.find((v:string) => v.startsWith('pattern:'))?.split(':')[1];
+  //       validators.push(Validators.pattern(new RegExp(pattern!)));
+  //     }
+
+  //     if (field.validations?.includes('email')) {
+  //       validators.push(Validators.email);
+  //     }
+
+  //     group[key] = this.fb.control({ value: field.value, disabled: field.disabled }, validators);
+  //   });
+
+  //   this.detailsForm = this.fb.group(group);
+  // }
+}

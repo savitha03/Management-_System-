@@ -9,8 +9,9 @@ export const detailsFormObject: any = {
     type: 'InputText',
     validations: [
       {
-        required: 'Employee Code should not be blank',
-        length:'Employee Code length should not be greater than 8 char '
+        validator: 'required',
+        value: true,
+        message: 'Employee Code should not be blank',
       }
     ],
     disabled: false,
@@ -20,7 +21,13 @@ export const detailsFormObject: any = {
     label: 'Full Name',
     value: '',
     type: 'InputText',
-    validations: [],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Name should not be blank',
+      }
+    ],
     disabled: false,
   },
   empStatus: {
@@ -28,7 +35,7 @@ export const detailsFormObject: any = {
     label: 'Employment Status',
     value: 'ACTIVE',
     type: 'InputText',
-    validations: ['required'],
+    validations: [],
     disabled: false,
   },
   firstName: {
@@ -36,7 +43,11 @@ export const detailsFormObject: any = {
     label: 'First Name',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [ {
+        validator: 'required',
+        value: true,
+        message: 'Employee First Name should not be blank',
+      }],
     disabled: false,
   },
   lastName: {
@@ -44,7 +55,11 @@ export const detailsFormObject: any = {
     label: 'Last Name',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [ {
+        validator: 'required',
+        value: true,
+        message: 'Employee Last Name should not be blank',
+      }],
     disabled: false,
   },
   dob: {
@@ -52,7 +67,11 @@ export const detailsFormObject: any = {
     label: 'Date of Birth',
     value: '',
     type: 'Date',
-    validations: ['required'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Date Of Birth should not be blank',
+      }],
     disabled: false,
   },
   gender: {
@@ -60,7 +79,11 @@ export const detailsFormObject: any = {
     label: 'Gender',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Gender should be selected',
+      }],
     disabled: false,
   },
   maritalStatus: {
@@ -68,7 +91,11 @@ export const detailsFormObject: any = {
     label: 'Marital Status',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Marital Status should be selected',
+      }],
     disabled: false,
   },
   nationality: {
@@ -76,7 +103,11 @@ export const detailsFormObject: any = {
     label: 'Nationality',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Nationality should be selected',
+      }],
     disabled: false,
   },
   phoneNumber: {
@@ -84,7 +115,11 @@ export const detailsFormObject: any = {
     label: 'Phone Number',
     value: '',
     type: 'InputText',
-    validations: ['required', 'pattern:^\\d{10}$'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Phone number should not be blank',
+      }],
     disabled: false,
   },
   alternateNumber: {
@@ -92,7 +127,7 @@ export const detailsFormObject: any = {
     label: 'Alternate Number',
     value: '',
     type: 'InputText',
-    validations: ['pattern:^\\d{10}$'],
+    validations: [],
     disabled: false,
   },
   email: {
@@ -100,7 +135,11 @@ export const detailsFormObject: any = {
     label: 'Email',
     value: '',
     type: 'InputText',
-    validations: ['required', 'email'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee email should not be blank',
+      }],
     disabled: false,
   },
   streetAddress: {
@@ -108,7 +147,11 @@ export const detailsFormObject: any = {
     label: 'Street Address',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [{
+        validator: 'required',
+        value: true,
+        message: 'Employee Street Address should not be blank',
+      }],
     disabled: false,
   },
   city: {
@@ -116,7 +159,13 @@ export const detailsFormObject: any = {
     label: 'City',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee City should not be blank',
+      },
+    ],
     disabled: false,
   },
   state: {
@@ -124,7 +173,13 @@ export const detailsFormObject: any = {
     label: 'State',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee State should not be blank',
+      },
+    ],
     disabled: false,
   },
   zipCode: {
@@ -132,7 +187,13 @@ export const detailsFormObject: any = {
     label: 'Zip Code',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Zip Code should not be blank',
+      },
+    ],
     disabled: false,
   },
   country: {
@@ -140,7 +201,13 @@ export const detailsFormObject: any = {
     label: 'Country',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Country should not be blank',
+      },
+    ],
     disabled: false,
   },
   role: {
@@ -148,7 +215,13 @@ export const detailsFormObject: any = {
     label: 'Role',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Role should be selected',
+      },
+    ],
     disabled: false,
   },
   teamManager: {
@@ -156,7 +229,13 @@ export const detailsFormObject: any = {
     label: 'Team Manager',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Team Manager should be selected',
+      },
+    ],
     disabled: false,
   },
   projectManager: {
@@ -164,7 +243,13 @@ export const detailsFormObject: any = {
     label: 'Project Manager',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Project Manager should be selected',
+      },
+    ],
     disabled: false,
   },
   teamLead: {
@@ -172,7 +257,13 @@ export const detailsFormObject: any = {
     label: 'Team Lead',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Team Lead should be selected',
+      },
+    ],
     disabled: false,
   },
   jobTitle: {
@@ -180,7 +271,13 @@ export const detailsFormObject: any = {
     label: 'Job Title',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Job Title should not be blank',
+      },
+    ],
     disabled: false,
   },
   employmentStatus: {
@@ -188,7 +285,13 @@ export const detailsFormObject: any = {
     label: 'Employment Status',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Employment Status should not be blank',
+      },
+    ],
     disabled: false,
   },
   joinedDate: {
@@ -196,7 +299,13 @@ export const detailsFormObject: any = {
     label: 'Joined Date',
     value: '',
     type: 'Date',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Joined Date should not be blank',
+      },
+    ],
     disabled: false,
   },
   skillset: {
@@ -204,7 +313,13 @@ export const detailsFormObject: any = {
     label: 'Skillset',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Skillset should not be blank',
+      },
+    ],
     disabled: false,
   },
   payGrade: {
@@ -212,7 +327,13 @@ export const detailsFormObject: any = {
     label: 'Pay Grade',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Pay Grade should not be blank',
+      },
+    ],
     disabled: false,
   },
   currency: {
@@ -220,7 +341,13 @@ export const detailsFormObject: any = {
     label: 'Currency',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Currency should be selected',
+      },
+    ],
     disabled: false,
   },
   basicSalary: {
@@ -228,7 +355,13 @@ export const detailsFormObject: any = {
     label: 'Basic Salary',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Basic Salary should be selected',
+      },
+    ],
     disabled: false,
   },
   payFrequency: {
@@ -236,7 +369,13 @@ export const detailsFormObject: any = {
     label: 'Pay Frequency',
     value: '',
     type: 'InputText',
-    validations: ['required'],
+    validations: [
+      {
+        validator: 'required',
+        value: true,
+        message: 'Employee Pay Frequency should be selected',
+      },
+    ],
     disabled: false,
   },
-};
+ };
