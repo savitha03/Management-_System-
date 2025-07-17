@@ -2,7 +2,7 @@
  <div class="mb-4">
     <label for="employeeSelect">Select Employee <span class="text-danger">*</span></label> 
     
-            <ng-select id="employeeSelect" [items]="filteredEmployees" bindLabel="name" bindValue="id"
+            <ng-select style="width: 300px;" id="employeeSelect" [items]="filteredEmployees" bindLabel="name" bindValue="id"
         placeholder="Search by Employee" [(ngModel)]="selectedEmployeeId" [typeahead]="employeeInput$"
         [searchFn]="customSearchFn" (change)="onEmployeeSelect()" class="ng-select-input">
         <ng-template ng-option-tmp let-item="item">

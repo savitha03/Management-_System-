@@ -1,7 +1,7 @@
 <div class="container my-4 p-4 bg-light border rounded-3 shadow-sm" style="height: 80vh;">
     <div class="tabs mt-1 d-flex justify-content-between">
         <div>
-            <button class="tab-btn mx-3" [class.active]="activeTab === 'personal'" disabled>
+            <button class="tab-btn me-3" [class.active]="activeTab === 'personal'" disabled>
                 Personal Details
             </button>
             <button class="tab-btn" [class.active]="activeTab === 'employment'" disabled>
@@ -54,14 +54,19 @@
                             <input [ngClass]="{ required: detailsForm.controls['dob'].errors }" type="date"
                                 formControlName="dob" />
                         </div>
+
+                        <!-- {{genderList$ | async |json}} -->
                         <div>
                             <label>Gender</label>
                             <select formControlName="gender"
                                 [ngClass]="{ required: detailsForm.controls['gender'].errors }">
                                 <option value="" disabled>--Select Gender Type--</option>
-                                <option value="Male">Male</option>
+                                <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.Code">
+                                    {{gender.ScreenName}}
+                                </option>
+                                <!-- <option value="Male">Male</option>
                                 <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                                <option value="Other">Other</option> -->
                             </select>
                         </div>
                         <div>

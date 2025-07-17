@@ -72,7 +72,7 @@ export class SideNav implements OnInit {
           link: 'leaves/apply-leave',
         },
         {
-          label: 'Leave History',
+          label: 'My Leave History',
           icon: 'bi bi-clock-history small text-muted',
           link: 'leaves/history',
         },

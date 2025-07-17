@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-employees-form',
@@ -19,8 +20,10 @@ export class EmployeesFormComponent implements OnInit {
   @Input() detailsForm: any;
   @Input() activeTab: any;
   @Input() isEdit:any;
+  @Input() genderList$!:Observable<any>;
   @Output() activeTabEmit = new EventEmitter();
   @Output() activeViewOrEdit = new EventEmitter();
+
 
   // personalForm!:FormGroup;
   // employeeForm!:FormGroup;

@@ -13,6 +13,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { detailsFormObject } from '../../forms/employee-details.forms';
 import { FormUtilServiceService } from '../../../shared/services/form-util-service.service';
+import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-employees',
@@ -27,6 +29,8 @@ export class EmployeesComponent implements OnInit {
   filterType: 'all' | 'active' | 'closed' = 'all';
 
   public activeTab = 'personal';
+
+  genderList$!: Observable<any>;
 
   gridApi: any;
   gridColumnApi: any;
@@ -90,7 +94,7 @@ export class EmployeesComponent implements OnInit {
       lastName: 'Kumar',
       fullName: 'Aparna Kumar',
       dob: '1993-09-20',
-      gender: 'Female',
+      gender: 'FEMALE',
       maritalStatus: 'Married',
       nationality: 'Indian',
       phoneNumber: '9812345678',
@@ -122,7 +126,7 @@ export class EmployeesComponent implements OnInit {
       lastName: 'Thiruselvam',
       fullName: 'Vigneshwaran Thiruselvam',
       dob: '1990-05-12',
-      gender: 'Male',
+      gender: 'MALE',
       maritalStatus: 'Single',
       nationality: 'Indian',
       phoneNumber: '9876543210',
@@ -153,7 +157,7 @@ export class EmployeesComponent implements OnInit {
       lastName: 'S',
       fullName: 'Savitha S',
       dob: '1995-08-20',
-      gender: 'Female',
+      gender: 'FEMALE',
       maritalStatus: 'Married',
       nationality: 'Indian',
       phoneNumber: '9988776655',
@@ -184,7 +188,7 @@ export class EmployeesComponent implements OnInit {
       lastName: 'R',
       fullName: 'Ravishankar R',
       dob: '1992-03-11',
-      gender: 'Male',
+      gender: 'MALE',
       maritalStatus: 'Single',
       nationality: 'Indian',
       phoneNumber: '9012345678',
@@ -217,16 +221,18 @@ export class EmployeesComponent implements OnInit {
     sortable: true,
     filter: true,
   };
-  pageErrors: any[]=[];
+  pageErrors: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private FormUtilServiceService: FormUtilServiceService
+    private formUtilServiceService: FormUtilServiceService,
+    private featureCommonService: FeatureCommonServiceService
   ) {}
 
   ngOnInit(): void {
     this.toggleActiveFilter('all');
     this.formBuilder();
+    this.loadDropdowns();
 
     if (this.isEdit) {
       this.detailsForm.enable();
@@ -285,7 +291,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   formBuilder() {
-    this.detailsForm = this.FormUtilServiceService.buildReactiveForm(
+    this.detailsForm = this.formUtilServiceService.buildReactiveForm(
       this.detailsFormEntity
     );
     console.log(this.detailsForm);
@@ -350,14 +356,14 @@ export class EmployeesComponent implements OnInit {
         break;
       }
       case 'SHOW_ERRORS': {
-            this.pageErrors = this.FormUtilServiceService.parseValidationErrors(
-              event.value.controls,
-              event.value.objects,
-            );
-            console.log(this.pageErrors);
-            
-          break;
-        }
+        this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+          event.value.controls,
+          event.value.objects
+        );
+        console.log(this.pageErrors);
+
+        break;
+      }
       case 'NEW_EMPLOYEE': {
         const newRow = this.getDefaultEmployee();
 
@@ -393,7 +399,7 @@ export class EmployeesComponent implements OnInit {
           }, 50);
         }
         console.log(this.detailsForm);
-        
+
         break;
       }
     }
@@ -414,11 +420,11 @@ export class EmployeesComponent implements OnInit {
   activeTabEmit(event: any) {
     this.activeTab = event.activeTab;
 
-     this.pageErrors = this.FormUtilServiceService.parseValidationErrors(
-              this.detailsForm.controls,
-              this.detailsFormEntity,
-            );
-            console.log(this.pageErrors);
+    this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+      this.detailsForm.controls,
+      this.detailsFormEntity
+    );
+    console.log(this.pageErrors);
   }
 
   activeViewOrEdit(event: any) {
@@ -431,31 +437,33 @@ export class EmployeesComponent implements OnInit {
   }
 
   onSumbit() {
-    this.isNewEmployee=false;
+    this.isNewEmployee = false;
   }
 
-  //   formBuilder(){
-  //     const group:any={};
-  //     Object.keys(detailsFormObject).forEach((key) => {
-  //     const field = detailsFormObject[key];
-  //     const validators = [];
-
-  //     if (field.validations?.includes('required')) {
-  //       validators.push(Validators.required);
-  //     }
-
-  //     if (field.validations?.some((v:string) => v.startsWith('pattern:'))) {
-  //       const pattern = field.validations.find((v:string) => v.startsWith('pattern:'))?.split(':')[1];
-  //       validators.push(Validators.pattern(new RegExp(pattern!)));
-  //     }
-
-  //     if (field.validations?.includes('email')) {
-  //       validators.push(Validators.email);
-  //     }
-
-  //     group[key] = this.fb.control({ value: field.value, disabled: field.disabled }, validators);
-  //   });
-
-  //   this.detailsForm = this.fb.group(group);
-  // }
+  loadDropdowns() {
+    this.featureCommonService
+      .getDropdownLists('EMPSTATUS')
+      .subscribe((data) => {
+      });
+    this.featureCommonService
+      .getDropdownLists('GENDER')
+      .subscribe((data) => {
+        this.genderList$ = of(data);
+      });
+    this.featureCommonService
+      .getDropdownLists('MARITALSTATUS')
+      .subscribe((data) => {});
+    this.featureCommonService
+      .getDropdownLists('EMPTSTATUS')
+      .subscribe((data) => {});
+    this.featureCommonService
+      .getDropdownLists('CURRENCY')
+      .subscribe((data) => {});
+    this.featureCommonService
+      .getDropdownLists('PAYFREQUENCY')
+      .subscribe((data) => {});
+    this.featureCommonService
+      .getDropdownLists('LEAVETYPE')
+      .subscribe((data) => {});
+  }
 }
