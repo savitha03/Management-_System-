@@ -20,7 +20,16 @@ export class EmployeesFormComponent implements OnInit {
   @Input() detailsForm: any;
   @Input() activeTab: any;
   @Input() isEdit:any;
+ 
   @Input() genderList$!:Observable<any>;
+  @Input() empStatus$!:Observable<any>;
+  @Input() maritalStatus$!:Observable<any>;
+  @Input() emptStatus$!:Observable<any>;
+  @Input() currency$!:Observable<any>;
+  @Input() payFrequency$!:Observable<any>;
+  @Input() role$!:Observable<any>;
+  
+
   @Output() activeTabEmit = new EventEmitter();
   @Output() activeViewOrEdit = new EventEmitter();
 

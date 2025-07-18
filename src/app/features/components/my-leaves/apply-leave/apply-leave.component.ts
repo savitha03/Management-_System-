@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
 
 @Component({
   selector: 'app-apply-leave',
@@ -13,9 +15,9 @@ export class ApplyLeaveComponent implements OnInit {
 
   leaveForm!:FormGroup;
 
-  
+  leaveType$!:Observable<any>;
 
-  constructor(private fb:FormBuilder){
+  constructor(private fb:FormBuilder , private featureCommonService:FeatureCommonServiceService){
     this.leaveForm=this.fb.group({
       typeName:['',Validators.required],
       startDate:['',Validators.required],
@@ -25,7 +27,7 @@ export class ApplyLeaveComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  
+  this.loadDropdowns();
   }
   apply() {
     if(this.leaveForm.valid){
@@ -37,5 +39,13 @@ export class ApplyLeaveComponent implements OnInit {
     }
 
 
+  }
+
+  loadDropdowns(){
+     this.featureCommonService
+      .getDropdownLists('LEAVETYPE')
+      .subscribe((data) => {
+         this.leaveType$ = of(data);
+      });
   }
 }

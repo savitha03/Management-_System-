@@ -30,7 +30,13 @@ export class EmployeesComponent implements OnInit {
 
   public activeTab = 'personal';
 
+  empStatus$!:Observable<any>;
   genderList$!: Observable<any>;
+  maritalStatus$!:Observable<any>;
+  emptStatus$!:Observable<any>;
+  currency$!:Observable<any>;
+  payFrequency$!:Observable<any>;
+  role$!:Observable<any>;
 
   gridApi: any;
   gridColumnApi: any;
@@ -95,7 +101,7 @@ export class EmployeesComponent implements OnInit {
       fullName: 'Aparna Kumar',
       dob: '1993-09-20',
       gender: 'FEMALE',
-      maritalStatus: 'Married',
+      maritalStatus: 'MARRIED',
       nationality: 'Indian',
       phoneNumber: '9812345678',
       alternateNumber: '9988776655',
@@ -127,7 +133,7 @@ export class EmployeesComponent implements OnInit {
       fullName: 'Vigneshwaran Thiruselvam',
       dob: '1990-05-12',
       gender: 'MALE',
-      maritalStatus: 'Single',
+      maritalStatus: 'SINGLE',
       nationality: 'Indian',
       phoneNumber: '9876543210',
       alternateNumber: '9123456780',
@@ -158,7 +164,7 @@ export class EmployeesComponent implements OnInit {
       fullName: 'Savitha S',
       dob: '1995-08-20',
       gender: 'FEMALE',
-      maritalStatus: 'Married',
+      maritalStatus: 'SINGLE',
       nationality: 'Indian',
       phoneNumber: '9988776655',
       alternateNumber: '9887766554',
@@ -189,7 +195,7 @@ export class EmployeesComponent implements OnInit {
       fullName: 'Ravishankar R',
       dob: '1992-03-11',
       gender: 'MALE',
-      maritalStatus: 'Single',
+      maritalStatus: 'SINGLE',
       nationality: 'Indian',
       phoneNumber: '9012345678',
       alternateNumber: '9090909090',
@@ -444,6 +450,7 @@ export class EmployeesComponent implements OnInit {
     this.featureCommonService
       .getDropdownLists('EMPSTATUS')
       .subscribe((data) => {
+        this.empStatus$ = of(data);
       });
     this.featureCommonService
       .getDropdownLists('GENDER')
@@ -452,18 +459,28 @@ export class EmployeesComponent implements OnInit {
       });
     this.featureCommonService
       .getDropdownLists('MARITALSTATUS')
-      .subscribe((data) => {});
+      .subscribe((data) => {
+          this.maritalStatus$ = of(data);
+      });
     this.featureCommonService
       .getDropdownLists('EMPTSTATUS')
-      .subscribe((data) => {});
+      .subscribe((data) => {
+         this.emptStatus$ = of(data);
+      });
     this.featureCommonService
       .getDropdownLists('CURRENCY')
-      .subscribe((data) => {});
+      .subscribe((data) => {
+         this.currency$ = of(data);
+      });
     this.featureCommonService
       .getDropdownLists('PAYFREQUENCY')
-      .subscribe((data) => {});
-    this.featureCommonService
-      .getDropdownLists('LEAVETYPE')
-      .subscribe((data) => {});
+      .subscribe((data) => {
+         this.payFrequency$ = of(data);
+      });
+      this.featureCommonService
+      .getDropdownLists('ROLE')
+      .subscribe((data)=>{
+        this.role$=of(data);
+      })
   }
 }

@@ -4,13 +4,16 @@
             <app-employees-list [filterType]="filterType" [colDefs]="colDefs" [rowData]="rowData"
                 [defaultColDefs]="defaultColDefs" [gridApi]="gridApi" [gridColumnApi]="gridColumnApi"
                 [gridOptions]="gridOptions" (applicationEventService)="handleAppEvent($event)"
-                (gridReady)="onGridReady($event)"></app-employees-list>
+                (gridReady)="onGridReady($event)">
+            </app-employees-list>
         </div>
         <div class="col-md-7">
-            
+
             <app-employees-form [detailsForm]="detailsForm" [activeTab]="activeTab"
-                (activeTabEmit)="activeTabEmit($event)" (activeViewOrEdit)="activeViewOrEdit($event)"
-                [isEdit]="isEdit" [genderList$]="genderList$"></app-employees-form>
+                (activeTabEmit)="activeTabEmit($event)" (activeViewOrEdit)="activeViewOrEdit($event)" [isEdit]="isEdit"
+                [empStatus$]="empStatus$" [genderList$]="genderList$" [maritalStatus$]="maritalStatus$"
+                [emptStatus$]="emptStatus$" [currency$]="currency$" [payFrequency$]="payFrequency$" [role$]="role$">
+            </app-employees-form>
         </div>
     </div>
 </div>

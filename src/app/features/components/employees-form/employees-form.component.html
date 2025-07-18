@@ -35,8 +35,11 @@
                         <div>
                             <label>Employee Status</label>
                             <select formControlName="empStatus">
-                                <option value="ACTIVE">Active</option>
-                                <option value="CLOSED">Closed</option>
+                                <option *ngFor="let empStatus of empStatus$ |async" [ngValue]="empStatus.code">
+                                    {{empStatus.screenName}}
+                                </option>
+                                <!-- <option value="ACTIVE">Active</option>
+                                <option value="CLOSED">Closed</option> -->
                             </select>
                         </div>
                         <div>
@@ -61,8 +64,8 @@
                             <select formControlName="gender"
                                 [ngClass]="{ required: detailsForm.controls['gender'].errors }">
                                 <option value="" disabled>--Select Gender Type--</option>
-                                <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.Code">
-                                    {{gender.ScreenName}}
+                                <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
+                                    {{gender.screenName}}
                                 </option>
                                 <!-- <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -74,8 +77,11 @@
                             <select formControlName="maritalStatus"
                                 [ngClass]="{ required: detailsForm.controls['maritalStatus'].errors }">
                                 <option value="" disabled>--Select Marital Status--</option>
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
+                                <option *ngFor="let maritalStatus of maritalStatus$ | async" [ngValue]="maritalStatus.code">
+                                    {{maritalStatus.screenName}}
+                                </option>
+                                <!-- <option value="Single">Single</option>
+                                <option value="Married">Married</option> -->
                             </select>
                         </div>
                         <div>
@@ -147,11 +153,14 @@
                                     <select formControlName="role"
                                         [ngClass]="{ required: detailsForm.controls['role'].errors }">
                                         <option value="">--Select Role--</option>
-                                        <option value="developer">Developer</option>
+                                        <option *ngFor="let role of role$|async" [ngValue]="role.code">
+                                            {{role.screenName}}
+                                        </option>
+                                        <!-- <option value="developer">Developer</option>
                                         <option value="qa">QA</option>
                                         <option value="teamLead">Team Lead</option>
                                         <option value="projectManager">Project Manager</option>
-                                        <option value="teamManager">Team Manager</option>
+                                        <option value="teamManager">Team Manager</option> -->
                                     </select>
                                 </div>
                                 <div>
@@ -206,9 +215,12 @@
                             <select class="form-select text-start" formControlName="employmentStatus"
                                 [ngClass]="{ required: detailsForm.controls['employmentStatus'].errors }">
                                 <option value="" disabled>--Select Employment Status--</option>
-                                <option value="trainee">Trainee</option>
+                                <option *ngFor="let employmentStatus of emptStatus$ | async" [ngValue]="employmentStatus.code">
+                                    {{employmentStatus.screenName}}
+                                </option>   
+                                <!-- <option value="trainee">Trainee</option>
                                 <option value="contract">Contract</option>
-                                <option value="permanent">Permanent</option>
+                                <option value="permanent">Permanent</option>  -->
                             </select>
 
                         </div>
@@ -238,8 +250,11 @@
                                     <select class="form-select text-start" formControlName="currency"
                                         [ngClass]="{ required: detailsForm.controls['currency'].errors }">
                                         <option value="" disabled>--Select Currency--</option>
-                                        <option value="Rupee">Rupee</option>
-                                        <option value="Dollar">Dollar</option>
+                                        <option *ngFor="let currency of currency$ |async" [ngValue]="currency.code">
+                                            {{currency.screenName}}
+                                        </option>
+                                        <!-- <option value="Rupee">Rupee</option>
+                                        <option value="Dollar">Dollar</option> -->
                                     </select>
                                 </div>
 
@@ -253,10 +268,13 @@
                                     <select class="form-select text-start" formControlName="payFrequency"
                                         [ngClass]="{ required: detailsForm.controls['payFrequency'].errors }">
                                         <option value="" disabled>--Select Pay Frequency--</option>
-                                        <option value="Daily">Daily</option>
+                                        <option *ngFor=" let payFrequency of payFrequency$ |async" [ngValue]="payFrequency.code">
+                                            {{payFrequency.screenName}}
+                                        </option>
+                                        <!-- <option value="Daily">Daily</option>
                                         <option value="Weekly">Weekly</option>
                                         <option value="Monthly">Monthly</option>
-                                        <option value="Yearly">Yearly</option>
+                                        <option value="Yearly">Yearly</option> -->
                                     </select>
                                 </div>
                             </div>

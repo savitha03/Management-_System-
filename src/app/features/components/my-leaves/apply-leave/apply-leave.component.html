@@ -9,9 +9,12 @@
           <select id="typeName" formControlName="typeName" class="form-select flex-grow-1 text-start form-control"
             required>
             <option value="" disabled>Select Leave Type</option>
-            <option value="Casual">Casual</option>
+            <option *ngFor="let typeName of leaveType$|async" [ngValue]="typeName.code">
+              {{typeName.screenName}}
+            </option>
+            <!-- <option value="Casual">Casual</option>
             <option value="CompOff">Comp Off</option>
-            <option value="LOP">LOP</option>
+            <option value="LOP">LOP</option> -->
           </select>
         </div>
 

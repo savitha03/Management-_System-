@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../../core/auth/auth';
 import { SideNav } from '../../../shared/components/side-nav/side-nav';
@@ -12,17 +12,31 @@ import { CommonModule } from '@angular/common';
   templateUrl: './feature-container.html',
   styleUrl: './feature-container.css',
 })
-export class FeatureContainer {
+export class FeatureContainer implements OnInit{
 
-  isOpen = false;
+    public validationSlider$:any
+
+  isOpen=false;
 
 togglePanel(): void {
-  this.isOpen = !this.isOpen;
+
+    this.sharedService.setValidationSliderSubject(!this.isOpen)
+    this.isOpen=!this.isOpen
+
 } 
-  public profile$:any;
-  constructor(private authService: Auth, private router: Router) {
+;
+  constructor(private authService: Auth, private router: Router, private sharedService:SharedService) {
     
    
+  }
+
+  ngOnInit(){
+    this.validationSlider$=this.sharedService.getValidationSliderSubject();
+     this.validationSlider$?.subscribe((data:any)=>{
+      if(data){
+        this.isOpen= data;
+      }
+    });
   }
 
   emitter(event: any) {
