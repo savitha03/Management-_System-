@@ -40,9 +40,7 @@ export class AuthComponent implements OnInit {
         this.authService.login(this.loginForm.getRawValue()).subscribe((data: any) => {
           if (data) {
             this.router.navigate(['simplesolve']);
-            console.info('User Logged In Successfully');
           } else {
-            console.error('Invalid Credentials');
           }
         });
       }

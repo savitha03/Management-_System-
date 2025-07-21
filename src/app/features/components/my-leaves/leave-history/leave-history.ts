@@ -145,12 +145,10 @@ export class LeaveHistory implements OnInit {
   }
 
   editPendingLeave(rowData: any) {
-    console.log('Editing row:', rowData);
     alert(`Editing pending leave for ${rowData.empId}`);
   }
 
   deletePendingLeave(rowData: any) {
-    console.log('Deleting row:', rowData);
     const confirmed = confirm(`Delete leave request for ${rowData.empId}?`);
     if (confirmed) {
       alert(`Deleted pending leave for ${rowData.empId}`);

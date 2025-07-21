@@ -23,6 +23,12 @@
     <button class="btn-close" (click)="isOpen = false" aria-label="Close"></button>
   </div>
   <div class="panel-body p-3">
+    <ng-scrollbar style="height: 100vh;">
+    <div *ngFor="let errors of validationErrors">
+      <p class="text-danger" >{{errors}}</p>
+      <hr>
+    </div>
+    </ng-scrollbar>
   </div>
 
 </div>

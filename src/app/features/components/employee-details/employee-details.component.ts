@@ -29,7 +29,7 @@ export class EmployeeDetailsComponent implements OnInit {
 
   onSubmitPersonal() {
     if (this.personalForm.valid) {
-      console.log('Personal Form Submitted', this.personalForm.value);
+     
     } else {
       this.personalForm.markAllAsTouched();
     }
@@ -37,7 +37,7 @@ export class EmployeeDetailsComponent implements OnInit {
 
   onSubmitContact() {
     if (this.contactForm.valid) {
-      console.log('Contact Form Submitted', this.contactForm.value);
+    
     } else {
       this.contactForm.markAllAsTouched();
     }

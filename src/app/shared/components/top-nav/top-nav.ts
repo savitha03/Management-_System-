@@ -21,7 +21,6 @@ export class TopNav implements OnInit {
      this.profile$?.subscribe((data:any)=>{
       if(data){
         this.profile= data;
-        console.log(this.profile)
       }
     })
   }

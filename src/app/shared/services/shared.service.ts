@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SharedService {
   private ProfileSubject$ = new BehaviorSubject<any>(null);
   private ValidationSliderSubject$ = new BehaviorSubject<any>(false);
+  private ValidationSubject$ = new BehaviorSubject<any>(null);
 
   constructor() {}
 
@@ -24,5 +25,13 @@ export class SharedService {
 
   getValidationSliderSubject(){
     return this.ValidationSliderSubject$.asObservable();
+  }
+
+  setValidationSubject(errors:any){
+    this.ValidationSubject$.next(errors);
+  }
+
+  getValidationSubject(){
+    return this.ValidationSubject$.asObservable();
   }
 }

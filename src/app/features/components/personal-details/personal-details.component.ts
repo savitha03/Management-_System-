@@ -32,9 +32,7 @@ export class PersonalDetailsComponent implements OnInit {
 
   // onSubmit() {
   //   if (this.activeTab === 'employee') {
-  //     console.log('Employee Details:', this.employeeForm.value);
   //   } else {
-  //     console.log('Contact Details:', this.contactForm.value);
   //   }
   // }
 

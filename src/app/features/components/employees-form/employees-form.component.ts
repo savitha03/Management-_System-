@@ -30,8 +30,9 @@ export class EmployeesFormComponent implements OnInit {
   @Input() role$!:Observable<any>;
   
 
-  @Output() activeTabEmit = new EventEmitter();
-  @Output() activeViewOrEdit = new EventEmitter();
+  @Output() activeTabEmit = new EventEmitter<any>();
+  @Output() activeViewOrEdit = new EventEmitter<any>();
+  @Output() handleAppEvent= new EventEmitter<any>();
 
 
   // personalForm!:FormGroup;
@@ -50,6 +51,13 @@ export class EmployeesFormComponent implements OnInit {
       this.activeTab = 'employment';
     } else if (value === 'previous') {
       this.activeTab = 'personal';
+    } else if (value === 'save') {
+      const event:any={
+        name:'SAVE',
+        component:'EmployeesFormComponent',
+        value:null
+      };
+      this.handleAppEvent.emit(event);
     } else {
     }
     this.activeTabEmitter(value);
@@ -104,4 +112,8 @@ export class EmployeesFormComponent implements OnInit {
   // }
 
 
-   }}
+   }
+  
+ 
+  
+  }

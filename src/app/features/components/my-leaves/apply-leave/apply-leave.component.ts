@@ -31,7 +31,6 @@ export class ApplyLeaveComponent implements OnInit {
   }
   apply() {
     if(this.leaveForm.valid){
-    console.log('Leave Application Submitted:', this.leaveForm.value);
     this.leaveForm.reset();
     }
     else{

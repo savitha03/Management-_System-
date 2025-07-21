@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { detailsFormObject } from '../../forms/employee-details.forms';
 import { FormUtilServiceService } from '../../../shared/services/form-util-service.service';
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
+import { SharedService } from '../../../shared/services/shared.service';
 import { Observable, of } from 'rxjs';
 
 @Component({
@@ -22,10 +23,13 @@ import { Observable, of } from 'rxjs';
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
+
+
 export class EmployeesComponent implements OnInit {
   isEdit = false;
   isNewEmployee = false;
   selectedRow: any = null;
+
   filterType: 'all' | 'active' | 'closed' = 'all';
 
   public activeTab = 'personal';
@@ -232,6 +236,7 @@ export class EmployeesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private formUtilServiceService: FormUtilServiceService,
+    private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService
   ) {}
 
@@ -300,7 +305,7 @@ export class EmployeesComponent implements OnInit {
     this.detailsForm = this.formUtilServiceService.buildReactiveForm(
       this.detailsFormEntity
     );
-    console.log(this.detailsForm);
+    
   }
 
   // formBuilder() {
@@ -366,10 +371,11 @@ export class EmployeesComponent implements OnInit {
           event.value.controls,
           event.value.objects
         );
-        console.log(this.pageErrors);
+        
 
         break;
       }
+      
       case 'NEW_EMPLOYEE': {
         const newRow = this.getDefaultEmployee();
 
@@ -404,12 +410,58 @@ export class EmployeesComponent implements OnInit {
             });
           }, 50);
         }
-        console.log(this.detailsForm);
 
         break;
       }
+
+      case 'SAVE':{
+        if(this.detailsForm.invalid){
+          this.detailsForm.markAllAsTouched();
+
+          const invalidControls = this.getInvalidControls(this.detailsForm);
+
+          console.warn('Invalid Form Controls');
+          invalidControls.forEach((controlName)=>{
+            const control =  this.detailsForm.get(controlName);
+          });
+
+          this.pageErrors=this.formUtilServiceService.parseValidationErrors(
+            this.detailsForm.controls,
+            this.detailsFormEntity
+          );
+
+          this.pageErrors = this.pageErrors.filter(
+            (item, index, array) =>
+              index === array.findIndex(element => element.content === item.content),
+          );
+
+          let validationErrors = this.pageErrors.map((error)=>(error.content))
+
+
+          if(validationErrors){
+            this.openValidationSlider(validationErrors);
+          }
+          
+          return;
+        }
+        
+        this.isNewEmployee=false;
+        break;
+      }
+       
     }
   }
+
+  getInvalidControls(formGroup: FormGroup): string[] {
+  const invalidControls: string[] = [];
+  Object.keys(formGroup.controls).forEach((controlName) => {
+    const control = formGroup.get(controlName);
+    if (control && control.invalid) {
+      invalidControls.push(controlName);
+    }
+  });
+  return invalidControls;
+}
 
   getDefaultEmployee(): any {
     const defaultEmployee: any = {};
@@ -423,6 +475,11 @@ export class EmployeesComponent implements OnInit {
     return defaultEmployee;
   }
 
+  openValidationSlider(validation:any){
+    this.sharedService.setValidationSliderSubject(true);
+    this.sharedService.setValidationSubject(validation);
+  }
+
   activeTabEmit(event: any) {
     this.activeTab = event.activeTab;
 
@@ -430,7 +487,6 @@ export class EmployeesComponent implements OnInit {
       this.detailsForm.controls,
       this.detailsFormEntity
     );
-    console.log(this.pageErrors);
   }
 
   activeViewOrEdit(event: any) {
@@ -478,9 +534,10 @@ export class EmployeesComponent implements OnInit {
          this.payFrequency$ = of(data);
       });
       this.featureCommonService
-      .getDropdownLists('ROLE')
+      .getDropdownLists('DESIGNATION')
       .subscribe((data)=>{
         this.role$=of(data);
       })
   }
+
 }
