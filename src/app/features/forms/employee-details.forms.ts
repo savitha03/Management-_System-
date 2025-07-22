@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const detailsFormObject: any = {
-  employeeId: {
+  empCode: {
     id: uuidv4(),
     label: 'Employee ID',
     value: '',
@@ -21,13 +21,7 @@ export const detailsFormObject: any = {
     label: 'Full Name',
     value: '',
     type: 'InputText',
-    validations: [
-      {
-        validator: 'required',
-        value: true,
-        message: 'Employee Name should not be blank',
-      }
-    ],
+    validations:null,
     disabled: false,
   },
   empStatus: {
@@ -62,7 +56,7 @@ export const detailsFormObject: any = {
       }],
     disabled: false,
   },
-  dob: {
+  dateOfBirth: {
     id: uuidv4(),
     label: 'Date of Birth',
     value: '',
@@ -210,7 +204,7 @@ export const detailsFormObject: any = {
     ],
     disabled: false,
   },
-  role: {
+  designation: {
     id: uuidv4(),
     label: 'Role',
     value: '',
@@ -219,12 +213,12 @@ export const detailsFormObject: any = {
       {
         validator: 'required',
         value: true,
-        message: 'Employee Role should be selected',
+        message: 'Employee Designation should be selected',
       },
     ],
     disabled: false,
   },
-  teamManager: {
+  teamHRHead: {
     id: uuidv4(),
     label: 'Team Manager',
     value: '',

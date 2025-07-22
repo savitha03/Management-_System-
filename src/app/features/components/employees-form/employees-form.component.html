@@ -29,8 +29,8 @@
                     <div class="form-grid">
                         <div>
                             <label>Employee Code</label>
-                            <input [ngClass]="{ required: detailsForm.controls['employeeId'].errors }" type="text"
-                                formControlName="employeeId" />
+                            <input [ngClass]="{ required: detailsForm.controls['empCode'].errors }" type="text"
+                                formControlName="empCode" />
                         </div>
                         <div>
                             <label>Employee Status</label>
@@ -54,8 +54,8 @@
                         </div>
                         <div>
                             <label>Date of Birth</label>
-                            <input [ngClass]="{ required: detailsForm.controls['dob'].errors }" type="date"
-                                formControlName="dob" />
+                            <input [ngClass]="{ required: detailsForm.controls['dateOfBirth'].errors }" type="date"
+                                formControlName="dateOfBirth" />
                         </div>
 
                         <!-- {{genderList$ | async |json}} -->
@@ -150,8 +150,8 @@
                             <div class="form-grid mt-4 mb-3">
                                 <div>
                                     <label>Designation</label>
-                                    <select formControlName="role"
-                                        [ngClass]="{ required: detailsForm.controls['role'].errors }">
+                                    <select formControlName="designation"
+                                        [ngClass]="{ required: detailsForm.controls['designation'].errors }">
                                         <option value="">--Select Role--</option>
                                         <option *ngFor="let role of role$|async" [ngValue]="role.code">
                                             {{role.screenName}}
@@ -165,8 +165,8 @@
                                 </div>
                                 <div>
                                     <label>Team and HR Head</label>
-                                    <select formControlName="teamManager"
-                                        [ngClass]="{required: detailsForm.controls['teamManager'].errors}">
+                                    <select formControlName="teamHRHead"
+                                        [ngClass]="{required: detailsForm.controls['teamHRHead'].errors}">
                                         <option value="">--Select Team Manager--</option>
                                         <option value="TM1">Manikandan Natarajan</option>
                                         <option value="TM2">Krishnakumar Gajain</option>

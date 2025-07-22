@@ -16,6 +16,7 @@ import { FormUtilServiceService } from '../../../shared/services/form-util-servi
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { Observable, of } from 'rxjs';
+import { EmployeeDetailsService } from '../../services/employee-details.service';
 
 @Component({
   selector: 'app-employees',
@@ -29,6 +30,12 @@ export class EmployeesComponent implements OnInit {
   isEdit = false;
   isNewEmployee = false;
   selectedRow: any = null;
+
+//   resetFormState() {
+//   this.isNewEmployee = false;
+//   this.isEdit = false;
+//   this.detailsForm.disable();
+// }
 
   filterType: 'all' | 'active' | 'closed' = 'all';
 
@@ -71,7 +78,7 @@ export class EmployeesComponent implements OnInit {
         hostComponent: 'EmployeesListComponent',
       }),
     },
-    { headerName: 'Emp Code', field: 'employeeId', width: 120, filter: true },
+    { headerName: 'Emp Code', field: 'empCode', width: 120, filter: true },
     {
       headerName: 'Emp Name',
       field: 'fullName',
@@ -96,135 +103,9 @@ export class EmployeesComponent implements OnInit {
     },
   ];
 
-  allRowData = [
-    {
-      employeeId: 'T2504',
-      empStatus: 'CLOSED',
-      firstName: 'Aparna',
-      lastName: 'Kumar',
-      fullName: 'Aparna Kumar',
-      dob: '1993-09-20',
-      gender: 'FEMALE',
-      maritalStatus: 'MARRIED',
-      nationality: 'Indian',
-      phoneNumber: '9812345678',
-      alternateNumber: '9988776655',
-      email: 'aparna.kumar@example.com',
-      streetAddress: '45 Green Park Avenue',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      zipCode: '560001',
-      country: 'India',
-      role: 'developer',
-      teamManager: 'Rahul Menon',
-      projectManager: 'Sneha Rajan',
-      teamLead: 'TL3',
-      jobTitle: 'Backend Developer',
-      employmentStatus: 'Active',
-      joinedDate: '2022-02-10',
-      skillset: 'Node.js, Express, SQL',
-      payGrade: 'PG2',
-      currency: 'INR',
-      basicSalary: '600000',
-      payFrequency: 'Monthly',
-    },
+  allRowData:any[] = [];
 
-    {
-      employeeId: 'ST1176',
-      empStatus: 'ACTIVE',
-      firstName: 'Vigneshwaran',
-      lastName: 'Thiruselvam',
-      fullName: 'Vigneshwaran Thiruselvam',
-      dob: '1990-05-12',
-      gender: 'MALE',
-      maritalStatus: 'SINGLE',
-      nationality: 'Indian',
-      phoneNumber: '9876543210',
-      alternateNumber: '9123456780',
-      email: 'vignesh@example.com',
-      streetAddress: '123 Main Street',
-      city: 'Chennai',
-      state: 'Tamil Nadu',
-      zipCode: '600001',
-      country: 'India',
-      role: 'developer',
-      teamManager: 'Manikandan Natarajan',
-      projectManager: 'Ramesh Thulasingam',
-      teamLead: 'TL1',
-      jobTitle: 'Frontend Developer',
-      employmentStatus: 'Active',
-      joinedDate: '2021-06-15',
-      skillset: 'Angular, TypeScript',
-      payGrade: 'PG1',
-      currency: 'INR',
-      basicSalary: '500000',
-      payFrequency: 'Monthly',
-    },
-    {
-      employeeId: 'T2506',
-      empStatus: 'CLOSED',
-      firstName: 'Savitha',
-      lastName: 'S',
-      fullName: 'Savitha S',
-      dob: '1995-08-20',
-      gender: 'FEMALE',
-      maritalStatus: 'SINGLE',
-      nationality: 'Indian',
-      phoneNumber: '9988776655',
-      alternateNumber: '9887766554',
-      email: 'savitha@example.com',
-      streetAddress: '456 Park Avenue',
-      city: 'Bangalore',
-      state: 'Karnataka',
-      zipCode: '560001',
-      country: 'India',
-      role: 'qa',
-      teamManager: 'Krishnakumar Gajain',
-      projectManager: 'Dinesh Vidhyasagar',
-      teamLead: 'TL2',
-      jobTitle: 'QA Engineer',
-      employmentStatus: 'Closed',
-      joinedDate: '2020-01-10',
-      skillset: 'Testing, Selenium',
-      payGrade: 'PG2',
-      currency: 'INR',
-      basicSalary: '450000',
-      payFrequency: 'Monthly',
-    },
-    {
-      employeeId: 'T2503',
-      empStatus: 'ACTIVE',
-      firstName: 'Ravishankar',
-      lastName: 'R',
-      fullName: 'Ravishankar R',
-      dob: '1992-03-11',
-      gender: 'MALE',
-      maritalStatus: 'SINGLE',
-      nationality: 'Indian',
-      phoneNumber: '9012345678',
-      alternateNumber: '9090909090',
-      email: 'ravi@example.com',
-      streetAddress: '789 MG Road',
-      city: 'Hyderabad',
-      state: 'Telangana',
-      zipCode: '500081',
-      country: 'India',
-      role: 'teamLead',
-      teamManager: 'Rajesh Doraiappa',
-      projectManager: 'Ganesh Gunasekaran',
-      teamLead: 'TL3',
-      jobTitle: 'Team Lead',
-      employmentStatus: 'Active',
-      joinedDate: '2019-07-01',
-      skillset: 'React, Node.js',
-      payGrade: 'PG3',
-      currency: 'INR',
-      basicSalary: '700000',
-      payFrequency: 'Monthly',
-    },
-  ];
-
-  rowData = [...this.allRowData];
+  rowData:any[] = [];
 
   defaultColDefs = {
     resizable: true,
@@ -237,13 +118,27 @@ export class EmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private formUtilServiceService: FormUtilServiceService,
     private sharedService: SharedService,
-    private featureCommonService: FeatureCommonServiceService
+    private featureCommonService: FeatureCommonServiceService,
+    private employeeDetailsService:EmployeeDetailsService
   ) {}
 
   ngOnInit(): void {
     this.toggleActiveFilter('all');
     this.formBuilder();
     this.loadDropdowns();
+    
+  
+  this.employeeDetailsService.getEmployeeDetails().subscribe((data:any)=>{
+    this.allRowData=data 
+    this.rowData=[...this.allRowData];
+    console.log(data);
+    
+
+    this.selectFirstRowAndShowDetails();
+    
+  });
+
+
 
     if (this.isEdit) {
       this.detailsForm.enable();
@@ -251,6 +146,8 @@ export class EmployeesComponent implements OnInit {
       this.detailsForm.disable();
     }
   }
+
+    
 
   toggleActiveFilter(status: 'all' | 'active' | 'closed') {
     this.filterType = status;
@@ -282,6 +179,7 @@ export class EmployeesComponent implements OnInit {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    this.selectFirstRowAndShowDetails();
 
     const firstNode = this.gridApi?.getDisplayedRowAtIndex(0);
     if (firstNode) {
@@ -292,7 +190,12 @@ export class EmployeesComponent implements OnInit {
 
   onRowSelected(row: any) {
     this.selectedRow = row;
-    this.detailsForm.patchValue(row);
+     const formData = {
+    ...this.selectedRow,
+    dateOfBirth: this.selectedRow.dateOfBirth ? this.selectedRow.dateOfBirth.split('T')[0] : '', // ✅ fix format
+  };
+
+  this.detailsForm.patchValue(formData);
     this.activeTab = 'personal';
 
     if (!this.isNewEmployee) {
@@ -307,40 +210,6 @@ export class EmployeesComponent implements OnInit {
     );
     
   }
-
-  // formBuilder() {
-  //   this.detailsForm = this.fb.group({
-  //     employeeId: ['', Validators.required],
-  //     fullName: [''],
-  //     empStatus: ['ACTIVE', Validators.required],
-  //     firstName: ['', Validators.required],
-  //     lastName: ['', Validators.required],
-  //     dob: ['', Validators.required],
-  //     gender: ['', Validators.required],
-  //     maritalStatus: ['', Validators.required],
-  //     nationality: ['', Validators.required],
-  //     phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-  //     alternateNumber: ['', [Validators.pattern(/^\d{10}$/)]],
-  //     email: ['', Validators.required],
-  //     streetAddress: ['', Validators.required],
-  //     city: ['', Validators.required],
-  //     state: ['', Validators.required],
-  //     zipCode: ['', Validators.required],
-  //     country: ['', Validators.required],
-  //     role: ['', Validators.required],
-  //     teamManager: ['', Validators.required],
-  //     projectManager: ['', Validators.required],
-  //     teamLead: ['', Validators.required],
-  //     jobTitle: ['', Validators.required],
-  //     employmentStatus: ['', Validators.required],
-  //     joinedDate: ['', Validators.required],
-  //     skillset: ['', Validators.required],
-  //     payGrade: ['', Validators.required],
-  //     currency: ['', Validators.required],
-  //     basicSalary: ['', Validators.required],
-  //     payFrequency: ['', Validators.required],
-  //   });
-  // }
 
   handleAppEvent(event: any) {
     switch (event.name) {
@@ -387,19 +256,12 @@ export class EmployeesComponent implements OnInit {
         this.selectedRow = newRow;
         this.detailsForm.reset(newRow); // Fill default values
         this.detailsForm.enable();
-        // this.detailsForm.controls['employeeId'].enable();
+   
 
         this.detailsForm.markAllAsTouched();
-        // this.detailsForm.updateValueAndValidity();
-
-        // Object.keys(this.detailsForm.controls).forEach(key=>{
-        //   const control=this.detailsForm.controls[key];
-        //   control.markAsTouched();
-        //   control.updateValueAndValidity();
-        // });
-
+     
         this.detailsForm.get('employeeId')!.setErrors({ required: true });
-        // this.detailsForm.get('employeeId')!.markAsTouched();
+    
 
         if (this.gridApi) {
           setTimeout(() => {
@@ -414,40 +276,77 @@ export class EmployeesComponent implements OnInit {
         break;
       }
 
-      case 'SAVE':{
-        if(this.detailsForm.invalid){
-          this.detailsForm.markAllAsTouched();
+     case 'SAVE': {
+  if (this.detailsForm.invalid) {
+    this.detailsForm.markAllAsTouched();
 
-          const invalidControls = this.getInvalidControls(this.detailsForm);
+    const invalidControls = this.getInvalidControls(this.detailsForm);
+    console.warn('Invalid Form Controls');
+    invalidControls.forEach((controlName) => {
+      const control = this.detailsForm.get(controlName);
+      console.warn(`Control "${controlName}" is invalid. Value:`, control?.value);
+    });
 
-          console.warn('Invalid Form Controls');
-          invalidControls.forEach((controlName)=>{
-            const control =  this.detailsForm.get(controlName);
-          });
+    this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+      this.detailsForm.controls,
+      this.detailsFormEntity
+    );
 
-          this.pageErrors=this.formUtilServiceService.parseValidationErrors(
-            this.detailsForm.controls,
-            this.detailsFormEntity
-          );
+    this.pageErrors = this.pageErrors.filter(
+      (item, index, array) =>
+        index === array.findIndex(element => element.content === item.content),
+    );
 
-          this.pageErrors = this.pageErrors.filter(
-            (item, index, array) =>
-              index === array.findIndex(element => element.content === item.content),
-          );
+    let validationErrors = this.pageErrors.map((error) => error.content);
 
-          let validationErrors = this.pageErrors.map((error)=>(error.content))
+    if (validationErrors) {
+      this.openValidationSlider(validationErrors);
+    }
 
+    return;
+  }
 
-          if(validationErrors){
-            this.openValidationSlider(validationErrors);
-          }
-          
-          return;
-        }
-        
-        this.isNewEmployee=false;
-        break;
+  const formData = this.detailsForm.getRawValue();
+  console.log('Saving Employee Data:', formData);
+
+  if (this.isNewEmployee) {
+    // New employee - call save API
+    this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+      next: (res) => {
+        console.log('Employee saved:', res);
+
+        this.allRowData = [res, ...this.allRowData];
+        this.toggleActiveFilter(this.filterType); // Refresh list
+        this.isNewEmployee = false;
+        this.isEdit = false;
+        this.detailsForm.disable();
+      },
+      error: (err) => {
+        console.error('Save error:', err);
       }
+    });
+  } else {
+    // Existing employee - call update API
+    this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+      next: (res) => {
+        console.log('Employee updated:', res);
+
+        const index = this.allRowData.findIndex(emp => emp.employeeId === res.employeeId);
+        if (index > -1) this.allRowData[index] = res;
+
+        this.toggleActiveFilter(this.filterType);
+        this.isEdit = false;
+        this.detailsForm.disable();
+      },
+      error: (err) => {
+        console.error('Update error:', err);
+      }
+    });
+  }
+
+  break;
+}
+
        
     }
   }
@@ -468,8 +367,6 @@ export class EmployeesComponent implements OnInit {
     Object.keys(this.detailsForm.controls).forEach((key) => {
       defaultEmployee[key] = '';
     });
-
-    // Optionally set default values
     defaultEmployee.empStatus = 'ACTIVE';
 
     return defaultEmployee;
@@ -539,5 +436,17 @@ export class EmployeesComponent implements OnInit {
         this.role$=of(data);
       })
   }
+
+  selectFirstRowAndShowDetails() {
+  setTimeout(() => {
+    if (this.gridApi && this.rowData.length > 0) {
+      const firstNode = this.gridApi.getDisplayedRowAtIndex(0);
+      if (firstNode) {
+        firstNode.setSelected(true);  // Select in grid
+        this.onRowSelected(firstNode.data); // Patch form
+      }
+    }
+  }, 100); // Wait for grid and data to render
+}
 
 }

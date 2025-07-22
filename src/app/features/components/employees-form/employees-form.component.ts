@@ -35,8 +35,6 @@ export class EmployeesFormComponent implements OnInit {
   @Output() handleAppEvent= new EventEmitter<any>();
 
 
-  // personalForm!:FormGroup;
-  // employeeForm!:FormGroup;
 
   employmentTabEnabled: boolean = false;
   currentMode:'Edit'|'View' = 'View';
@@ -44,7 +42,6 @@ export class EmployeesFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // this.detailsForm.get('employeeId').setErrors(true);
   }
   navButtons(value: any) {
     if (value === 'next') {
@@ -110,10 +107,7 @@ export class EmployeesFormComponent implements OnInit {
   //     this.detailsForm.markAllAsTouched();
   //   }
   // }
-
-
    }
-  
  
   
   }

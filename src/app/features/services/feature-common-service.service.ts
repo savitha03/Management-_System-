@@ -13,4 +13,8 @@ export class FeatureCommonServiceService {
   getDropdownLists(code: string) {
     return this.http.get(`${this.appUrl}/api/common/code-type/${code}`);
   }
+
+  getTeamDropdownLists(type:string){
+    return this.http.get(`${this.appUrl}/api/common/team-type/${type}`);
+  }
 }
