@@ -4,12 +4,12 @@
     <form [formGroup]="leaveForm" (ngSubmit)="apply()">
       <div class="leave-form-grid">
         <div class="mt-4">
-          <label for="typeName" class="form-label">Leave Type</label>
-          <select id="typeName" formControlName="typeName" class="form-select flex-grow-1 text-start form-control"
+          <label for="leaveType" class="form-label">Leave Type</label>
+          <select id="leaveType" formControlName="leaveType" class="form-select flex-grow-1 text-start form-control"
             required>
             <option value="" disabled>Select Leave Type</option>
-            <option *ngFor="let typeName of leaveType$|async" [ngValue]="typeName.code">
-              {{typeName.screenName}}
+            <option *ngFor="let leaveType of leaveType$|async" [ngValue]="leaveType.code">
+              {{leaveType.screenName}}
             </option>
             <!-- <option value="Casual">Casual</option>
             <option value="CompOff">Comp Off</option>
@@ -18,27 +18,31 @@
         </div>
 
         <div class="mt-4">
-          <label for="startDate" class="form-label">Start Date</label>
-          <input type="date" id="startDate" class="form-control" formControlName="startDate" />
+          <label for="fromDate" class="form-label">From Date</label>
+          <input type="date" id="fromDate" class="form-control" formControlName="fromDate" />
 
         </div>
 
         <div class="mt-4">
-          <label for="endDate" class="form-label">End Date</label>
-          <input type="date" id="endDate" class="form-control" formControlName="endDate" />
+          <label for="toDate" class="form-label">To Date</label>
+          <input type="date" id="toDate" class="form-control" formControlName="toDate" />
 
         </div>
           <div  *ngIf="showTimeFields">
             <label class="form-label mt-2">From Time</label>
-            <input type="text" id="fromTime" class="form-control" formControlName="fromTime" />
+            <input type="time" id="fromTime" class="form-control" formControlName="fromTime" />
           </div>
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">To Time</label>
-            <input type="text" id="toTime" class="form-control" formControlName="toTime" />
+            <input type="time" id="toTime" class="form-control" formControlName="toTime" />
           </div>
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">Total Hours</label>
-            <input type="text" class="form-control" formControlName="totalHours" readonly />
+            <input type="number" class="form-control" formControlName="totalHours"  />
+          </div>
+          <div *ngIf="showTimeFields">
+            <label class="form-label mt-2">Duration</label>
+            <input type="text" class="form-control" formControlName="duration"  />
           </div>
 
 

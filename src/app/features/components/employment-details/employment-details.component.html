@@ -13,8 +13,8 @@
         <form [formGroup]="jobForm" *ngIf="activeTab==='job'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label for="empId">Employee Code</label>
-                    <input type="text" name="empId" id="empId" formControlName="empId" readonly/>
+                    <label for="empCode">Employee Code</label>
+                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly/>
                 </div>
                 <div>
                     <label for="jobTitle">Job Title</label>
@@ -48,8 +48,8 @@
         <form [formGroup]="salaryForm" *ngIf="activeTab==='salary'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label for="empId">Employee Code</label>
-                    <input type="text" name="empId" id="empId" formControlName="empId" readonly/>
+                    <label for="empCode">Employee Code</label>
+                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly/>
                 </div>
                 <div>
                     <label for="payGrade">Pay Grade</label>

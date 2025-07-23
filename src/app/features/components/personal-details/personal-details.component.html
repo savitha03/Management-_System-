@@ -16,24 +16,24 @@
         <form [formGroup]="employeeForm" *ngIf="activeTab === 'employee'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label for="employeeId" >Employee Code</label>
-                    <input type="text" readonly formControlName="employeeId" name="employeeId" id="employeeId"/>
+                    <label for="empCode" >Employee Code</label>
+                    <input type="text" readonly formControlName="empCode" name="empCode" id="empCode" readonly/>
                 </div>
                 <div>
                     <label for="firstName" >First Name</label>
-                    <input type="text" readonly formControlName="firstName" name="firstName" id="firstName"/>
+                    <input type="text" readonly formControlName="firstName" name="firstName" id="firstName" readonly/>
                 </div>
                 <div>
                     <label for="lastName">Last Name</label>
-                    <input type="text" readonly formControlName="lastName" name="lastName" id="lastName"/>
+                    <input type="text" readonly formControlName="lastName" name="lastName" id="lastName" readonly />
                 </div>
                 <div>
                     <label for="dob">Date of Birth</label>
-                    <input type="date" readonly formControlName="dob" name="dob" id="dob"/>
+                    <input type="date" readonly formControlName="dob" name="dob" id="dob" readonly/>
                 </div>
                 <div>
                     <label for="gender">Gender</label>
-                    <input type="text" readonly formControlName="gender" name="gender" id="gender" />
+                    <input type="text" readonly formControlName="gender" name="gender" id="gender" readonly />
                     <!-- <select formControlName="gender">
                         <option value="" disabled >--Select Gender Type--</option>
                         <option value="Male">Male</option>
@@ -44,7 +44,7 @@
               
                 <div>
                     <label for="maritalStatus">Marital Status</label>
-                    <input type="text" readonly formControlName="maritalStatus" name="maritalStatus" id="maritalStatus" />
+                    <input type="text" readonly formControlName="maritalStatus" name="maritalStatus" id="maritalStatus" readonly />
                     <!-- <select formControlName="maritalStatus" >
                         <option value="" disabled >--Select Marital Status--</option>
                         <option value="Single">Single</option>
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                     <label for="nationality">Nationality</label>
-                    <input type="text" readonly formControlName="nationality" name="nationality" id="nationality"/>
+                    <input type="text" readonly formControlName="nationality" name="nationality" id="nationality" readonly/>
                     <!-- <select formControlName="nationality">
                         <option value="" disabled class="dropdown">--Select Nationality--</option>
                         <option value="Indian" class="dropdown">Indian</option>
@@ -66,52 +66,52 @@
         <form [formGroup]="contactForm" *ngIf="activeTab === 'contact'" class="mt-4">
             <div class="form-grid">
                 <div>
-                    <label for="employeeId">Employee Code</label>
-                    <input type="text" readonly formControlName="employeeId" name="employeeId" id="employeeId"/>
+                    <label for="empCode">Employee Code</label>
+                    <input type="text" readonly formControlName="empCode" name="empCode" id="empCode" readonly/>
                 </div>
                 <div>
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="text" readonly formControlName="phoneNumber" name="phoneNumber" id="phoneNumber"/>
+                    <input type="text" readonly formControlName="phoneNumber" name="phoneNumber" id="phoneNumber" readonly/>
                 </div>
                 <div>
                     <label for="alternateNumber">Alternate Number</label>
-                    <input type="text" readonly formControlName="alternateNumber" name="alternateNumber" id="alternateNumber"/>
+                    <input type="text" readonly formControlName="alternateNumber" name="alternateNumber" id="alternateNumber" readonly/>
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="email" readonly formControlName="email" name="email" id="email"/>
+                    <input type="email" readonly formControlName="email" name="email" id="email" readonly/>
                 </div>
                 <div>
                     <label for="streetAddress">Street Address</label>
-                    <input type="text" readonly formControlName="streetAddress" name="streetAddress" id="streetAddress"/>
+                    <input type="text" readonly formControlName="streetAddress" name="streetAddress" id="streetAddress" readonly/>
                 </div>
                 <div>
                     <label for="city">City</label>
-                    <input type="text" readonly formControlName="city" name="city" id="city"/>
+                    <input type="text" readonly formControlName="city" name="city" id="city" readonly/>
                 </div>
                 <div>
                     <label for="state">State</label>
-                    <input type="text" readonly formControlName="state" name="state" id="state"/>
+                    <input type="text" readonly formControlName="state" name="state" id="state" readonly/>
                 </div>
                 <div>
                     <label for="zipCode">Zip Code</label>
-                    <input type="text" readonly formControlName="zipCode" name="zipCode" id="zipCode" />
+                    <input type="text" readonly formControlName="zipCode" name="zipCode" id="zipCode" readonly />
                 </div>
                 <div>
                     <label for="country">Country</label>
-                    <input type="text" readonly formControlName="country" name="country" id="country" />
+                    <input type="text" readonly formControlName="country" name="country" id="country" readonly />
                 </div>
             </div>
         </form>
         <form [formGroup]="teamsForm" *ngIf="activeTab==='team'" class="mt-4" >
             <div class="form-grid">
                 <div>
-                    <label for="employeeId">Employee Code</label>
-                    <input type="text" readonly formControlName="employeeId" name="employeeId" id="employeeId"/>
+                    <label for="empCode">Employee Code</label>
+                    <input type="text" readonly formControlName="empCode" name="empCode" id="empCode" readonly/>
                 </div>
                 <div>
                     <label for="role">Designation</label>
-                    <input type="text" readonly formControlName="role" name="role" id="role"/>
+                    <input type="text" readonly formControlName="role" name="role" id="role" readonly/>
                     <!-- <select formControlName="role">
                         <option value="">--Select Role--</option>
                         <option value="developer">Developer</option>
@@ -124,8 +124,8 @@
             </div>
              <div class="form-grid mt-4">
                 <div>
-                    <label for="teamhead">Team and HR Head</label>
-                    <input type="text" readonly formControlName="teamhead" name="teamhead" id="teamhead" />
+                    <label for="teamAndHrHead">Team and HR Head</label>
+                    <input type="text" readonly formControlName="teamAndHrHead" name="teamAndHrHead" id="teamAndHrHead" readonly />
                     <!-- <select formControlName="teamManager">
                         <option value="" disabled>--Select Team Manager--</option>
                         <option value="">Manikandan Natarajan</option>
@@ -135,7 +135,7 @@
                 </div>
                  <div>
                     <label for="projectManager">Project Manager</label>
-                    <input type="text" readonly formControlName="projectManager" name="projectManager" id="projectManager" />
+                    <input type="text" readonly formControlName="projectManager" name="projectManager" id="projectManager" readonly />
                     <!-- <select formControlName="projectManager">
                         <option value="" disabled>--Select Project Manager--</option>
                         <option value="">Ramesh Thulasingam</option>
@@ -145,7 +145,7 @@
                 </div>
                    <div>
                     <label for="teamLead">Team Lead</label>
-                    <input type="text" readonly formControlName="teamLead" name="teamLead" id="teamLead" />
+                    <input type="text" readonly formControlName="teamLead" name="teamLead" id="teamLead" readonly />
                     <!-- <select formControlName="teamLead">
                         <option value="" disabled>--Select Team Lead--</option>
                         <option value="">TL1</option>

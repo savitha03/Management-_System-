@@ -1,68 +1,122 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
 import { end } from '@popperjs/core';
+import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
+import { leaveFormObject } from '../../../forms/apply-leave.forms';
+import { FormUtilServiceService } from '../../../../shared/services/form-util-service.service';
 
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './apply-leave.component.html',
-  styleUrls: ['./apply-leave.component.css']
+  styleUrls: ['./apply-leave.component.css'],
 })
 export class ApplyLeaveComponent implements OnInit {
+  leaveForm!: FormGroup;
+  leaveFormEnitity:any = leaveFormObject;
 
-  leaveForm!:FormGroup;
+  leaveType$!: Observable<any>;
 
-  leaveType$!:Observable<any>;
-
-  constructor(private fb:FormBuilder , private featureCommonService:FeatureCommonServiceService){
-    this.leaveForm=this.fb.group({
-      typeName:['',Validators.required],
-      startDate:['',Validators.required],
-      endDate:['',Validators.required],
-      fromTime: ['',Validators.required],
-      toTime: ['',Validators.required],
-      totalHours: ['',Validators.required],
-      reason:['',Validators.required]
-    });
-
-    this.leaveForm.get('startDate')?.valueChanges.subscribe(()=>this.checkDateEquality());
-    this.leaveForm.get('endDate')?.valueChanges.subscribe(()=>this.checkDateEquality());
+  constructor(
+    private fb: FormBuilder,
+    private featureCommonService: FeatureCommonServiceService,
+    private formUtilServiceService: FormUtilServiceService,
+    private leaveManagementService: LeaveManagementServiceService
+  ) {
+    // this.leaveForm = this.fb.group({
+    //   leaveType: ['', Validators.required],
+    //   fromDate: ['', Validators.required],
+    //   toDate: ['', Validators.required],
+    //   fromTime: ['', Validators.required],
+    //   toTime: ['', Validators.required],
+    //   totalHours: ['', Validators.required],
+    //   reason: ['', Validators.required],
+    // });
+    
+    
   }
-    showTimeFields=false;
+  showTimeFields = false;
 
-    checkDateEquality(){
-      const startDate = this.leaveForm.get('startDate')?.value;
-      const endDate = this.leaveForm.get('endDate')?.value;
+  checkDateEquality() {
+    const fromDate = this.leaveForm.get('fromDate')?.value;
+    const toDate = this.leaveForm.get('toDate')?.value;
 
-      this.showTimeFields = startDate && endDate && startDate===endDate ;
-    }
+    this.showTimeFields = fromDate && toDate && fromDate === toDate;
+  }
 
-
-
+  
+ 
 
   ngOnInit(): void {
-  this.loadDropdowns();
-  }
-  apply() {
-    if(this.leaveForm.valid){
-    this.leaveForm.reset();
-    }
-    else{
-      this.leaveForm.markAllAsTouched();
-    }
+    this.loadDropdowns();
+    this.formBuilder();
 
-
+    
   }
 
-  loadDropdowns(){
-     this.featureCommonService
+  
+  // apply() {
+  //   if(this.leaveForm.valid){
+  //   this.leaveForm.reset();
+  //   }
+  //   else{
+  //     this.leaveForm.markAllAsTouched();
+  //   }
+
+  // }
+
+   formBuilder() {
+    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
+      this.leaveFormEnitity
+    );
+    this.leaveForm
+      .get('fromDate')
+      ?.valueChanges.subscribe(() => this.checkDateEquality());
+    this.leaveForm
+      .get('toDate')
+      ?.valueChanges.subscribe(() => this.checkDateEquality());
+    
+  }
+
+  loadDropdowns() {
+    this.featureCommonService
       .getDropdownLists('LEAVETYPE')
       .subscribe((data) => {
-         this.leaveType$ = of(data);
+        this.leaveType$ = of(data);
       });
   }
+
+  apply() {
+    if (this.leaveForm.valid) {
+      const leaveData = this.leaveForm.value;
+
+       
+      this.leaveManagementService
+        .saveEmployeeLeaveRequest(leaveData)
+        .subscribe({
+          next: (response) => {
+            console.log('Leave request submitted successfully', response);
+            this.leaveForm.reset();
+          },
+          error: (err) => {
+            console.error('Error submitting leave request', err);
+          },
+        });
+    } else {
+      this.leaveForm.markAllAsTouched();
+    }
+  }
+
+
+
 }

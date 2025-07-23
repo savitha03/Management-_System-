@@ -24,30 +24,28 @@ import { EmployeeDetailsService } from '../../services/employee-details.service'
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
-
-
 export class EmployeesComponent implements OnInit {
   isEdit = false;
   isNewEmployee = false;
   selectedRow: any = null;
 
-//   resetFormState() {
-//   this.isNewEmployee = false;
-//   this.isEdit = false;
-//   this.detailsForm.disable();
-// }
+  //   resetFormState() {
+  //   this.isNewEmployee = false;
+  //   this.isEdit = false;
+  //   this.detailsForm.disable();
+  // }
 
   filterType: 'all' | 'active' | 'closed' = 'all';
 
   public activeTab = 'personal';
 
-  empStatus$!:Observable<any>;
+  empStatus$!: Observable<any>;
   genderList$!: Observable<any>;
-  maritalStatus$!:Observable<any>;
-  emptStatus$!:Observable<any>;
-  currency$!:Observable<any>;
-  payFrequency$!:Observable<any>;
-  role$!:Observable<any>;
+  maritalStatus$!: Observable<any>;
+  emptStatus$!: Observable<any>;
+  currency$!: Observable<any>;
+  payFrequency$!: Observable<any>;
+  role$!: Observable<any>;
 
   gridApi: any;
   gridColumnApi: any;
@@ -103,9 +101,9 @@ export class EmployeesComponent implements OnInit {
     },
   ];
 
-  allRowData:any[] = [];
+  allRowData: any[] = [];
 
-  rowData:any[] = [];
+  rowData: any[] = [];
 
   defaultColDefs = {
     resizable: true,
@@ -119,26 +117,14 @@ export class EmployeesComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService,
-    private employeeDetailsService:EmployeeDetailsService
+    private employeeDetailsService: EmployeeDetailsService
   ) {}
 
   ngOnInit(): void {
     this.toggleActiveFilter('all');
     this.formBuilder();
     this.loadDropdowns();
-    
-  
-  this.employeeDetailsService.getEmployeeDetails().subscribe((data:any)=>{
-    this.allRowData=data 
-    this.rowData=[...this.allRowData];
-    console.log(data);
-    
-
-    this.selectFirstRowAndShowDetails();
-    
-  });
-
-
+    this.getEmployees();
 
     if (this.isEdit) {
       this.detailsForm.enable();
@@ -147,7 +133,14 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-    
+  getEmployees() {
+    this.employeeDetailsService.getEmployeeDetails().subscribe((data: any) => {
+      this.allRowData = data;
+      this.rowData = [...this.allRowData];
+      console.log(data);
+      this.selectFirstRowAndShowDetails();
+    });
+  }
 
   toggleActiveFilter(status: 'all' | 'active' | 'closed') {
     this.filterType = status;
@@ -190,12 +183,18 @@ export class EmployeesComponent implements OnInit {
 
   onRowSelected(row: any) {
     this.selectedRow = row;
-     const formData = {
-    ...this.selectedRow,
-    dateOfBirth: this.selectedRow.dateOfBirth ? this.selectedRow.dateOfBirth.split('T')[0] : '', // ✅ fix format
-  };
+    const formData = {
+      ...this.selectedRow,
+      dateOfBirth: this.selectedRow.dateOfBirth
+        ? this.selectedRow.dateOfBirth.split('T')[0]
+        : '',
+      joinedDate: this.selectedRow.joinedDate
+        ? this.selectedRow.joinedDate.split('T')[0]
+        : '', // ✅ fix format
+      
+    };
 
-  this.detailsForm.patchValue(formData);
+    this.detailsForm.patchValue(formData);
     this.activeTab = 'personal';
 
     if (!this.isNewEmployee) {
@@ -208,7 +207,6 @@ export class EmployeesComponent implements OnInit {
     this.detailsForm = this.formUtilServiceService.buildReactiveForm(
       this.detailsFormEntity
     );
-    
   }
 
   handleAppEvent(event: any) {
@@ -240,11 +238,10 @@ export class EmployeesComponent implements OnInit {
           event.value.controls,
           event.value.objects
         );
-        
 
         break;
       }
-      
+
       case 'NEW_EMPLOYEE': {
         const newRow = this.getDefaultEmployee();
 
@@ -256,12 +253,10 @@ export class EmployeesComponent implements OnInit {
         this.selectedRow = newRow;
         this.detailsForm.reset(newRow); // Fill default values
         this.detailsForm.enable();
-   
 
         this.detailsForm.markAllAsTouched();
-     
+
         this.detailsForm.get('employeeId')!.setErrors({ required: true });
-    
 
         if (this.gridApi) {
           setTimeout(() => {
@@ -276,91 +271,103 @@ export class EmployeesComponent implements OnInit {
         break;
       }
 
-     case 'SAVE': {
-  if (this.detailsForm.invalid) {
-    this.detailsForm.markAllAsTouched();
+      case 'SAVE': {
+        if (this.detailsForm.invalid) {
+          this.detailsForm.markAllAsTouched();
 
-    const invalidControls = this.getInvalidControls(this.detailsForm);
-    console.warn('Invalid Form Controls');
-    invalidControls.forEach((controlName) => {
-      const control = this.detailsForm.get(controlName);
-      console.warn(`Control "${controlName}" is invalid. Value:`, control?.value);
-    });
+          const invalidControls = this.getInvalidControls(this.detailsForm);
+          console.warn('Invalid Form Controls');
+          invalidControls.forEach((controlName) => {
+            const control = this.detailsForm.get(controlName);
+            console.warn(
+              `Control "${controlName}" is invalid. Value:`,
+              control?.value
+            );
+          });
 
-    this.pageErrors = this.formUtilServiceService.parseValidationErrors(
-      this.detailsForm.controls,
-      this.detailsFormEntity
-    );
+          this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+            this.detailsForm.controls,
+            this.detailsFormEntity
+          );
 
-    this.pageErrors = this.pageErrors.filter(
-      (item, index, array) =>
-        index === array.findIndex(element => element.content === item.content),
-    );
+          this.pageErrors = this.pageErrors.filter(
+            (item, index, array) =>
+              index ===
+              array.findIndex((element) => element.content === item.content)
+          );
 
-    let validationErrors = this.pageErrors.map((error) => error.content);
+          let validationErrors = this.pageErrors.map((error) => error.content);
 
-    if (validationErrors) {
-      this.openValidationSlider(validationErrors);
+          if (validationErrors) {
+            this.openValidationSlider(validationErrors);
+          }
+
+          return;
+        }
+
+        const formData = this.detailsForm.getRawValue();
+        console.log('Saving Employee Data:', formData);
+
+        if (this.isNewEmployee) {
+          // New employee - call save API
+          this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+            next: (res) => {
+              console.log('Employee saved:', res);
+
+              this.allRowData = [res, ...this.allRowData];
+              this.toggleActiveFilter(this.filterType); // Refresh list
+              this.isNewEmployee = false;
+              this.isEdit = false;
+              this.detailsForm.disable();
+              this.getEmployees();
+              this.clearValidation();
+            },
+            error: (err) => {
+              console.error('Save error:', err);
+            },
+          });
+        } else {
+          // Existing employee - call update API
+          this.employeeDetailsService
+            .updateEmployeeDetails(formData)
+            .subscribe({
+              next: (res) => {
+                console.log('Employee updated:', res);
+
+                const index = this.allRowData.findIndex(
+                  (emp) => emp.employeeId === res.employeeId
+                );
+                if (index > -1) this.allRowData[index] = res;
+
+                this.toggleActiveFilter(this.filterType);
+                this.isEdit = false;
+                this.detailsForm.disable();
+              },
+              error: (err) => {
+                console.error('Update error:', err);
+              },
+            });
+        }
+
+        break;
+      }
     }
-
-    return;
   }
 
-  const formData = this.detailsForm.getRawValue();
-  console.log('Saving Employee Data:', formData);
-
-  if (this.isNewEmployee) {
-    // New employee - call save API
-    this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
-      next: (res) => {
-        console.log('Employee saved:', res);
-
-        this.allRowData = [res, ...this.allRowData];
-        this.toggleActiveFilter(this.filterType); // Refresh list
-        this.isNewEmployee = false;
-        this.isEdit = false;
-        this.detailsForm.disable();
-      },
-      error: (err) => {
-        console.error('Save error:', err);
-      }
-    });
-  } else {
-    // Existing employee - call update API
-    this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
-      next: (res) => {
-        console.log('Employee updated:', res);
-
-        const index = this.allRowData.findIndex(emp => emp.employeeId === res.employeeId);
-        if (index > -1) this.allRowData[index] = res;
-
-        this.toggleActiveFilter(this.filterType);
-        this.isEdit = false;
-        this.detailsForm.disable();
-      },
-      error: (err) => {
-        console.error('Update error:', err);
-      }
-    });
-  }
-
-  break;
-}
-
-       
-    }
+  clearValidation() {
+    this.sharedService.setValidationSubject(null);
   }
 
   getInvalidControls(formGroup: FormGroup): string[] {
-  const invalidControls: string[] = [];
-  Object.keys(formGroup.controls).forEach((controlName) => {
-    const control = formGroup.get(controlName);
-    if (control && control.invalid) {
-      invalidControls.push(controlName);
-    }
-  });
-  return invalidControls;
-}
+    const invalidControls: string[] = [];
+    Object.keys(formGroup.controls).forEach((controlName) => {
+      const control = formGroup.get(controlName);
+      if (control && control.invalid) {
+        invalidControls.push(controlName);
+      }
+    });
+    return invalidControls;
+  }
 
   getDefaultEmployee(): any {
     const defaultEmployee: any = {};
@@ -372,7 +379,7 @@ export class EmployeesComponent implements OnInit {
     return defaultEmployee;
   }
 
-  openValidationSlider(validation:any){
+  openValidationSlider(validation: any) {
     this.sharedService.setValidationSliderSubject(true);
     this.sharedService.setValidationSubject(validation);
   }
@@ -405,48 +412,43 @@ export class EmployeesComponent implements OnInit {
       .subscribe((data) => {
         this.empStatus$ = of(data);
       });
-    this.featureCommonService
-      .getDropdownLists('GENDER')
-      .subscribe((data) => {
-        this.genderList$ = of(data);
-      });
+    this.featureCommonService.getDropdownLists('GENDER').subscribe((data) => {
+      this.genderList$ = of(data);
+    });
     this.featureCommonService
       .getDropdownLists('MARITALSTATUS')
       .subscribe((data) => {
-          this.maritalStatus$ = of(data);
+        this.maritalStatus$ = of(data);
       });
     this.featureCommonService
       .getDropdownLists('EMPTSTATUS')
       .subscribe((data) => {
-         this.emptStatus$ = of(data);
+        this.emptStatus$ = of(data);
       });
-    this.featureCommonService
-      .getDropdownLists('CURRENCY')
-      .subscribe((data) => {
-         this.currency$ = of(data);
-      });
+    this.featureCommonService.getDropdownLists('CURRENCY').subscribe((data) => {
+      this.currency$ = of(data);
+    });
     this.featureCommonService
       .getDropdownLists('PAYFREQUENCY')
       .subscribe((data) => {
-         this.payFrequency$ = of(data);
+        this.payFrequency$ = of(data);
       });
-      this.featureCommonService
+    this.featureCommonService
       .getDropdownLists('DESIGNATION')
-      .subscribe((data)=>{
-        this.role$=of(data);
-      })
+      .subscribe((data) => {
+        this.role$ = of(data);
+      });
   }
 
   selectFirstRowAndShowDetails() {
-  setTimeout(() => {
-    if (this.gridApi && this.rowData.length > 0) {
-      const firstNode = this.gridApi.getDisplayedRowAtIndex(0);
-      if (firstNode) {
-        firstNode.setSelected(true);  // Select in grid
-        this.onRowSelected(firstNode.data); // Patch form
+    setTimeout(() => {
+      if (this.gridApi && this.rowData.length > 0) {
+        const firstNode = this.gridApi.getDisplayedRowAtIndex(0);
+        if (firstNode) {
+          firstNode.setSelected(true); // Select in grid
+          this.onRowSelected(firstNode.data); // Patch form
+        }
       }
-    }
-  }, 100); // Wait for grid and data to render
-}
-
+    }, 100); // Wait for grid and data to render
+  }
 }

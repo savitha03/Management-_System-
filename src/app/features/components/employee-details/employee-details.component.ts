@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DetailsServiceService } from '../../services/details-service.service';
 
 @Component({
   selector: 'app-employee-details',
@@ -21,6 +22,8 @@ export class EmployeeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.activeTab = 'personal';  // ensure default tab always set
     this.buildForm();
+
+   
   }
 
   setActiveTab(tab: string) {
@@ -67,4 +70,6 @@ export class EmployeeDetailsComponent implements OnInit {
       country: ['', Validators.required]
     });
   }
+
+
 }
