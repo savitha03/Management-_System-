@@ -57,13 +57,7 @@ export const leaveFormObject: any = {
     label: 'From Time',
     value: '',
     type: 'InputText',
-    validations: [
-      {
-        validator: 'required',
-        value: true,
-        message: 'From Time should not be blank',
-      }
-    ],
+    validations: [],
     disabled: false,
   },
   toTime: {
@@ -71,13 +65,7 @@ export const leaveFormObject: any = {
     label: 'To Time',
     value: '',
     type: 'InputText',
-    validations: [
-      {
-        validator: 'required',
-        value: true,
-        message: 'To Time should not be blank',
-      }
-    ],
+    validations: [],
     disabled: false,
   },
   totalHours: {
@@ -85,13 +73,7 @@ export const leaveFormObject: any = {
     label: 'Total Hours',
     value: '',
     type: 'InputText',
-    validations: [
-      {
-        validator: 'required',
-        value: true,
-        message: 'To Hours should not be blank',
-      }
-    ],
+    validations:[],
     disabled: false,
   },
   duration: {

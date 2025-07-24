@@ -216,20 +216,8 @@
                     <div class="form-grid">
                         <div>
                             <label for="jobTitle">Job Title</label>
-                            <!-- <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle"
-                                [ngClass]="{ required: detailsForm.controls['jobTitle'].errors }" /> -->
-                                <select formControlName="designation"
-                                        [ngClass]="{ required: detailsForm.controls['designation'].errors }">
-                                        <option value="">--Select Role--</option>
-                                        <option *ngFor="let role of role$|async" [ngValue]="role.code">
-                                            {{role.screenName}}
-                                        </option>
-                                        <!-- <option value="developer">Developer</option>
-                                        <option value="qa">QA</option>
-                                        <option value="teamLead">Team Lead</option>
-                                        <option value="projectManager">Project Manager</option>
-                                        <option value="teamManager">Team Manager</option> -->
-                                    </select>
+                            <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle"
+                                [ngClass]="{ required: detailsForm.controls['jobTitle'].errors }" />
                         </div>
                         <div>
                             <label for="employmentStatus">Employment Status</label>

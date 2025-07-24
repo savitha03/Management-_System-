@@ -31,21 +31,15 @@
                     <label for="dob">Date of Birth</label>
                     <input type="date" readonly formControlName="dob" name="dob" id="dob" readonly/>
                 </div>
-                  <div>
-                            <label>Gender</label>
-                            <select formControlName="gender"
-                            
-                                [ngClass]="{ required: employeeForm.controls['gender'].errors }">
-                                <option value="" disabled>--Select Gender Type--</option>
-                                <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
-                                    {{gender.screenName}}
-                                </option>
-                                <!-- <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option> -->
-                            </select>
-                        </div>
-              
+                <div>
+                    <label>Gender</label>
+                    <select formControlName="gender" [ngClass]="{ required: employeeForm.controls['gender'].errors }">
+                        <option value="" disabled>--Select Gender Type--</option>
+                        <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
+                            {{gender.screenName}}
+                        </option>
+                    </select>
+                </div>
                  <div>
                             <label>Marital Status</label>
                             <select formControlName="maritalStatus"
