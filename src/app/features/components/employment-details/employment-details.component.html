@@ -1,7 +1,7 @@
 <div class="m-5">
     <div class="m-5">
         <h4>Employment Details</h4>
-            <div class="tabs mb-3 mt-4">
+        <div class="tabs mb-3 mt-4">
             <button class="tab-btn" [class.active]="activeTab === 'job'" (click)="switchTab('job')">
                 Job Details
             </button>
@@ -14,33 +14,39 @@
             <div class="form-grid">
                 <div>
                     <label for="empCode">Employee Code</label>
-                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly/>
+                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly />
                 </div>
                 <div>
                     <label for="jobTitle">Job Title</label>
-                    <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle" readonly/>
+                    <input type="text" name="jobTitle" id="jobTitle" formControlName="jobTitle" readonly />
                 </div>
-                 <div>
-                    <label for="employmentStatus">Employement Status</label>
-                    <input type="text" name="employmentStatus" id="employmentStatus" formControlName="employmentStatus" readonly/>
+                <div>
+                    <label>Employement Status</label>
+                    <select formControlName="employmentStatus">
+                        <option *ngFor="let employmentStatus of emptStatus$ |async" [ngValue]="employmentStatus.code">
+                            {{employmentStatus.screenName}}
+                        </option>
+                        <!-- <option value="ACTIVE">Active</option>
+                                <option value="CLOSED">Closed</option> -->
+                    </select>
                 </div>
-                   <!-- <div>
+                <!-- <div>
                     <label for="employmentStatus">Employment Status</label> -->
-                    <!-- <select class="form-select text-start" formControlName="employmentStatus">
+                <!-- <select class="form-select text-start" formControlName="employmentStatus">
                         <option value="" disabled>--Select Employment Status--</option>
                         <option value="trainee">Trainee</option>
                         <option value="contract">Contract</option>
                         <option value="permanent">Permanent</option>
                     </select> -->
-                    <!-- <input type="text" name="employmentStatus" id="employmentStatus" formControlName="employmentStatus"/>
+                <!-- <input type="text" name="employmentStatus" id="employmentStatus" formControlName="employmentStatus"/>
                 </div> -->
-                   <div>
+                <div>
                     <label for="joinedDate">Join Date</label>
-                    <input type="Date" name="joinedDate" id="joinedDate" formControlName="joinedDate" readonly/>
+                    <input type="Date" name="joinedDate" id="joinedDate" formControlName="joinedDate" readonly />
                 </div>
-                 <div>
+                <div>
                     <label for="skillset">Skillset</label>
-                    <input type="text" name="skillset" id="skillset" formControlName="skillset" readonly/>
+                    <input type="text" name="skillset" id="skillset" formControlName="skillset" readonly />
                 </div>
             </div>
         </form>
@@ -49,44 +55,46 @@
             <div class="form-grid">
                 <div>
                     <label for="empCode">Employee Code</label>
-                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly/>
+                    <input type="text" name="empCode" id="empCode" formControlName="empCode" readonly />
                 </div>
                 <div>
                     <label for="payGrade">Pay Grade</label>
-                    <input type="text" name="payGrade" id="payGrade" formControlName="payGrade" readonly/>
+                    <input type="text" name="payGrade" id="payGrade" formControlName="payGrade" readonly />
                 </div>
-                   <!-- <div>
+                <!-- <div>
                     <label for="currency">Currency</label>
                     <input type="number" name="currency" id="currency" formControlName="currency"/>
                 </div> -->
-                <div >
-                <label for="currency">Currency</label>
-                <input type="number" name="currency" id="currency" formControlName="currency" readonly/>
-                <!-- <select class="form-select text-start" formControlName="currency">
-                  <option value="" disabled>--Select Currency--</option>
-                  <option value="Rupee">Rupee</option>
-                  <option value="Dollar">Dollar</option>
-                </select> -->
-              </div>
+                <div>
+                    <label>Currency</label>
+                    <select class="form-select text-start" formControlName="currency"
+                        [ngClass]="{ required: salaryForm.controls['currency'].errors }">
+                        <option value="" disabled>--Select Currency--</option>
+                        <option *ngFor="let currency of currency$ |async" [ngValue]="currency.code">
+                            {{currency.screenName}}
+                        </option>
+                        <!-- <option value="Rupee">Rupee</option>
+                                        <option value="Dollar">Dollar</option> -->
+                    </select>
+                </div>
 
-                   <div>
+                <div>
                     <label for="basicSalary">Basic Salary</label>
-                    <input type="text" name="basicSalary" id="basicSalary" formControlName="basicSalary" readonly/>
+                    <input type="text" name="basicSalary" id="basicSalary" formControlName="basicSalary" readonly />
                 </div>
                 <div>
-                    <label for="payFrequency">Pay Frequency</label>
-                     <input type="number" name="payFrequency" id="payFrequency" formControlName="payFrequency" readonly/>
-                    <!-- <select  class="form-select text-start" formControlName="payFrequency" >
-                         <option value="" disabled>--Select Pay Frequency--</option>
-                        <option value="Daily">Daily</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Monthly">Monthly</option>
-                        <option value="Yearly">Yearly</option>
-                    </select> -->
+                    <label>Pay Frequency</label>
+                    <select class="form-select text-start" formControlName="payFrequency"
+                        [ngClass]="{ required: salaryForm.controls['payFrequency'].errors }">
+                        <option value="" disabled>--Select Pay Frequency--</option>
+                        <option *ngFor=" let payFrequency of payFrequency$ |async" [ngValue]="payFrequency.code">
+                            {{payFrequency.screenName}}
+                        </option>
+                    </select>
                 </div>
             </div>
         </form>
-         <!-- <div class="buttons mt-4">
+        <!-- <div class="buttons mt-4">
             <button class="btn submit" (click)="onSubmit()">Submit</button>
         </div> -->
     </div>

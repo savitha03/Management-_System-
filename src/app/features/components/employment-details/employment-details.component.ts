@@ -1,74 +1,108 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { DetailsServiceService } from '../../services/details-service.service';
+import { Observable, of } from 'rxjs';
+import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
 
 @Component({
   selector: 'app-employment-details',
-  imports: [ReactiveFormsModule,CommonModule,FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './employment-details.component.html',
-  styleUrl: './employment-details.component.css'
+  styleUrl: './employment-details.component.css',
 })
 export class EmploymentDetailsComponent implements OnInit {
-
-  activeTab='job';
+  activeTab = 'job';
   jobForm!: FormGroup;
   salaryForm!: FormGroup;
-  
 
-  
-  constructor(private fb:FormBuilder, private detailsService:DetailsServiceService){}
+  // @Input() detailsForm: any;
 
-  ngOnInit(): void { 
+  emptStatus$!: Observable<any>;
+  currency$!: Observable<any>;
+  payFrequency$!: Observable<any>;
+
+  constructor(
+    private fb: FormBuilder,
+    private detailsService: DetailsServiceService,
+    private featureCommonService: FeatureCommonServiceService
+  ) {}
+
+  ngOnInit(): void {
     this.formBuilder();
-    const employeeId = "T2506"
+    const employeeId = 'T2506';
     this.loadEmployeeData(employeeId);
+    this.loadDropdowns();
   }
 
-   switchTab(tab: string) {
+  switchTab(tab: string) {
     this.activeTab = tab;
   }
 
-  onSubmit(){ 
-  }
+  onSubmit() {}
 
-
-  formBuilder(){
-     this.jobForm = this.fb.group({
+  formBuilder() {
+    this.jobForm = this.fb.group({
       empCode: [''],
       jobTitle: ['', Validators.required],
-      employmentStatus:['',Validators.required],
+      employmentStatus: ['', Validators.required],
       joinedDate: ['', Validators.required],
-      skillset: ['', Validators.required]
+      skillset: ['', Validators.required],
     });
 
-    this.salaryForm=this.fb.group({
-      empCode:[''],
-      payGrade:['',Validators.required],
-      currency:['',Validators.required],
-      basicSalary:['',Validators.required],
-      payFrequency:['',Validators.required]
-    })
+    this.salaryForm = this.fb.group({
+      empCode: [''],
+      payGrade: ['', Validators.required],
+      currency: ['', Validators.required],
+      basicSalary: ['', Validators.required],
+      payFrequency: ['', Validators.required],
+    });
   }
 
- loadEmployeeData(empId: any) {
-  this.detailsService.getEmployeeJobDetails(empId).subscribe((data: any) => {
-    const formData = {
-      ...data,
-      joinedDate: data.joinedDate ? this.formatDateString(data.joinedDate) : ''
-    };
-    this.jobForm.patchValue(formData);
-  });
+  loadEmployeeData(empId: any) {
+    this.detailsService.getEmployeeJobDetails(empId).subscribe((data: any) => {
+      const formData = {
+        ...data,
+        joinedDate: data.joinedDate
+          ? this.formatDateString(data.joinedDate)
+          : '',
+      };
+      this.jobForm.patchValue(formData);
+    });
 
-  this.detailsService.getEmployeeSalaryDetails(empId).subscribe((data: any) => {
-    this.salaryForm.patchValue(data);
-  });
-}
+    this.detailsService
+      .getEmployeeSalaryDetails(empId)
+      .subscribe((data: any) => {
+        this.salaryForm.patchValue(data);
+      });
+  }
 
-// Helper method
-formatDateString(dateStr: string): string {
-  const [month, day, year] = dateStr.split(' ')[0].split('/');
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-}
+  // Helper method
+  formatDateString(dateStr: string): string {
+    const [month, day, year] = dateStr.split(' ')[0].split('/');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
 
+  loadDropdowns() {
+    this.featureCommonService
+      .getDropdownLists('EMPTSTATUS')
+      .subscribe((data) => {
+        this.emptStatus$ = of(data);
+      });
+    this.featureCommonService.getDropdownLists('CURRENCY').subscribe((data) => {
+      this.currency$ = of(data);
+    });
+    this.featureCommonService
+      .getDropdownLists('PAYFREQUENCY')
+      .subscribe((data) => {
+        this.payFrequency$ = of(data);
+      });
+      
+  }
 }

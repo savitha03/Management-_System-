@@ -28,6 +28,9 @@ export class EmployeesFormComponent implements OnInit {
   @Input() currency$!:Observable<any>;
   @Input() payFrequency$!:Observable<any>;
   @Input() role$!:Observable<any>;
+  @Input() teamHRHead$!:Observable<any>;
+  @Input() projectManager$!:Observable<any>;
+  @Input() teamLead$!:Observable<any>;
   
 
   @Output() activeTabEmit = new EventEmitter<any>();

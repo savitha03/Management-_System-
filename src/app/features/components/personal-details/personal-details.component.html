@@ -31,26 +31,33 @@
                     <label for="dob">Date of Birth</label>
                     <input type="date" readonly formControlName="dob" name="dob" id="dob" readonly/>
                 </div>
-                <div>
-                    <label for="gender">Gender</label>
-                    <input type="text" readonly formControlName="gender" name="gender" id="gender" readonly />
-                    <!-- <select formControlName="gender">
-                        <option value="" disabled >--Select Gender Type--</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select> -->
-                </div>
+                  <div>
+                            <label>Gender</label>
+                            <select formControlName="gender"
+                            
+                                [ngClass]="{ required: employeeForm.controls['gender'].errors }">
+                                <option value="" disabled>--Select Gender Type--</option>
+                                <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
+                                    {{gender.screenName}}
+                                </option>
+                                <!-- <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option> -->
+                            </select>
+                        </div>
               
-                <div>
-                    <label for="maritalStatus">Marital Status</label>
-                    <input type="text" readonly formControlName="maritalStatus" name="maritalStatus" id="maritalStatus" readonly />
-                    <!-- <select formControlName="maritalStatus" >
-                        <option value="" disabled >--Select Marital Status--</option>
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                    </select> -->
-                </div>
+                 <div>
+                            <label>Marital Status</label>
+                            <select formControlName="maritalStatus"
+                                [ngClass]="{ required: employeeForm.controls['maritalStatus'].errors }">
+                                <option value="" disabled>--Select Marital Status--</option>
+                                <option *ngFor="let maritalStatus of maritalStatus$ | async" [ngValue]="maritalStatus.code">
+                                    {{maritalStatus.screenName}}
+                                </option>
+                                <!-- <option value="Single">Single</option>
+                                <option value="Married">Married</option> -->
+                            </select>
+                        </div>
                 <div>
                     <label for="nationality">Nationality</label>
                     <input type="text" readonly formControlName="nationality" name="nationality" id="nationality" readonly/>
@@ -109,18 +116,21 @@
                     <label for="empCode">Employee Code</label>
                     <input type="text" readonly formControlName="empCode" name="empCode" id="empCode" readonly/>
                 </div>
-                <div>
-                    <label for="role">Designation</label>
-                    <input type="text" readonly formControlName="role" name="role" id="role" readonly/>
-                    <!-- <select formControlName="role">
-                        <option value="">--Select Role--</option>
-                        <option value="developer">Developer</option>
-                        <option value="qa">QA</option>
-                        <option value="teamLead">Team Lead</option>
-                        <option value="projectManager">Project Manager</option>
-                        <option value="teamManager">Team Manager</option>
-                    </select> -->
-                </div>
+               <div>
+                                    <label>Designation</label>
+                                    <select formControlName="designation"
+                                        [ngClass]="{ required: teamsForm.controls['designation'].errors }">
+                                        <option value="">--Select Role--</option>
+                                        <option *ngFor="let role of role$|async" [ngValue]="role.code">
+                                            {{role.screenName}}
+                                        </option>
+                                        <!-- <option value="developer">Developer</option>
+                                        <option value="qa">QA</option>
+                                        <option value="teamLead">Team Lead</option>
+                                        <option value="projectManager">Project Manager</option>
+                                        <option value="teamManager">Team Manager</option> -->
+                                    </select>
+                                </div>
             </div>
              <div class="form-grid mt-4">
                 <div>

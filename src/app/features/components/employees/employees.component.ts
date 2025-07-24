@@ -46,6 +46,11 @@ export class EmployeesComponent implements OnInit {
   currency$!: Observable<any>;
   payFrequency$!: Observable<any>;
   role$!: Observable<any>;
+  teamHRHead$! : Observable<any>;
+  projectManager$! :Observable<any>;
+  teamLead$! :Observable<any>;
+  
+
 
   gridApi: any;
   gridColumnApi: any;
@@ -117,7 +122,8 @@ export class EmployeesComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService,
-    private employeeDetailsService: EmployeeDetailsService
+    private employeeDetailsService: EmployeeDetailsService,
+  
   ) {}
 
   ngOnInit(): void {
@@ -438,6 +444,19 @@ export class EmployeesComponent implements OnInit {
       .subscribe((data) => {
         this.role$ = of(data);
       });
+      this.featureCommonService.getTeamDropdownLists('TEAMHRHEAD')
+      .subscribe((data)=>{
+        this.teamHRHead$ = of(data);
+      })
+       this.featureCommonService.getTeamDropdownLists('PROJECTMGR')
+      .subscribe((data)=>{
+        this.projectManager$ = of(data);
+      })
+       this.featureCommonService.getTeamDropdownLists('TEAMLEADER')
+      .subscribe((data)=>{
+        this.teamLead$ = of(data);
+      })
+    
   }
 
   selectFirstRowAndShowDetails() {

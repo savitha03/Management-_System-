@@ -9,6 +9,8 @@ import {
 } from '@angular/forms';
 import { DetailsServiceService } from '../../services/details-service.service';
 import { a } from '@angular/cdk/bidi-module.d-D-fEBKdS';
+import { Observable, of } from 'rxjs';
+import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
 
 @Component({
   selector: 'app-personal-details',
@@ -23,16 +25,26 @@ export class PersonalDetailsComponent implements OnInit {
   contactForm!: FormGroup;
   teamsForm!: FormGroup;
   selectedRow: any = null;
+  
+  
+
+  genderList$!: Observable<any>;
+  maritalStatus$!: Observable<any>;
+  role$!: Observable<any>;
+
 
   constructor(
     private fb: FormBuilder,
-    private detailsService: DetailsServiceService
+    private detailsService: DetailsServiceService,
+    private featureCommonService: FeatureCommonServiceService,
   ) {}
   ngOnInit(): void {
     this.formBuilder();
     const employeeId = 'T2506';
 
     this.loadEmployeeData(employeeId);
+
+   this.loadDropdowns();
   }
   //  const formData = {
   //     ...this.selectedRow,
@@ -80,7 +92,7 @@ export class PersonalDetailsComponent implements OnInit {
 
     this.teamsForm = this.fb.group({
       empCode: [null],
-      role: ['', Validators.required],
+      designation: ['', Validators.required],
       teamAndHrHead: ['', Validators.required],
       projectManager: ['', Validators.required],
       teamLead: ['', Validators.required],
@@ -108,5 +120,21 @@ export class PersonalDetailsComponent implements OnInit {
     this.detailsService.getEmployeeTeamDetails(empId).subscribe((data: any) => {
       this.teamsForm.patchValue(data);
     });
+  }
+
+  loadDropdowns(){
+    this.featureCommonService.getDropdownLists('GENDER').subscribe((data) => {
+          this.genderList$ = of(data);
+        });
+     this.featureCommonService
+      .getDropdownLists('MARITALSTATUS')
+      .subscribe((data) => {
+        this.maritalStatus$ = of(data);
+      });
+      this.featureCommonService
+      .getDropdownLists('DESIGNATION')
+      .subscribe((data) => {
+        this.role$ = of(data);
+      });
   }
 }

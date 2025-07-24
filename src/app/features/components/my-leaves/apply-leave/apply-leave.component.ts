@@ -50,6 +50,7 @@ export class ApplyLeaveComponent implements OnInit {
   checkDateEquality() {
     const fromDate = this.leaveForm.get('fromDate')?.value;
     const toDate = this.leaveForm.get('toDate')?.value;
+    
 
     this.showTimeFields = fromDate && toDate && fromDate === toDate;
   }
