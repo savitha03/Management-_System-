@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   AbstractControl,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
@@ -37,11 +37,12 @@ export class ApplyLeaveComponent implements OnInit {
   ngOnInit(): void {
     this.loadDropdowns();
     this.formBuilder();
-    
   }
 
   formBuilder() {
-    this.leaveForm = this.formUtilServiceService.buildReactiveForm(this.leaveFormEnitity);
+    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
+      this.leaveFormEnitity
+    );
     this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
@@ -78,36 +79,35 @@ export class ApplyLeaveComponent implements OnInit {
     };
   }
 
- checkDateEquality() {
-  const fromDate = this.leaveForm.get('fromDate')?.value;
-  const toDate = this.leaveForm.get('toDate')?.value;
-  const sameDay = fromDate && toDate && fromDate === toDate;
+  checkDateEquality() {
+    const fromDate = this.leaveForm.get('fromDate')?.value;
+    const toDate = this.leaveForm.get('toDate')?.value;
+    const sameDay = fromDate && toDate && fromDate === toDate;
 
-  this.showTimeFields = sameDay;
+    this.showTimeFields = sameDay;
 
-  const fromTimeCtrl = this.leaveForm.get('fromTime');
-  const toTimeCtrl = this.leaveForm.get('toTime');
-  const totalHoursCtrl = this.leaveForm.get('totalHours');
+    const fromTimeCtrl = this.leaveForm.get('fromTime');
+    const toTimeCtrl = this.leaveForm.get('toTime');
+    const totalHoursCtrl = this.leaveForm.get('totalHours');
 
-  if (sameDay) {
-    fromTimeCtrl?.setValidators(Validators.required);
-    toTimeCtrl?.setValidators(Validators.required);
-    totalHoursCtrl?.setValidators(Validators.required);
-  } else {
-    fromTimeCtrl?.clearValidators();
-    toTimeCtrl?.clearValidators();
-    totalHoursCtrl?.clearValidators();
+    if (sameDay) {
+      fromTimeCtrl?.setValidators(Validators.required);
+      toTimeCtrl?.setValidators(Validators.required);
+      totalHoursCtrl?.setValidators(Validators.required);
+    } else {
+      fromTimeCtrl?.clearValidators();
+      toTimeCtrl?.clearValidators();
+      totalHoursCtrl?.clearValidators();
 
-    fromTimeCtrl?.setValue('');
-    toTimeCtrl?.setValue('');
-    totalHoursCtrl?.setValue('');
+      fromTimeCtrl?.setValue('');
+      toTimeCtrl?.setValue('');
+      totalHoursCtrl?.setValue('');
+    }
+
+    fromTimeCtrl?.updateValueAndValidity();
+    toTimeCtrl?.updateValueAndValidity();
+    totalHoursCtrl?.updateValueAndValidity();
   }
-
-  fromTimeCtrl?.updateValueAndValidity();
-  toTimeCtrl?.updateValueAndValidity();
-  totalHoursCtrl?.updateValueAndValidity();
-}
-
 
   parseTimeToDate(timeStr: string): Date {
     const [hh, mm] = timeStr.split(':').map(Number);
@@ -157,11 +157,11 @@ export class ApplyLeaveComponent implements OnInit {
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
         if (diffHrs < 4) {
-          this.leaveForm.get('duration')?.setValue("0");
+          this.leaveForm.get('duration')?.setValue('0');
         } else if (diffHrs >= 4 && diffHrs < 6) {
-          this.leaveForm.get('duration')?.setValue("0.5");
+          this.leaveForm.get('duration')?.setValue('0.5');
         } else {
-          this.leaveForm.get('duration')?.setValue("1");
+          this.leaveForm.get('duration')?.setValue('1');
         }
       } else {
         this.leaveForm.get('duration')?.setValue('');
@@ -178,23 +178,30 @@ export class ApplyLeaveComponent implements OnInit {
       .getDropdownLists('LEAVETYPE')
       .subscribe((data) => (this.leaveType$ = of(data)));
   }
+  
+apply() {
+  this.leaveForm.get('empCode')?.patchValue('T2506'); // Set empCode FIRST
 
-  apply() {
-    if (this.leaveForm.valid) {
-      this.leaveForm.get('empCode')?.patchValue('T2506');
-      const leaveData = this.leaveForm.value;
+  if (this.leaveForm.valid) {
+    const leaveData = this.leaveForm.value;
 
-      this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe({
-        next: (res) => {
-          console.log('Leave request submitted', res);
-          this.leaveForm.reset();
-        },
-        error: (err) => {
-          console.error('Submission failed', err);
-        },
-      });
-    } else {
-      this.leaveForm.markAllAsTouched();
-    }
+    console.log('Sending leave request:', leaveData); // Debug line
+
+    this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe({
+      next: (res) => {
+        console.log('Leave request submitted', res);
+        this.leaveForm.reset();
+      },
+      error: (err) => {
+        console.error('Submission failed', err);
+        if (err.error?.errors) {
+          console.table(err.error.errors); // Shows field-level errors
+        }
+      },
+    });
+  } else {
+    this.leaveForm.markAllAsTouched();
   }
+}
+
 }

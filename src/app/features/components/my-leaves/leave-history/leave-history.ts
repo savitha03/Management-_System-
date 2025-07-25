@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ThemeService } from '../../../../shared/services/theme.service';
+import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -17,11 +18,11 @@ export class LeaveHistory implements OnInit {
   isDarkMode = false;
 
   columnDefs: ColDef[] = [
-    { headerName: 'Emp. ID', field: 'empId', width: 110 },
+    { headerName: 'Emp Code', field: 'empCode', width: 120 },
     { headerName: 'Leave Type', field: 'leaveType', width: 140 },
     { headerName: 'From Date', field: 'fromDate', width: 140 },
     { headerName: 'To Date', field: 'toDate', width: 140 },
-    { headerName: 'Duration', field: 'duration', width: 130 },
+    { headerName: 'Duration', field: 'duration', width: 120 },
     {
       headerName: 'Leave Status',
       field: 'status',
@@ -88,60 +89,64 @@ export class LeaveHistory implements OnInit {
     wrapText: true,
   };
 
-  rowData = [
-    {
-      empId: 'ST1176',
-      leaveType: 'Casual Leave',
-      fromDate: '2025-06-01',
-      toDate: '2025-06-03',
-      duration: '3 days',
-      status: 'Approved',
-      reason: 'Family trip',
-    },
-    {
-      empId: 'ST1176',
-      leaveType: 'Casual Leave',
-      fromDate: '2025-06-05',
-      toDate: '2025-06-06',
-      duration: '2 days',
-      status: 'Pending',
-      reason: 'Fever',
-    },
-    {
-      empId: 'ST1176',
-      leaveType: 'Casual Leave',
-      fromDate: '2025-05-28',
-      toDate: '2025-05-30',
-      duration: '3 days',
-      status: 'Approved',
-      reason: 'Personal work',
-    },
-    {
-      empId: 'ST1176',
-      leaveType: 'Overtime',
-      fromDate: '2025-06-02',
-      toDate: '2025-06-02',
-      duration: '1 day',
-      status: 'Rejected',
-      reason: 'No reason provided',
-    },
-    {
-      empId: 'ST1176',
-      leaveType: 'Casual Leave',
-      fromDate: '2025-06-07',
-      toDate: '2025-06-08',
-      duration: '2 days',
-      status: 'Pending',
-      reason: 'Back pain',
-    },
-  ];
+  // rowData = [
+  //   {
+  //     empId: 'ST1176',
+  //     leaveType: 'Casual Leave',
+  //     fromDate: '2025-06-01',
+  //     toDate: '2025-06-03',
+  //     duration: '3 days',
+  //     status: 'Approved',
+  //     reason: 'Family trip',
+  //   },
+  //   {
+  //     empId: 'ST1176',
+  //     leaveType: 'Casual Leave',
+  //     fromDate: '2025-06-05',
+  //     toDate: '2025-06-06',
+  //     duration: '2 days',
+  //     status: 'Pending',
+  //     reason: 'Fever',
+  //   },
+  //   {
+  //     empId: 'ST1176',
+  //     leaveType: 'Casual Leave',
+  //     fromDate: '2025-05-28',
+  //     toDate: '2025-05-30',
+  //     duration: '3 days',
+  //     status: 'Approved',
+  //     reason: 'Personal work',
+  //   },
+  //   {
+  //     empId: 'ST1176',
+  //     leaveType: 'Overtime',
+  //     fromDate: '2025-06-02',
+  //     toDate: '2025-06-02',
+  //     duration: '1 day',
+  //     status: 'Rejected',
+  //     reason: 'No reason provided',
+  //   },
+  //   {
+  //     empId: 'ST1176',
+  //     leaveType: 'Casual Leave',
+  //     fromDate: '2025-06-07',
+  //     toDate: '2025-06-08',
+  //     duration: '2 days',
+  //     status: 'Pending',
+  //     reason: 'Back pain',
+  //   },
+  // ];
 
-  constructor(private themeService: ThemeService) {}
+  rowData: any[] = []; // Initially empty, will be filled by API
+
+  constructor(private themeService: ThemeService, private leaveManagementService:LeaveManagementServiceService) {}
 
   ngOnInit(): void {
     this.themeService.darkMode$.subscribe((isDark: any) => {
       this.isDarkMode = isDark;
     });
+      this.loadLeaveHistory();
+
   }
 
   editPendingLeave(rowData: any) {
@@ -155,4 +160,19 @@ export class LeaveHistory implements OnInit {
       // You can add logic here to remove the row from rowData and refresh grid if needed
     }
   }
+
+  loadLeaveHistory() {
+  this.leaveManagementService.getEmployeeLeaveHistory('T2506').subscribe((data: any[]) => {
+    this.rowData = data.map((leave) => ({
+      empId: leave.empCode,
+      leaveType: leave.typeName,
+      fromDate: leave.fromDate,
+      toDate: leave.toDate,
+      duration: leave.duration + ' ' + (leave.duration === '1' ? 'day' : 'days'),
+      status: leave.status,
+      reason: leave.reason,
+    }));
+  });
+}
+
 }
