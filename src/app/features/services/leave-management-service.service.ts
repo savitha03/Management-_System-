@@ -28,9 +28,6 @@ export class LeaveManagementServiceService {
     return this.http.post(`${this.appUrl}/api/LeaveManagement/apply`,userData).pipe(
     map((data:any)=>(data)))}
 
-  // getEmployeeLeaveHistory(){
-  //   return this.http.get(`${this.appUrl}/api/LeaveManagement/my-history`);
-  // }
   getEmployeeLeaveHistory(p0: string): Observable<LeaveRecord[]> {
    let queryParams = new HttpParams();
    queryParams=queryParams.append('empCode',p0)
@@ -41,10 +38,11 @@ export class LeaveManagementServiceService {
 
     return this.http.get(`${this.appUrl}/api/LeaveManagement/users-history`);
   }
-  // UpdateEmployeeLeaveRequest(){
-  //   return this.http.put(`${this.appUrl}/api/LeaveManagement/update-leave`);
-  // }
-  // DeleteEmployeeLeaveRequest(){
-  //   return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`);
-  // }
+  UpdateEmployeeLeaveRequest(updateUser:any){
+    return this.http.put(`${this.appUrl}/api/LeaveManagement/update-leave`,updateUser);
+  }
+
+  DeleteEmployeeLeaveRequest(deleteUser:any){
+    return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`,deleteUser);
+  }
 }

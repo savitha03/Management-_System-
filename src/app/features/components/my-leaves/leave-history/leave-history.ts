@@ -4,6 +4,9 @@ import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CoreModalComponent } from '../../../../shared/modals/core-modal/core-modal.component';
+import { ApplyLeaveComponent, UpdateLeaveComponent } from '../apply-leave/apply-leave.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -15,27 +18,34 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   encapsulation: ViewEncapsulation.None,
 })
 export class LeaveHistory implements OnInit {
+  leaveTypeLabels: { [key: string]: string } = {
+    CASUAL: 'Casual Leave',
+    LOSSOFPAY: 'Loss Of Pay',
+    COMPENSATORYOFF: 'Comp Off',
+    OVERTIME: 'OverTime',
+  };
+
   isDarkMode = false;
 
   columnDefs: ColDef[] = [
     { headerName: 'Emp Code', field: 'empCode', width: 120 },
     { headerName: 'Leave Type', field: 'leaveType', width: 140 },
     { headerName: 'From Date', field: 'fromDate', width: 140 },
-    { headerName: 'To Date', field: 'toDate', width: 140 },
-    { headerName: 'Duration', field: 'duration', width: 120 },
+    { headerName: 'To Date', field: 'toDate', width: 130 },
+    { headerName: 'Duration', field: 'duration', width: 130 },
     {
       headerName: 'Leave Status',
-      field: 'status',
+      field: 'leaveStatus',
       width: 150,
       cellClass: (params) => {
-        if (params.value === 'Approved') return 'ag-center status-approved';
-        if (params.value === 'Pending') return 'ag-center status-pending';
-        if (params.value === 'Rejected') return 'ag-center status-rejected';
+        if (params.value === 'APPROVED') return 'ag-center status-approved';
+        if (params.value === 'PENDING') return 'ag-center status-pending';
+        if (params.value === 'REJECTED') return 'ag-center status-rejected';
         return 'ag-center';
       },
       cellRenderer: (params: any) => {
         // Just return plain text, no span needed now
-        return params.value;
+        return params.value ==='APPROVED' ? 'Approved' : params.value==='PENDING'?'Pending' : params.value==='REJECTED'?'Rejected' : ''
       },
     },
     {
@@ -44,7 +54,7 @@ export class LeaveHistory implements OnInit {
       width: 300,
       wrapText: true, // optional but recommended for wrapping
       autoHeight: true,
-      filter:false,
+      filter: false,
       cellStyle: { whiteSpace: 'normal', overflowWrap: 'break-word' },
     },
     {
@@ -56,7 +66,7 @@ export class LeaveHistory implements OnInit {
         const container = document.createElement('div');
         container.style.textAlign = 'center';
 
-        if (params.data.status === 'Pending') {
+        if (params.data.leaveStatus === 'PENDING') {
           const editBtn = document.createElement('button');
           editBtn.className = 'btn btn-outline-success btn-sm me-3';
           editBtn.title = 'Edit';
@@ -137,42 +147,121 @@ export class LeaveHistory implements OnInit {
   //   },
   // ];
 
-  rowData: any[] = []; // Initially empty, will be filled by API
+  rowData: any[] = [];
 
-  constructor(private themeService: ThemeService, private leaveManagementService:LeaveManagementServiceService) {}
+  constructor(
+    private themeService: ThemeService,
+    private leaveManagementService: LeaveManagementServiceService,
+    private modalService:NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.themeService.darkMode$.subscribe((isDark: any) => {
       this.isDarkMode = isDark;
     });
-      this.loadLeaveHistory();
-
+    this.loadLeaveHistory();
+    this.leaveManagementService
+      .getEmployeeLeaveHistory('T2506')
+      .subscribe((data: any[]) => {
+        // console.log('Raw API Data:', data);
+      });
   }
 
   editPendingLeave(rowData: any) {
-    alert(`Editing pending leave for ${rowData.empId}`);
+    // alert(`Editing pending leave for ${rowData.empCode}`);
+    const editModal=this.modalService.open(UpdateLeaveComponent,{
+      backdrop:"static",
+      size:"xl",
+      keyboard:false
+    });
+    editModal.componentInstance.leaveData={
+      leaveType:rowData.leaveType,
+      fromDate:rowData.fromDate,
+      toDate:rowData.toDate,
+      fromTime:rowData.fromTime,
+      toTime:rowData.toTime,
+      reason:rowData.reason
+    };
+
+   editModal.componentInstance.eventHandler$.subscribe((data:any)=>{
+    if(data==="Update"){
+      const updateUser={
+        leaveId:rowData.leaveId,
+        empCode:rowData.empCode,
+        leaveType:rowData.leaveType,
+        fromDate:rowData.fromDate,
+        toDate:rowData.toDate,
+        fromTime:rowData.fromTime,
+        toTime:rowData.toTime,
+        reason:rowData.reason
+      }
+       this.leaveManagementService.UpdateEmployeeLeaveRequest(updateUser).subscribe((data)=>{
+          if(data){
+            this.loadLeaveHistory();
+            editModal.close();
+          }
+        }
+   )}
+   })
   }
 
   deletePendingLeave(rowData: any) {
-    const confirmed = confirm(`Delete leave request for ${rowData.empId}?`);
-    if (confirmed) {
-      alert(`Deleted pending leave for ${rowData.empId}`);
-      // You can add logic here to remove the row from rowData and refresh grid if needed
-    }
+    // console.log(rowData);
+    
+    const deleteModal = this.modalService.open(CoreModalComponent,{
+      backdrop:"static",
+      size:"lg",
+      keyboard:false
+    });
+
+    deleteModal.componentInstance.header="Confirmation";
+    deleteModal.componentInstance.content="Do You Want To Delete Leave Request ?"
+    deleteModal.result.then((result)=>{
+      console.log(result);
+      
+    })
+    deleteModal.componentInstance.eventHandler$.subscribe((data:any)=>{
+      if(data==="Proceed"){
+
+        const deleteUser ={
+          leaveId:rowData.leaveId,
+          empCode:rowData.empCode
+        }
+        this.leaveManagementService.DeleteEmployeeLeaveRequest(deleteUser).subscribe((data)=>{
+          if(data){
+            this.loadLeaveHistory();
+            deleteModal.close();
+          }
+        }
+      );
+       
+        
+        // this.leaveManagementService.DeleteEmployeeLeaveRequest(rowData.leaveId).subscribe(() => {
+        // this.rowData = this.rowData.filter(row => row.leaveId !== rowData.leaveId);
+        // });
+
+      }
+    })
+
+
+
   }
 
   loadLeaveHistory() {
-  this.leaveManagementService.getEmployeeLeaveHistory('T2506').subscribe((data: any[]) => {
-    this.rowData = data.map((leave) => ({
-      empId: leave.empCode,
-      leaveType: leave.typeName,
-      fromDate: leave.fromDate,
-      toDate: leave.toDate,
-      duration: leave.duration + ' ' + (leave.duration === '1' ? 'day' : 'days'),
-      status: leave.status,
-      reason: leave.reason,
-    }));
-  });
-}
-
+    this.leaveManagementService
+      .getEmployeeLeaveHistory('T2506')
+      .subscribe((data: any[]) => {
+        this.rowData = data.map((leave) => ({
+          empCode: leave.empCode,
+          leaveType: this.leaveTypeLabels[leave.leaveType] || leave.leaveType,
+          fromDate: leave.fromDate?.slice(0, 10),
+          toDate: leave.toDate?.slice(0, 10),
+          duration:
+            leave.duration + ' ' + (leave.duration === '1' ? 'day' : 'days'),
+          leaveStatus: leave.leaveStatus,
+          reason: leave.reason,
+          leaveId:leave.leaveId
+        }));
+      });
+  }
 }
