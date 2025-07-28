@@ -34,10 +34,10 @@ export class LeaveManagementServiceService {
   return this.http.get<LeaveRecord[]>(`${this.appUrl}/api/LeaveManagement/my-history`,{params:queryParams});
 }
 
-  getUsersLeaveHistory(){
-
+  getUsersLeaveHistory():Observable<any>{
     return this.http.get(`${this.appUrl}/api/LeaveManagement/users-history`);
   }
+
   UpdateEmployeeLeaveRequest(updateUser:any){
     return this.http.put(`${this.appUrl}/api/LeaveManagement/update-leave`,updateUser);
   }

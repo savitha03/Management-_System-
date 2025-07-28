@@ -191,7 +191,8 @@ export class ApplyLeaveComponent implements OnInit {
       const leaveData = this.leaveForm.value;
       this.leaveManagementService
         .saveEmployeeLeaveRequest(leaveData)
-        .subscribe({
+        .subscribe(()=>{
+          this.leaveForm.reset();
         });
     } else {
       this.leaveForm.markAllAsTouched();
@@ -354,11 +355,20 @@ export class UpdateLeaveComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDropdowns();
+    // this.loadDropdowns();
     this.formBuilder();
+      this.featureCommonService.getDropdownLists('LEAVETYPE').subscribe(data => {
+    this.leaveType$ = of(data);
+
+    // ✅ Now that dropdown values are loaded, patch the form
     if (this.leaveData) {
       this.leaveForm.patchValue(this.leaveData);
     }
+  });
+
+
+    
+   
   }
 
   formBuilder() {
@@ -479,11 +489,11 @@ export class UpdateLeaveComponent implements OnInit {
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
         if (diffHrs < 4) {
-          this.leaveForm.get('duration')?.setValue('0');
+          this.leaveForm.get('duration')?.setValue('0 day');
         } else if (diffHrs >= 4 && diffHrs < 6) {
-          this.leaveForm.get('duration')?.setValue('0.5');
+          this.leaveForm.get('duration')?.setValue('0.5 day');
         } else {
-          this.leaveForm.get('duration')?.setValue('1');
+          this.leaveForm.get('duration')?.setValue('1 day');
         }
       } else {
         this.leaveForm.get('duration')?.setValue('');
@@ -491,7 +501,7 @@ export class UpdateLeaveComponent implements OnInit {
     } else {
       const diffTime = to.getTime() - from.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      this.leaveForm.get('duration')?.setValue(diffDays.toString());
+      this.leaveForm.get('duration')?.setValue(`${diffDays.toString()} days`);
     }
   }
 
@@ -514,7 +524,13 @@ export class UpdateLeaveComponent implements OnInit {
     }
   }
   update(){
-    this.eventHandler$.emit('Update')
+   
+    const payload = {
+      type: 'UPDATE',
+      value : this.leaveForm.getRawValue()
+    }
+
+    this.eventHandler$.emit(payload);
   }
 
 }

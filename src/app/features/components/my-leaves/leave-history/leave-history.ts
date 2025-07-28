@@ -175,25 +175,29 @@ export class LeaveHistory implements OnInit {
       keyboard:false
     });
     editModal.componentInstance.leaveData={
+      empCode:rowData.empCode,
+      leaveId:rowData.leaveId,
       leaveType:rowData.leaveType,
       fromDate:rowData.fromDate,
       toDate:rowData.toDate,
       fromTime:rowData.fromTime,
       toTime:rowData.toTime,
-      reason:rowData.reason
+      reason:rowData.reason,
+      duration:rowData.duration
     };
 
    editModal.componentInstance.eventHandler$.subscribe((data:any)=>{
-    if(data==="Update"){
+    if(data.type ==="UPDATE"){
       const updateUser={
-        leaveId:rowData.leaveId,
-        empCode:rowData.empCode,
-        leaveType:rowData.leaveType,
-        fromDate:rowData.fromDate,
-        toDate:rowData.toDate,
-        fromTime:rowData.fromTime,
-        toTime:rowData.toTime,
-        reason:rowData.reason
+        leaveId:data.value.leaveId,
+        empCode:data.value.empCode,
+        leaveType:data.value.leaveType,
+        fromDate:data.value.fromDate,
+        toDate:data.value.toDate,
+        fromTime:data.value.fromTime,
+        toTime:data.value.toTime,
+        reason:data.value.reason,
+        duration:data.value.duration
       }
        this.leaveManagementService.UpdateEmployeeLeaveRequest(updateUser).subscribe((data)=>{
           if(data){
@@ -253,11 +257,13 @@ export class LeaveHistory implements OnInit {
       .subscribe((data: any[]) => {
         this.rowData = data.map((leave) => ({
           empCode: leave.empCode,
-          leaveType: this.leaveTypeLabels[leave.leaveType] || leave.leaveType,
+          leaveType:leave.leaveType,
+          fromTime:leave.fromTime,
+          toTime:leave.toTime,
           fromDate: leave.fromDate?.slice(0, 10),
           toDate: leave.toDate?.slice(0, 10),
           duration:
-            leave.duration + ' ' + (leave.duration === '1' ? 'day' : 'days'),
+            leave.duration + ' ' + (Number(leave.duration) <= 1 ? 'day' : 'days'),
           leaveStatus: leave.leaveStatus,
           reason: leave.reason,
           leaveId:leave.leaveId

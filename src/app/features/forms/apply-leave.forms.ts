@@ -10,6 +10,14 @@ export const leaveFormObject: any = {
     validations: null,
     disabled: false,
   },
+     leaveId: {
+    id: uuidv4(),
+    label: 'Leave Id',
+    value: '',
+    type: 'Hidden Field',
+    validations: null,
+    disabled: false,
+  },
     leaveType: {
     id: uuidv4(),
     label: 'Leave Type',
@@ -104,5 +112,6 @@ export const leaveFormObject: any = {
     ],
     disabled: false,
   },
+
   
 };
