@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { SharedService } from '../../services/shared.service';
+import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-top-nav',
@@ -15,17 +17,26 @@ export class TopNav implements OnInit {
   profile$:any;
   isDarkMode = false;
   profile:any;
+  loggedInUser:any;
 
-  constructor(private themeService: ThemeService,private sharedService: SharedService) {
+  constructor(private themeService: ThemeService,private sharedService: SharedService, private store:Store) {
     this.profile$=this.sharedService.getProfileSubject();
      this.profile$?.subscribe((data:any)=>{
       if(data){
         this.profile= data;
       }
     })
+   this.store.select(selectAuthUser).subscribe((user:any) => {
+      if(user){
+        this.loggedInUser= user;
+      }
+    });
   }
 
   ngOnInit(): void {
+    
+ 
+
     // 1. Check if user saved preference
     const savedTheme = localStorage.getItem('theme');
 

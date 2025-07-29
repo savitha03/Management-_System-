@@ -7,6 +7,8 @@ import { LeaveManagementServiceService } from '../../../services/leave-managemen
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModalComponent } from '../../../../shared/modals/core-modal/core-modal.component';
 import { ApplyLeaveComponent, UpdateLeaveComponent } from '../apply-leave/apply-leave.component';
+import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -18,6 +20,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   encapsulation: ViewEncapsulation.None,
 })
 export class LeaveHistory implements OnInit {
+
+  loggedInUser:any;
+
   leaveTypeLabels: { [key: string]: string } = {
     CASUAL: 'Casual Leave',
     LOSSOFPAY: 'Loss Of Pay',
@@ -153,7 +158,12 @@ export class LeaveHistory implements OnInit {
     private themeService: ThemeService,
     private leaveManagementService: LeaveManagementServiceService,
     private modalService:NgbModal,
-  ) {}
+    private store:Store
+  ) {this.store.select(selectAuthUser).subscribe((user:any) => {
+        if(user){
+          this.loggedInUser= user;
+        }
+      });}
 
   ngOnInit(): void {
     this.themeService.darkMode$.subscribe((isDark: any) => {
@@ -161,7 +171,7 @@ export class LeaveHistory implements OnInit {
     });
     this.loadLeaveHistory();
     this.leaveManagementService
-      .getEmployeeLeaveHistory('T2506')
+      .getEmployeeLeaveHistory(this.loggedInUser.empCode)
       .subscribe((data: any[]) => {
         // console.log('Raw API Data:', data);
       });
@@ -220,10 +230,6 @@ export class LeaveHistory implements OnInit {
 
     deleteModal.componentInstance.header="Confirmation";
     deleteModal.componentInstance.content="Do You Want To Delete Leave Request ?"
-    deleteModal.result.then((result)=>{
-      console.log(result);
-      
-    })
     deleteModal.componentInstance.eventHandler$.subscribe((data:any)=>{
       if(data==="Proceed"){
 
@@ -253,7 +259,7 @@ export class LeaveHistory implements OnInit {
 
   loadLeaveHistory() {
     this.leaveManagementService
-      .getEmployeeLeaveHistory('T2506')
+      .getEmployeeLeaveHistory(this.loggedInUser.empCode)
       .subscribe((data: any[]) => {
         this.rowData = data.map((leave) => ({
           empCode: leave.empCode,

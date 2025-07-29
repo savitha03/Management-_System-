@@ -10,21 +10,21 @@
         </div>
         <div>
             <button class="btn btn-danger" *ngIf="isEdit" (click)="viewOrEdit('Edit')">
-              <i class="bi bi-pencil-square"></i>  Edit
+                <i class="bi bi-pencil-square"></i> Edit
             </button>
             <button class="btn btn-secondary" *ngIf="!isEdit" (click)="viewOrEdit('View')">
-              <i class="bi bi-binoculars"></i>  View 
+                <i class="bi bi-binoculars"></i> View
             </button>
         </div>
 
 
     </div>
-   
+
     <div class="mt-3">
         <div class="scroll-wrapper p-3" style="position: relative; height: 55vh;" *ngIf="activeTab === 'personal'">
             <ng-scrollbar style="height: 55vh;">
                 <h5 class="mt-2">Employee Details</h5>
-                <form [formGroup]="detailsForm"  class="mt-4">
+                <form [formGroup]="detailsForm" class="mt-4">
                     <!-- (ngSubmit)="next()" -->
                     <div class="form-grid">
                         <div>
@@ -77,7 +77,8 @@
                             <select formControlName="maritalStatus"
                                 [ngClass]="{ required: detailsForm.controls['maritalStatus'].errors }">
                                 <option value="" disabled>--Select Marital Status--</option>
-                                <option *ngFor="let maritalStatus of maritalStatus$ | async" [ngValue]="maritalStatus.code">
+                                <option *ngFor="let maritalStatus of maritalStatus$ | async"
+                                    [ngValue]="maritalStatus.code">
                                     {{maritalStatus.screenName}}
                                 </option>
                                 <!-- <option value="Single">Single</option>
@@ -122,13 +123,24 @@
                                 </div>
                                 <div>
                                     <label>City</label>
-                                    <input type="text" formControlName="city"
-                                        [ngClass]="{ required: detailsForm.controls['city'].errors }" />
+                                    <select formControlName="city"
+                                        [ngClass]="{ required: detailsForm.controls['city'].errors }">
+                                        <option value="">--Select City--</option>
+                                        <option *ngFor="let city of cityList$|async" [ngValue]="city.code">
+                                            {{city.screenName}}
+                                        </option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label>State</label>
-                                    <input type="text" formControlName="state"
-                                        [ngClass]="{ required: detailsForm.controls['state'].errors }" />
+                                    <select formControlName="state"
+                                        [ngClass]="{ required: detailsForm.controls['state'].errors }">
+                                        <option value="">--Select State--</option>
+                                        <option *ngFor="let state of stateList$|async" [ngValue]="state.code">
+                                            {{state.screenName}}
+                                        </option>
+                                    </select>
+
                                 </div>
                                 <div>
                                     <label>Zip Code</label>
@@ -137,8 +149,13 @@
                                 </div>
                                 <div>
                                     <label>Country</label>
-                                    <input type="text" formControlName="country"
-                                        [ngClass]="{ required: detailsForm.controls['country'].errors }" />
+                                    <select formControlName="country"
+                                        [ngClass]="{ required: detailsForm.controls['country'].errors }">
+                                        <option value="">--Select Country--</option>
+                                        <option *ngFor="let country of countryList$|async" [ngValue]="country.code">
+                                            {{country.screenName}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -167,23 +184,25 @@
                                     <label>Team and HR Head</label>
                                     <select formControlName="teamHRHead"
                                         [ngClass]="{required: detailsForm.controls['teamHRHead'].errors}">
-                                         <option value="">--Select Team Manager--</option> 
-                                         <option *ngFor="let teamHRHead of teamHRHead$|async" [ngValue]="teamHRHead.code">
+                                        <option value="">--Select Team Manager--</option>
+                                        <option *ngFor="let teamHRHead of teamHRHead$|async"
+                                            [ngValue]="teamHRHead.code">
                                             {{teamHRHead.screenName}}
-                                         </option>
+                                        </option>
                                         <!-- <option value="TM1">Manikandan Natarajan</option>
                                         <option value="TM2">Krishnakumar Gajain</option>
-                                        <option value="TM3">Rajesh Doraiappa</option> --> 
+                                        <option value="TM3">Rajesh Doraiappa</option> -->
                                     </select>
                                 </div>
                                 <div>
                                     <label>Project Manager</label>
                                     <select formControlName="projectManager"
                                         [ngClass]="{ required: detailsForm.controls['projectManager'].errors }">
-                                        <option value="" >--Select Project Manager--</option>
-                                         <option *ngFor="let projectManager of projectManager$|async" [ngValue]="projectManager.code">
+                                        <option value="">--Select Project Manager--</option>
+                                        <option *ngFor="let projectManager of projectManager$|async"
+                                            [ngValue]="projectManager.code">
                                             {{projectManager.screenName}}
-                                         </option>
+                                        </option>
                                         <!-- <option value="PM1">Ramesh Thulasingam</option>
                                         <option value="PM2">Dinesh Vidhyasagar</option>
                                         <option value="PM3">Ganesh Gunasekaran</option>  -->
@@ -196,7 +215,7 @@
                                         <option value="">--Select Team Lead--</option>
                                         <option *ngFor="let teamLead of teamLead$|async" [ngValue]="teamLead.code">
                                             {{teamLead.screenName}}
-                                         </option>
+                                        </option>
                                         <!-- <option value="TL1">TL1</option>
                                         <option value="TL2">TL2</option>
                                         <option value="TL3">TL3</option>
@@ -224,9 +243,10 @@
                             <select class="form-select text-start" formControlName="employmentStatus"
                                 [ngClass]="{ required: detailsForm.controls['employmentStatus'].errors }">
                                 <option value="" disabled>--Select Employment Status--</option>
-                                <option *ngFor="let employmentStatus of emptStatus$ | async" [ngValue]="employmentStatus.code">
+                                <option *ngFor="let employmentStatus of emptStatus$ | async"
+                                    [ngValue]="employmentStatus.code">
                                     {{employmentStatus.screenName}}
-                                </option>   
+                                </option>
                                 <!-- <option value="trainee">Trainee</option>
                                 <option value="contract">Contract</option>
                                 <option value="permanent">Permanent</option>  -->
@@ -277,7 +297,8 @@
                                     <select class="form-select text-start" formControlName="payFrequency"
                                         [ngClass]="{ required: detailsForm.controls['payFrequency'].errors }">
                                         <option value="" disabled>--Select Pay Frequency--</option>
-                                        <option *ngFor=" let payFrequency of payFrequency$ |async" [ngValue]="payFrequency.code">
+                                        <option *ngFor=" let payFrequency of payFrequency$ |async"
+                                            [ngValue]="payFrequency.code">
                                             {{payFrequency.screenName}}
                                         </option>
                                         <!-- <option value="Daily">Daily</option>

@@ -7,8 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Observable } from 'rxjs';
+import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
+import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-employees-form',
@@ -19,43 +23,42 @@ import { Observable } from 'rxjs';
 export class EmployeesFormComponent implements OnInit {
   @Input() detailsForm: any;
   @Input() activeTab: any;
-  @Input() isEdit:any;
- 
-  @Input() genderList$!:Observable<any>;
-  @Input() empStatus$!:Observable<any>;
-  @Input() maritalStatus$!:Observable<any>;
-  @Input() emptStatus$!:Observable<any>;
-  @Input() currency$!:Observable<any>;
-  @Input() payFrequency$!:Observable<any>;
-  @Input() role$!:Observable<any>;
-  @Input() teamHRHead$!:Observable<any>;
-  @Input() projectManager$!:Observable<any>;
-  @Input() teamLead$!:Observable<any>;
-  
+  @Input() isEdit: any;
+
+  @Input() genderList$!: Observable<any>;
+  @Input() empStatus$!: Observable<any>;
+  @Input() maritalStatus$!: Observable<any>;
+  @Input() emptStatus$!: Observable<any>;
+  @Input() currency$!: Observable<any>;
+  @Input() payFrequency$!: Observable<any>;
+  @Input() role$!: Observable<any>;
+  @Input() teamHRHead$!: Observable<any>;
+  @Input() projectManager$!: Observable<any>;
+  @Input() teamLead$!: Observable<any>;
+  @Input() cityList$!: Observable<any>;
+  @Input() stateList$!: Observable<any>;
+  @Input() countryList$!: Observable<any>;
 
   @Output() activeTabEmit = new EventEmitter<any>();
   @Output() activeViewOrEdit = new EventEmitter<any>();
-  @Output() handleAppEvent= new EventEmitter<any>();
-
-
+  @Output() handleAppEvent = new EventEmitter<any>();
 
   employmentTabEnabled: boolean = false;
-  currentMode:'Edit'|'View' = 'View';
+  currentMode: 'Edit' | 'View' = 'View';
 
-  constructor() {}
+  constructor(private modalService: NgbModal, private store: Store) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   navButtons(value: any) {
     if (value === 'next') {
       this.activeTab = 'employment';
     } else if (value === 'previous') {
       this.activeTab = 'personal';
     } else if (value === 'save') {
-      const event:any={
-        name:'SAVE',
-        component:'EmployeesFormComponent',
-        value:null
+      const event: any = {
+        name: 'SAVE',
+        component: 'EmployeesFormComponent',
+        value: null,
       };
       this.handleAppEvent.emit(event);
     } else {
@@ -63,11 +66,11 @@ export class EmployeesFormComponent implements OnInit {
     this.activeTabEmitter(value);
   }
 
-  activeTabEmitter(value:any) {
-    const payload={
-      btnValue:value,
-      activeTab:this.activeTab
-    }
+  activeTabEmitter(value: any) {
+    const payload = {
+      btnValue: value,
+      activeTab: this.activeTab,
+    };
     this.activeTabEmit.emit(payload);
   }
 
@@ -75,42 +78,32 @@ export class EmployeesFormComponent implements OnInit {
     this.activeTab = 'personal';
   }
 
-
-
-   viewOrEdit(mode: 'Edit' | 'View'): void {
+  viewOrEdit(mode: 'Edit' | 'View'): void {
     this.currentMode = mode;
-    this.isEdit      = mode === 'View';
 
-    this.activeViewOrEdit.emit(this.isEdit)
+    if (mode === 'View') {
+      const editModal = this.modalService.open(CoreModalComponent, {
+        backdrop: 'static',
+        size: 'lg',
+        keyboard: false,
+      });
 
-  // get isPersonalDetailsValid():boolean{
-  //   const personalControls=[
-  //   'employeeId', 'empStatus', 'firstName', 'lastName',
-  //   'dob', 'gender', 'maritalStatus', 'nationality',
-  //   'phoneNumber', 'alternateNumber', 'email',
-  //   'streetAddress', 'city', 'state', 'zipCode', 'country',
-  //   'role', 'teamManager', 'projectManager', 'teamLead'
-  //   ];
-  //   return personalControls.every(field=>this.detailsForm.controls[field]?.valid);
-  // }
+      editModal.componentInstance.header = 'Confirmation';
+      editModal.componentInstance.content = `Do you want to edit ${
+        this.detailsForm.get('fullName').value
+      }'s Detail ?`;
+      editModal.componentInstance.isYesOrNo = true;
 
-  // get isEmployeeDetailsValid():boolean{
-  //   const employeeControls=[
-  //     'jobTitle','employmentStatus','joinedDate','skillset',
-  //     'payGrade','currency','basicSalary','payFrequency'
-  //   ];
-  //   return employeeControls.every(field=>this.detailsForm.controls[field]?.valid);
-  // }
-
-  // next() {
-  //   if (this.detailsForm.valid) {
-  //     console.log('Leave Application Submitted:', this.detailsForm.value);
-  //     this.detailsForm.reset();
-  //   } else {
-  //     this.detailsForm.markAllAsTouched();
-  //   }
-  // }
-   }
- 
-  
+      editModal.componentInstance.eventHandler$.subscribe((data: any) => {
+        if (data === 'Proceed') {
+          this.isEdit = mode === 'View';
+          this.activeViewOrEdit.emit(this.isEdit);
+          editModal.close();
+        }
+      });
+    }else{
+      this.isEdit = mode !== 'Edit';
+        this.activeViewOrEdit.emit(this.isEdit)
+    }
   }
+}

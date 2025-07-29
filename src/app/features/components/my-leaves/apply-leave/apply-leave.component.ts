@@ -14,6 +14,8 @@ import { LeaveManagementServiceService } from '../../../services/leave-managemen
 import { leaveFormObject } from '../../../forms/apply-leave.forms';
 import { FormUtilServiceService } from '../../../../shared/services/form-util-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngrx/store';
+import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 
 @Component({
   selector: 'app-apply-leave',
@@ -25,6 +27,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class ApplyLeaveComponent implements OnInit {
   @Input() leaveData: any;
 
+
+  loggedInUser: any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
   leaveType$!: Observable<any>;
@@ -34,8 +38,15 @@ export class ApplyLeaveComponent implements OnInit {
     private fb: FormBuilder,
     private featureCommonService: FeatureCommonServiceService,
     private formUtilServiceService: FormUtilServiceService,
-    private leaveManagementService: LeaveManagementServiceService
-  ) {}
+    private leaveManagementService: LeaveManagementServiceService,
+    private store:Store
+  ) {
+    this.store.select(selectAuthUser).subscribe((user:any) => {
+            if(user){
+              this.loggedInUser= user;
+            }
+          });
+  }
 
   ngOnInit(): void {
     this.loadDropdowns();
@@ -186,7 +197,7 @@ export class ApplyLeaveComponent implements OnInit {
   }
 
   apply() {
-    this.leaveForm.get('empCode')?.patchValue('T2506'); // Set empCode FIRST
+    this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode); // Set empCode FIRST
     if (this.leaveForm.valid) {
       const leaveData = this.leaveForm.value;
       this.leaveManagementService
@@ -341,6 +352,8 @@ export class UpdateLeaveComponent implements OnInit {
   @Input() content:any;
   @Output() eventHandler$ = new EventEmitter();
 
+
+  loggedInUser:any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
   leaveType$!: Observable<any>;
@@ -352,7 +365,14 @@ export class UpdateLeaveComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
     public activeModal:NgbActiveModal,
-  ) {}
+    private store:Store
+  ) {
+    this.store.select(selectAuthUser).subscribe((user:any) => {
+        if(user){
+          this.loggedInUser= user;
+        }
+      });
+  }
 
   ngOnInit(): void {
     // this.loadDropdowns();
@@ -512,7 +532,7 @@ export class UpdateLeaveComponent implements OnInit {
   }
 
   apply() {
-    this.leaveForm.get('empCode')?.patchValue('T2506'); // Set empCode FIRST
+    this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode); // Set empCode FIRST
     if (this.leaveForm.valid) {
       const leaveData = this.leaveForm.value;
       this.leaveManagementService

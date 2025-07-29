@@ -49,6 +49,9 @@ export class EmployeesComponent implements OnInit {
   teamHRHead$! : Observable<any>;
   projectManager$! :Observable<any>;
   teamLead$! :Observable<any>;
+  cityList$! :Observable<any>;
+  stateList$!:Observable<any>;
+  countryList$!: Observable<any>;
   
 
 
@@ -431,6 +434,15 @@ export class EmployeesComponent implements OnInit {
       .subscribe((data) => {
         this.emptStatus$ = of(data);
       });
+    this.featureCommonService.getDropdownLists('CITY').subscribe((data)=>{
+      this.cityList$ = of(data);
+    });
+     this.featureCommonService.getDropdownLists('STATE').subscribe((data)=>{
+      this.stateList$ = of(data);
+    });
+     this.featureCommonService.getDropdownLists('COUNTRY').subscribe((data)=>{
+      this.countryList$ = of(data);
+    });
     this.featureCommonService.getDropdownLists('CURRENCY').subscribe((data) => {
       this.currency$ = of(data);
     });

@@ -11,6 +11,8 @@ import { DetailsServiceService } from '../../services/details-service.service';
 import { a } from '@angular/cdk/bidi-module.d-D-fEBKdS';
 import { Observable, of } from 'rxjs';
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
+import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-personal-details',
@@ -25,6 +27,7 @@ export class PersonalDetailsComponent implements OnInit {
   contactForm!: FormGroup;
   teamsForm!: FormGroup;
   selectedRow: any = null;
+  loggedInUser:any;
   
   
 
@@ -37,14 +40,28 @@ export class PersonalDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private detailsService: DetailsServiceService,
     private featureCommonService: FeatureCommonServiceService,
-  ) {}
+    private store: Store
+  ) {
+     this.store.select(selectAuthUser).subscribe((user:any) => {
+      if(user){
+        this.loggedInUser= user;
+      }
+    });
+  }
   ngOnInit(): void {
     this.formBuilder();
-    const employeeId = 'T2506';
+    
 
-    this.loadEmployeeData(employeeId);
+    this.loadEmployeeData(this.loggedInUser.empCode);
 
    this.loadDropdowns();
+
+
+//     this.store.select(selectAuthUser).subscribe((user:any) => {
+//   if (user) {
+//     console.log('Logged-in user:', user);
+//   }
+// });
   }
   //  const formData = {
   //     ...this.selectedRow,

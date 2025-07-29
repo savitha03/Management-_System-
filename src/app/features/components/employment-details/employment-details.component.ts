@@ -10,6 +10,8 @@ import {
 import { DetailsServiceService } from '../../services/details-service.service';
 import { Observable, of } from 'rxjs';
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
+import { Store } from '@ngrx/store';
+import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
 
 @Component({
   selector: 'app-employment-details',
@@ -21,6 +23,7 @@ export class EmploymentDetailsComponent implements OnInit {
   activeTab = 'job';
   jobForm!: FormGroup;
   salaryForm!: FormGroup;
+  loggedInUser:any;
 
   // @Input() detailsForm: any;
 
@@ -31,13 +34,19 @@ export class EmploymentDetailsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private detailsService: DetailsServiceService,
-    private featureCommonService: FeatureCommonServiceService
-  ) {}
+    private featureCommonService: FeatureCommonServiceService,
+    private store:Store
+  ) {
+    this.store.select(selectAuthUser).subscribe((user:any) => {
+            if(user){
+              this.loggedInUser= user;
+            }
+          });
+  }
 
   ngOnInit(): void {
     this.formBuilder();
-    const employeeId = 'T2506';
-    this.loadEmployeeData(employeeId);
+    this.loadEmployeeData(this.loggedInUser.empCode);
     this.loadDropdowns();
   }
 
