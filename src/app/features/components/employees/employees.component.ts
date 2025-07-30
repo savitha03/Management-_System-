@@ -220,10 +220,42 @@ export class EmployeesComponent implements OnInit {
 
   handleAppEvent(event: any) {
     switch (event.name) {
+      // case 'ROW_CLICKED': {
+      //   this.onRowSelected(event.value.selectedRow);
+      //   break;
+      // }
       case 'ROW_CLICKED': {
-        this.onRowSelected(event.value.selectedRow);
-        break;
-      }
+  if (this.isNewEmployee && this.detailsForm.invalid) {
+    this.detailsForm.markAllAsTouched();
+
+    const validationMessages = this.formUtilServiceService.parseValidationErrors(
+      this.detailsForm.controls,
+      this.detailsFormEntity
+    );
+
+    const uniqueMessages = validationMessages
+      .filter((item, index, array) =>
+        index === array.findIndex((el) => el.content === item.content)
+      )
+      .map((err) => err.content);
+
+    this.openValidationSlider(uniqueMessages);
+    setTimeout(() => {
+      this.gridApi.forEachNode((node: any) => {
+        if (node.rowIndex === 0) {
+          node.setSelected(true);
+        }
+      });
+    });
+
+    
+    return;
+  }
+
+  this.onRowSelected(event.value.selectedRow);
+  break;
+}
+
       case 'TOGGLE_ACTIVE': {
         this.toggleActiveFilter(event.value.filterType);
         break;
@@ -251,34 +283,79 @@ export class EmployeesComponent implements OnInit {
         break;
       }
 
+      // case 'NEW_EMPLOYEE': {
+      //   const newRow = this.getDefaultEmployee();
+
+      //   this.isNewEmployee = true;
+      //   this.isEdit = true;
+
+      //   this.allRowData = [newRow, ...this.allRowData];
+      //   this.toggleActiveFilter(this.filterType);
+      //   this.selectedRow = newRow;
+      //   this.detailsForm.reset(newRow); // Fill default values
+      //   this.detailsForm.enable();
+
+      //   this.detailsForm.markAllAsTouched();
+
+      //   this.detailsForm.get('employeeId')!.setErrors({ required: true });
+
+      //   if (this.gridApi) {
+      //     setTimeout(() => {
+      //       this.gridApi.forEachNode((node: any) => {
+      //         if (node.rowIndex === 0) {
+      //           node.setSelected(true);
+      //         }
+      //       });
+      //     }, 50);
+      //   }
+
+      //   break;
+      // }
       case 'NEW_EMPLOYEE': {
-        const newRow = this.getDefaultEmployee();
+  if (this.isNewEmployee && this.detailsForm.invalid) {
+    this.detailsForm.markAllAsTouched();
 
-        this.isNewEmployee = true;
-        this.isEdit = true;
+    const validationMessages = this.formUtilServiceService.parseValidationErrors(
+      this.detailsForm.controls,
+      this.detailsFormEntity
+    );
 
-        this.allRowData = [newRow, ...this.allRowData];
-        this.toggleActiveFilter(this.filterType);
-        this.selectedRow = newRow;
-        this.detailsForm.reset(newRow); // Fill default values
-        this.detailsForm.enable();
+    const uniqueMessages = validationMessages
+      .filter((item, index, array) =>
+        index === array.findIndex((el) => el.content === item.content)
+      )
+      .map((err) => err.content);
 
-        this.detailsForm.markAllAsTouched();
+    this.openValidationSlider(uniqueMessages);
+    return; 
+  }
 
-        this.detailsForm.get('employeeId')!.setErrors({ required: true });
+  const newRow = this.getDefaultEmployee();
 
-        if (this.gridApi) {
-          setTimeout(() => {
-            this.gridApi.forEachNode((node: any) => {
-              if (node.rowIndex === 0) {
-                node.setSelected(true);
-              }
-            });
-          }, 50);
+  this.isNewEmployee = true;
+  this.isEdit = true;
+
+  this.allRowData = [newRow, ...this.allRowData];
+  this.toggleActiveFilter(this.filterType);
+  this.selectedRow = newRow;
+  this.detailsForm.reset(newRow);
+  this.detailsForm.enable();
+
+  this.detailsForm.markAllAsTouched();
+  this.detailsForm.get('employeeId')!.setErrors({ required: true });
+
+  if (this.gridApi) {
+    setTimeout(() => {
+      this.gridApi.forEachNode((node: any) => {
+        if (node.rowIndex === 0) {
+          node.setSelected(true);
         }
+      });
+    }, 50);
+  }
 
-        break;
-      }
+  break;
+}
 
       case 'SAVE': {
         if (this.detailsForm.invalid) {
@@ -330,6 +407,7 @@ export class EmployeesComponent implements OnInit {
               this.detailsForm.disable();
               this.getEmployees();
               this.clearValidation();
+              
             },
             error: (err) => {
               console.error('Save error:', err);

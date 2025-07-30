@@ -42,7 +42,9 @@ export class EmployeesListComponent implements OnInit {
   @Input() gridApi: any;
   @Input() gridColumnApi: any;
   @Input() gridOptions!: GridOptions;
+  @Input() isNewEmployee:any;
   @Output() gridReady = new EventEmitter<any>();
+
   
 
   @Output() applicationEventService = new EventEmitter<any>();

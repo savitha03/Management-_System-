@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
 })
 export class EmployeesFormComponent implements OnInit {
   @Input() detailsForm: any;
-  @Input() activeTab: any;
+  @Input() activeTab!: string;
   @Input() isEdit: any;
 
   @Input() genderList$!: Observable<any>;
@@ -49,6 +49,7 @@ export class EmployeesFormComponent implements OnInit {
   constructor(private modalService: NgbModal, private store: Store) {}
 
   ngOnInit(): void {}
+  
   navButtons(value: any) {
     if (value === 'next') {
       this.activeTab = 'employment';
