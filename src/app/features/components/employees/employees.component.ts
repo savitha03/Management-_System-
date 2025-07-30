@@ -17,6 +17,8 @@ import { FeatureCommonServiceService } from '../../services/feature-common-servi
 import { SharedService } from '../../../shared/services/shared.service';
 import { Observable, of } from 'rxjs';
 import { EmployeeDetailsService } from '../../services/employee-details.service';
+import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-employees',
@@ -28,6 +30,8 @@ export class EmployeesComponent implements OnInit {
   isEdit = false;
   isNewEmployee = false;
   selectedRow: any = null;
+  currentMode: 'Edit' | 'View' = 'View';
+
 
   //   resetFormState() {
   //   this.isNewEmployee = false;
@@ -126,6 +130,7 @@ export class EmployeesComponent implements OnInit {
     private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService,
     private employeeDetailsService: EmployeeDetailsService,
+    private modalService:NgbModal
   
   ) {}
 
@@ -438,6 +443,46 @@ export class EmployeesComponent implements OnInit {
 
         break;
       }
+
+      case'VIEW_OR_EDIT':{
+       const { mode, detailsForm } = event.value;
+      this.currentMode = mode;
+
+      if (mode === 'View') {
+        const editModal = this.modalService.open(CoreModalComponent, {
+          backdrop: 'static',
+          size: 'lg',
+          keyboard: false,
+        });
+
+        editModal.componentInstance.header = 'Confirmation';
+        editModal.componentInstance.content = `Do you want to edit ${detailsForm.get('fullName')?.value}'s Detail ?`;
+        editModal.componentInstance.isYesOrNo = true;
+
+        editModal.componentInstance.eventHandler$.subscribe((data: any) => {
+          if (data === 'Proceed') {
+            this.isEdit = true;
+            this.activeViewOrEdit(this.isEdit);
+            editModal.close();
+          }
+        });
+      } else {
+        const saveModal = this.modalService.open(CoreModalComponent, {
+          backdrop: 'static',
+          size: 'lg',
+          keyboard: false,
+        });
+        saveModal.componentInstance.header = 'Confirmation';
+        saveModal.componentInstance.content = `Do you want to edit ${detailsForm.get('fullName')?.value}'s Detail ?`;
+        saveModal.componentInstance.isYesOrNo = true;
+
+
+        this.isEdit = mode !== 'Edit';
+        this.activeViewOrEdit(this.isEdit)
+      }
+
+      break;
+    }
     }
   }
 

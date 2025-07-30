@@ -82,29 +82,69 @@ export class EmployeesFormComponent implements OnInit {
   viewOrEdit(mode: 'Edit' | 'View'): void {
     this.currentMode = mode;
 
-    if (mode === 'View') {
-      const editModal = this.modalService.open(CoreModalComponent, {
-        backdrop: 'static',
-        size: 'lg',
-        keyboard: false,
-      });
+    const event = {
+      name: 'VIEW_OR_EDIT',
+      component: 'EmployeesFormComponent',
+      value: {
+        mode: this.currentMode,
+        detailsForm: this.detailsForm,
+      },
+    };
 
-      editModal.componentInstance.header = 'Confirmation';
-      editModal.componentInstance.content = `Do you want to edit ${
-        this.detailsForm.get('fullName').value
-      }'s Detail ?`;
-      editModal.componentInstance.isYesOrNo = true;
-
-      editModal.componentInstance.eventHandler$.subscribe((data: any) => {
-        if (data === 'Proceed') {
-          this.isEdit = mode === 'View';
-          this.activeViewOrEdit.emit(this.isEdit);
-          editModal.close();
-        }
-      });
-    }else{
-      this.isEdit = mode !== 'Edit';
-        this.activeViewOrEdit.emit(this.isEdit)
-    }
+    this.handleAppEvent.emit(event);
   }
+  // viewOrEdit(mode: 'Edit' | 'View'): void {
+  //   this.currentMode = mode;
+
+  //   if (mode === 'View') {
+  //     const editModal = this.modalService.open(CoreModalComponent, {
+  //       backdrop: 'static',
+  //       size: 'lg',
+  //       keyboard: false,
+  //     });
+
+  //     editModal.componentInstance.header = 'Confirmation';
+  //     editModal.componentInstance.content = `Do you want to edit ${
+  //       this.detailsForm.get('fullName').value
+  //     }'s Detail ?`;
+  //     editModal.componentInstance.isYesOrNo = true;
+
+  //     editModal.componentInstance.eventHandler$.subscribe((data: any) => {
+  //       if (data === 'Proceed') {
+  //         this.isEdit = mode === 'View';
+  //         this.activeViewOrEdit.emit(this.isEdit);
+  //         editModal.close();
+  //       }
+  //     });
+  //   }else{
+  //     this.isEdit = mode !== 'Edit';
+  //       this.activeViewOrEdit.emit(this.isEdit)
+  //   }
+  // }
+
+  unsavedChanges(callback: () => void): void {
+  if (this.detailsForm?.dirty) {
+    const saveChangesModal = this.modalService.open(CoreModalComponent, {
+      backdrop: 'static',
+      size: 'lg',
+      keyboard: false,
+    });
+
+    saveChangesModal.componentInstance.header = 'Confirmation';
+    saveChangesModal.componentInstance.content = `You have unsaved changes. Do you want to discard them?`;
+    saveChangesModal.componentInstance.isYesOrNo = true;
+
+    saveChangesModal.componentInstance.eventHandler$.subscribe((data: any) => {
+      if (data === 'Proceed') {
+        this.detailsForm.reset(); // optionally reset form
+        this.detailsForm.markAsPristine(); // clear dirty state
+        callback(); // proceed with the action (e.g., navigate)
+        saveChangesModal.close();
+      }
+    });
+  } else {
+    callback(); // no unsaved changes — proceed directly
+  }
+}
+
 }
