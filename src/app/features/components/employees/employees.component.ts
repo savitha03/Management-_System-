@@ -101,7 +101,8 @@ export class EmployeesComponent implements OnInit {
             : params.data.empStatus === 'CLOSED'
             ? false
             : null;
-
+        console.log(isActive);
+        
         const icon =
           isActive === true
             ? '<i class="bi bi-bookmark-check-fill text-success me-2"></i>'
@@ -196,26 +197,43 @@ export class EmployeesComponent implements OnInit {
   }
 
   onRowSelected(row: any) {
-    this.selectedRow = row;
-    const formData = {
-      ...this.selectedRow,
-      dateOfBirth: this.selectedRow.dateOfBirth
-        ? this.selectedRow.dateOfBirth.split('T')[0]
-        : '',
-      joinedDate: this.selectedRow.joinedDate
-        ? this.selectedRow.joinedDate.split('T')[0]
-        : '', // ✅ fix format
-      
-    };
+  if (this.isEdit && this.detailsForm.dirty && !this.isNewEmployee) {
+    const formData = this.detailsForm.getRawValue();
 
-    this.detailsForm.patchValue(formData);
-    this.activeTab = 'personal';
-
-    if (!this.isNewEmployee) {
-      this.isEdit = false;
-      this.detailsForm.disable();
-    }
+    this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+      next: (res) => {
+        console.log('Auto-saved changes:', res);
+        const index = this.allRowData.findIndex(
+          (emp) => emp.empCode === res.empCode
+        );
+        if (index > -1) this.allRowData[index] = res;
+      },
+      error: (err) => {
+        console.error('Auto-save failed:', err);
+      },
+    });
   }
+
+  this.selectedRow = row;
+  const formData = {
+    ...this.selectedRow,
+    dateOfBirth: this.selectedRow.dateOfBirth
+      ? this.selectedRow.dateOfBirth.split('T')[0]
+      : '',
+    joinedDate: this.selectedRow.joinedDate
+      ? this.selectedRow.joinedDate.split('T')[0]
+      : '',
+  };
+
+  this.detailsForm.patchValue(formData);
+  this.activeTab = 'personal';
+
+  if (!this.isNewEmployee) {
+    this.isEdit = false;
+    this.detailsForm.disable();
+  }
+}
+
 
   formBuilder() {
     this.detailsForm = this.formUtilServiceService.buildReactiveForm(
@@ -230,7 +248,7 @@ export class EmployeesComponent implements OnInit {
       //   break;
       // }
       case 'ROW_CLICKED': {
-  if (this.isNewEmployee && this.detailsForm.invalid) {
+      if (this.isNewEmployee && this.detailsForm.invalid) {
     this.detailsForm.markAllAsTouched();
 
     const validationMessages = this.formUtilServiceService.parseValidationErrors(
@@ -271,7 +289,7 @@ export class EmployeesComponent implements OnInit {
         }
         if (this.detailsForm.dirty && this.detailsForm.valid) {
         }
-        this.detailsForm.controls['employeeId'].enable();
+        this.detailsForm.controls['empCode'].enable();
         this.handleAppEvent({
           name: 'NEW_EMPLOYEE',
           component: 'UserInfoComponent',
@@ -347,7 +365,7 @@ export class EmployeesComponent implements OnInit {
   this.detailsForm.enable();
 
   this.detailsForm.markAllAsTouched();
-  this.detailsForm.get('employeeId')!.setErrors({ required: true });
+  this.detailsForm.get('empCode')!.setErrors({ required: true });
 
   if (this.gridApi) {
     setTimeout(() => {
@@ -427,7 +445,7 @@ export class EmployeesComponent implements OnInit {
                 console.log('Employee updated:', res);
 
                 const index = this.allRowData.findIndex(
-                  (emp) => emp.employeeId === res.employeeId
+                  (emp) => emp.empCode === res.empCode
                 );
                 if (index > -1) this.allRowData[index] = res;
 

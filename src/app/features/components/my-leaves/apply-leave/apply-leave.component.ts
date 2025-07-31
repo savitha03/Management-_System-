@@ -16,16 +16,22 @@ import { FormUtilServiceService } from '../../../../shared/services/form-util-se
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
+import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave-requests.component';
+import { RouterModule } from "@angular/router";
+
+
 
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CommonModule, UsersLeaveRequestsComponent, RouterModule],
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
 export class ApplyLeaveComponent implements OnInit {
   @Input() leaveData: any;
+ 
+
 
 
   loggedInUser: any;
@@ -196,19 +202,40 @@ export class ApplyLeaveComponent implements OnInit {
       .subscribe((data) => (this.leaveType$ = of(data)));
   }
 
+  // apply() {
+  //   this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode); // Set empCode FIRST
+  //   if (this.leaveForm.valid) {
+  //     const leaveData = this.leaveForm.value;
+  //     this.leaveManagementService
+  //       .saveEmployeeLeaveRequest(leaveData)
+  //       .subscribe(()=>{
+  //         this.leaveSubmitted.emit(leaveData);
+  //         this.leaveForm.reset();
+  //       });
+  //   } else {
+  //     this.leaveForm.markAllAsTouched();
+  //   }
+  // }
   apply() {
-    this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode); // Set empCode FIRST
-    if (this.leaveForm.valid) {
-      const leaveData = this.leaveForm.value;
-      this.leaveManagementService
-        .saveEmployeeLeaveRequest(leaveData)
-        .subscribe(()=>{
-          this.leaveForm.reset();
-        });
-    } else {
-      this.leaveForm.markAllAsTouched();
-    }
+  this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode);
+
+  if (this.leaveForm.valid) {
+    const leaveData = {
+      ...this.leaveForm.value,
+      name: this.loggedInUser?.name || 'Anonymous',
+      designation: this.loggedInUser?.designation || 'Employee',
+      profile: this.loggedInUser?.profile || 'https://i.pravatar.cc/150?img=8',
+    };
+
+    this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe(() => {
+      
+      this.leaveForm.reset();
+    });
+  } else {
+    this.leaveForm.markAllAsTouched();
   }
+}
+
 }
 
 @Component({

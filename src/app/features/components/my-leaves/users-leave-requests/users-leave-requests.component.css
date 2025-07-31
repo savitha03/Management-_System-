@@ -1,0 +1,45 @@
+.card {
+  border-radius: 1.25rem; /* rounded-4 effect */
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+img.rounded-circle {
+  object-fit: cover;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5em 0.75em;
+  border-radius: 1rem;
+}
+.btn-primary {
+  background-color:#1f7ec1 ;
+  color:  #f0f4f8;
+} 
+.btn-info{
+  color:  #f0f4f8;
+  /* background-color: #1570b8 !important; */
+}
+
+.tab-btn {
+  font-size: 0.85rem;
+  padding: 0.35rem 1rem;
+  background-color: #f1f1f1;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+.tab-btn:hover {
+  background-color: #f0f4f8;
+  color: #1f7ec1;
+}  
