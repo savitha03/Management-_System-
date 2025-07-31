@@ -83,6 +83,10 @@ export class EmploymentDetailsComponent implements OnInit {
           : '',
       };
       this.jobForm.patchValue(formData);
+      this.jobForm.get('employmentStatus')?.disable();
+      this.salaryForm.get('currency')?.disable();
+      // this.salaryForm.get('basicSalary')?.disable();
+      this.salaryForm.get('payFrequency')?.disable();
     });
 
     this.detailsService

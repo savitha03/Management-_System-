@@ -101,7 +101,6 @@ export class EmployeesComponent implements OnInit {
             : params.data.empStatus === 'CLOSED'
             ? false
             : null;
-        console.log(isActive);
         
         const icon =
           isActive === true

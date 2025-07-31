@@ -1,12 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ColDef } from 'ag-grid-community';
-import { AgGridAngular } from "ag-grid-angular";
 import { CommonModule } from '@angular/common';
+import { AsyncDetection, NgScrollbar } from "ngx-scrollbar";
 
 @Component({
   selector: 'app-users-leave-requests',
-  imports: [ CommonModule],
+  imports: [CommonModule,NgScrollbar],
   templateUrl: './users-leave-requests.component.html',
   styleUrl: './users-leave-requests.component.css',
 })
@@ -101,6 +99,37 @@ export class UsersLeaveRequestsComponent {
       imageUrl: 'assets/avatar.png',
   
     },
+      {
+    name: 'Ralph Edwards',
+    role: 'Frontend Developer',
+    reason: 'Medical Appointment',
+    leaveType: 'Sick',
+    days: '1 Day',
+    from: '15 Apr 2020',
+    to: '15 Apr 2020',
+    imageUrl: 'assets/avatar.png',
+  },
+  {
+    name: 'Savannah Nguyen',
+    role: 'Product Designer',
+    reason: 'Family Event',
+    leaveType: 'Casual',
+    days: '2 Days',
+    from: '18 Apr 2020',
+    to: '19 Apr 2020',
+    imageUrl: 'assets/avatar.png',
+  },
+  {
+    name: 'Wade Warren',
+    role: 'QA Analyst',
+    reason: 'Fever and fatigue',
+    leaveType: 'Sick',
+    days: '2 Days',
+    from: '20 Apr 2020',
+    to: '21 Apr 2020',
+    imageUrl: 'assets/avatar.png',
+  },
+    
   ];
 }
 

@@ -200,6 +200,14 @@ background-color:#f99700 !important;
   
 }
 
+select:disabled {
+  color: #000; /* Black text */
+  -webkit-text-fill-color: #000 !important; /* For Safari */
+  opacity: 1; /* Remove faded/gray appearance */
+  cursor: default;
+  
+}
+
 
 /* .mandatory-field {
   border-left: 4px solid red !important;

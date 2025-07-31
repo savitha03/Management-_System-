@@ -49,6 +49,9 @@ export class PersonalDetailsComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+   
+
+    
     this.formBuilder();
     
 
@@ -125,6 +128,9 @@ export class PersonalDetailsComponent implements OnInit {
           dob: data.dob ? data.dob.split('T')[0] : '',
         };
         this.employeeForm.patchValue(formData);
+        this.employeeForm.get('gender')?.disable();
+        this.employeeForm.get('maritalStatus')?.disable();
+        this.teamsForm.get('designation')?.disable();
       });
     // this.detailsService.getEmployeePersonalDetails(empId).subscribe((data:any)=>{
     //   this.employeeForm.patchValue(data);

@@ -67,9 +67,9 @@
                 </div> -->
                 <div>
                     <label>Currency</label>
-                    <select class="form-select text-start" formControlName="currency"
+                    <select formControlName="currency"
                         [ngClass]="{ required: salaryForm.controls['currency'].errors }">
-                        <option value="" disabled>--Select Currency--</option>
+                        <option value=""  >--Select Currency--</option>
                         <option *ngFor="let currency of currency$ |async" [ngValue]="currency.code">
                             {{currency.screenName}}
                         </option>
@@ -84,7 +84,7 @@
                 </div>
                 <div>
                     <label>Pay Frequency</label>
-                    <select class="form-select text-start" formControlName="payFrequency"
+                    <select  formControlName="payFrequency"
                         [ngClass]="{ required: salaryForm.controls['payFrequency'].errors }">
                         <option value="" disabled>--Select Pay Frequency--</option>
                         <option *ngFor=" let payFrequency of payFrequency$ |async" [ngValue]="payFrequency.code">

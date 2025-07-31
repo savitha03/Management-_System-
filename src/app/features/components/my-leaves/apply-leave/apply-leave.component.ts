@@ -24,7 +24,7 @@ import { RouterModule } from "@angular/router";
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CommonModule, UsersLeaveRequestsComponent, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })

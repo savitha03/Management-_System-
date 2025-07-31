@@ -73,7 +73,7 @@ export class SideNav implements OnInit {
         },
         {
           label: 'Users Leave Request',
-          icon: 'bi-send small text-muted',
+          icon: 'bi bi-envelope-exclamation small text-muted',
           link: 'leaves/users-leave-request',
         },
         {

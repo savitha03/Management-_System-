@@ -1,11 +1,20 @@
 .card {
-  border-radius: 1.25rem; /* rounded-4 effect */
-  transition: box-shadow 0.3s ease;
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  will-change: transform;
 }
 
 .card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
 }
+
 
 img.rounded-circle {
   object-fit: cover;
@@ -16,16 +25,16 @@ img.rounded-circle {
   padding: 0.5em 0.75em;
   border-radius: 1rem;
 }
-.btn-primary {
+/* .btn-primary {
   background-color:#1f7ec1 ;
   color:  #f0f4f8;
 } 
 .btn-info{
-  color:  #f0f4f8;
+  color:  #f0f4f8; */
   /* background-color: #1570b8 !important; */
-}
 
-.tab-btn {
+
+/* .tab-btn {
   font-size: 0.85rem;
   padding: 0.35rem 1rem;
   background-color: #f1f1f1;
@@ -42,4 +51,34 @@ img.rounded-circle {
 .tab-btn:hover {
   background-color: #f0f4f8;
   color: #1f7ec1;
-}  
+}   */
+
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  transition: background 0.2s ease-in-out;
+}
+
+.deny {
+  background-color: #fff;
+  color: #289ee4;
+  border: 1px solid #cce7f8;
+}
+
+.deny:hover {
+  background-color: #eaf6ff;
+}
+
+.approve {
+  background-color: #289ee4;
+  color: #fff;
+}
+
+.approve:hover {
+  background-color: #148ed4;
+}
