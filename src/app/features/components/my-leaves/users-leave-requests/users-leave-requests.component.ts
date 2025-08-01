@@ -91,7 +91,7 @@ loadUsersLeaveRequests(){
       fullName:item.fullName,
       designation:item.designation,
       leaveType:item.leaveType,
-      duration:item.duration,
+      duration: item.duration + ' ' + (Number(item.duration) <= 1 ? 'day' : 'days'),
       reason:item.reason,
       fromDate:item.fromDate,
       toDate:item.toDate,
