@@ -163,7 +163,7 @@ selectedEmployeeId: string | null = null;
       leaveType: item.leaveType,
       fromDate: item.fromDate.slice(0, 10),
       toDate: item.toDate.slice(0, 10),
-      duration: item.duration,
+      duration: item.duration + ' ' + (Number(item.duration) <= 1 ? 'day' : 'days'),
       leaveStatus: item.leaveStatus,
       reason: item.reason,
     }));
