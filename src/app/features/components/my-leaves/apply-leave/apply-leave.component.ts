@@ -180,11 +180,11 @@ export class ApplyLeaveComponent implements OnInit {
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
         if (diffHrs < 4) {
-          this.leaveForm.get('duration')?.setValue('0');
+          this.leaveForm.get('duration')?.setValue('0 day');
         } else if (diffHrs >= 4 && diffHrs < 6) {
-          this.leaveForm.get('duration')?.setValue('0.5');
+          this.leaveForm.get('duration')?.setValue('0.5 day');
         } else {
-          this.leaveForm.get('duration')?.setValue('1');
+          this.leaveForm.get('duration')?.setValue('1 day');
         }
       } else {
         this.leaveForm.get('duration')?.setValue('');
@@ -192,7 +192,7 @@ export class ApplyLeaveComponent implements OnInit {
     } else {
       const diffTime = to.getTime() - from.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      this.leaveForm.get('duration')?.setValue(diffDays.toString());
+      this.leaveForm.get('duration')?.setValue(`${diffDays.toString()} days`);
     }
   }
 

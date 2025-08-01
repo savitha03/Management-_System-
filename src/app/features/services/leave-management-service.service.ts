@@ -45,4 +45,8 @@ export class LeaveManagementServiceService {
   DeleteEmployeeLeaveRequest(deleteUser:any){
     return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`,deleteUser);
   }
+
+  getUsersLeaveRequestHistory():Observable<any>{
+    return this,this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action`);
+  }
 }

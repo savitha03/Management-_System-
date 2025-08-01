@@ -45,11 +45,20 @@ export class EmployeesFormComponent implements OnInit {
 
   employmentTabEnabled: boolean = false;
   currentMode: 'Edit' | 'View' = 'View';
+  form!: FormGroup
 
-  constructor(private modalService: NgbModal, private store: Store) {}
 
-  ngOnInit(): void {}
-  
+
+  constructor(private modalService: NgbModal, private store: Store,private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+
+  }
+
+
+
+
+
   navButtons(value: any) {
     if (value === 'next') {
       this.activeTab = 'employment';

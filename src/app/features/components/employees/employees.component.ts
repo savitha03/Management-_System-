@@ -304,35 +304,6 @@ export class EmployeesComponent implements OnInit {
 
         break;
       }
-
-      // case 'NEW_EMPLOYEE': {
-      //   const newRow = this.getDefaultEmployee();
-
-      //   this.isNewEmployee = true;
-      //   this.isEdit = true;
-
-      //   this.allRowData = [newRow, ...this.allRowData];
-      //   this.toggleActiveFilter(this.filterType);
-      //   this.selectedRow = newRow;
-      //   this.detailsForm.reset(newRow); // Fill default values
-      //   this.detailsForm.enable();
-
-      //   this.detailsForm.markAllAsTouched();
-
-      //   this.detailsForm.get('employeeId')!.setErrors({ required: true });
-
-      //   if (this.gridApi) {
-      //     setTimeout(() => {
-      //       this.gridApi.forEachNode((node: any) => {
-      //         if (node.rowIndex === 0) {
-      //           node.setSelected(true);
-      //         }
-      //       });
-      //     }, 50);
-      //   }
-
-      //   break;
-      // }
       case 'NEW_EMPLOYEE': {
   if (this.isNewEmployee && this.detailsForm.invalid) {
     this.detailsForm.markAllAsTouched();
@@ -379,87 +350,158 @@ export class EmployeesComponent implements OnInit {
   break;
 }
 
-      case 'SAVE': {
-        if (this.detailsForm.invalid) {
-          this.detailsForm.markAllAsTouched();
+      // case 'SAVE': {
+      //   if (this.detailsForm.invalid) {
+      //     this.detailsForm.markAllAsTouched();
 
-          const invalidControls = this.getInvalidControls(this.detailsForm);
-          console.warn('Invalid Form Controls');
-          invalidControls.forEach((controlName) => {
-            const control = this.detailsForm.get(controlName);
-            console.warn(
-              `Control "${controlName}" is invalid. Value:`,
-              control?.value
-            );
-          });
+      //     const invalidControls = this.getInvalidControls(this.detailsForm);
+      //     console.warn('Invalid Form Controls');
+      //     invalidControls.forEach((controlName) => {
+      //       const control = this.detailsForm.get(controlName);
+      //       console.warn(
+      //         `Control "${controlName}" is invalid. Value:`,
+      //         control?.value
+      //       );
+      //     });
 
-          this.pageErrors = this.formUtilServiceService.parseValidationErrors(
-            this.detailsForm.controls,
-            this.detailsFormEntity
-          );
+      //     this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+      //       this.detailsForm.controls,
+      //       this.detailsFormEntity
+      //     );
 
-          this.pageErrors = this.pageErrors.filter(
-            (item, index, array) =>
-              index ===
-              array.findIndex((element) => element.content === item.content)
-          );
+      //     this.pageErrors = this.pageErrors.filter(
+      //       (item, index, array) =>
+      //         index ===
+      //         array.findIndex((element) => element.content === item.content)
+      //     );
 
-          let validationErrors = this.pageErrors.map((error) => error.content);
+      //     let validationErrors = this.pageErrors.map((error) => error.content);
 
-          if (validationErrors) {
-            this.openValidationSlider(validationErrors);
-          }
+      //     if (validationErrors) {
+      //       this.openValidationSlider(validationErrors);
+      //     }
 
-          return;
-        }
+      //     return;
+      //   }
 
-        const formData = this.detailsForm.getRawValue();
-        console.log('Saving Employee Data:', formData);
+      //   const formData = this.detailsForm.getRawValue();
+      //   console.log('Saving Employee Data:', formData);
 
-        if (this.isNewEmployee) {
-          // New employee - call save API
-          this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
-            next: (res) => {
-              console.log('Employee saved:', res);
+      //   if (this.isNewEmployee) {
+      //     // New employee - call save API
+      //     this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+      //       next: (res) => {
+      //         console.log('Employee saved:', res);
 
-              this.allRowData = [res, ...this.allRowData];
-              this.toggleActiveFilter(this.filterType); // Refresh list
-              this.isNewEmployee = false;
-              this.isEdit = false;
-              this.detailsForm.disable();
-              this.getEmployees();
-              this.clearValidation();
+      //         this.allRowData = [res, ...this.allRowData];
+      //         this.toggleActiveFilter(this.filterType); // Refresh list
+      //         this.isNewEmployee = false;
+      //         this.isEdit = false;
+      //         this.detailsForm.disable();
+      //         this.getEmployees();
+      //         this.clearValidation();
               
-            },
-            error: (err) => {
-              console.error('Save error:', err);
-            },
-          });
-        } else {
-          // Existing employee - call update API
-          this.employeeDetailsService
-            .updateEmployeeDetails(formData)
-            .subscribe({
-              next: (res) => {
-                console.log('Employee updated:', res);
+      //       },
+      //       error: (err) => {
+      //         console.error('Save error:', err);
+      //       },
+      //     });
+      //   } else {
+      //     // Existing employee - call update API
+      //     this.employeeDetailsService
+      //       .updateEmployeeDetails(formData)
+      //       .subscribe({
+      //         next: (res) => {
+      //           console.log('Employee updated:', res);
 
-                const index = this.allRowData.findIndex(
-                  (emp) => emp.empCode === res.empCode
-                );
-                if (index > -1) this.allRowData[index] = res;
+      //           const index = this.allRowData.findIndex(
+      //             (emp) => emp.empCode === res.empCode
+      //           );
+      //           if (index > -1) this.allRowData[index] = res;
 
-                this.toggleActiveFilter(this.filterType);
-                this.isEdit = false;
-                this.detailsForm.disable();
-              },
-              error: (err) => {
-                console.error('Update error:', err);
-              },
-            });
-        }
+      //           this.toggleActiveFilter(this.filterType);
+      //           this.isEdit = false;
+      //           this.detailsForm.disable();
+      //         },
+      //         error: (err) => {
+      //           console.error('Update error:', err);
+      //         },
+      //       });
+      //   }
 
-        break;
+      //   break;
+      // }
+      case 'SAVE': {
+  this.detailsForm.markAllAsTouched();
+
+  if (this.detailsForm.invalid) {
+    const invalidControls = this.getInvalidControls(this.detailsForm);
+    this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+      this.detailsForm.controls,
+      this.detailsFormEntity
+    );
+    this.pageErrors = this.pageErrors.filter(
+      (item, index, array) =>
+        index === array.findIndex((element) => element.content === item.content)
+    );
+
+    const validationErrors = this.pageErrors.map((error) => error.content);
+    if (validationErrors.length > 0) {
+      this.openValidationSlider(validationErrors);
+    }
+    return;
+  }
+
+  // ✅ VALID FORM → SHOW CONFIRMATION MODAL
+  const modalRef = this.modalService.open(CoreModalComponent, {
+    backdrop: 'static',
+    size: 'lg',
+    keyboard: false,
+  });
+
+  modalRef.componentInstance.header = 'Confirmation';
+  modalRef.componentInstance.content = `Are you sure you want to save the employee details?`;
+  modalRef.componentInstance.isYesOrNo = true;
+
+  modalRef.componentInstance.eventHandler$.subscribe((response: any) => {
+    if (response === 'Proceed') {
+      const formData = this.detailsForm.getRawValue();
+
+      if (this.isNewEmployee) {
+        this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+          next: (res) => {
+            this.allRowData = [res, ...this.allRowData];
+            this.toggleActiveFilter(this.filterType);
+            this.isNewEmployee = false;
+            this.isEdit = false;
+            this.detailsForm.disable();
+            this.getEmployees();
+            this.clearValidation();
+          },
+          error: (err) => console.error('Save error:', err),
+        });
+      } else {
+        this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+          next: (res) => {
+            const index = this.allRowData.findIndex(
+              (emp) => emp.empCode === res.empCode
+            );
+            if (index > -1) this.allRowData[index] = res;
+            this.toggleActiveFilter(this.filterType);
+            this.isEdit = false;
+            this.detailsForm.disable();
+          },
+          error: (err) => console.error('Update error:', err),
+        });
       }
+
+      modalRef.close();
+    }
+  });
+
+  break;
+}
+
 
       case'VIEW_OR_EDIT':{
        const { mode, detailsForm } = event.value;
