@@ -5,12 +5,11 @@ import { LeaveManagementServiceService } from '../../../services/leave-managemen
 
 @Component({
   selector: 'app-users-leave-requests',
-  imports: [CommonModule,NgScrollbar],
+  imports: [CommonModule, NgScrollbar],
   templateUrl: './users-leave-requests.component.html',
   styleUrl: './users-leave-requests.component.css',
 })
 export class UsersLeaveRequestsComponent implements OnInit {
-
   //  leaveRequests = [
   //   {
   //     fullName: 'Jenny Wilson',
@@ -32,7 +31,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
   //     fromDate: '10 Apr 2020',
   //     toDate: '11 Apr 2020',
   //     imageUrl: 'assets/avatar.png',
-     
+
   //   },
   //   {
   //     name: 'Brooklyn Simmons',
@@ -43,7 +42,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
   //     fromDate: '10 Apr 2020',
   //     toDate: '11 Apr 2020',
   //     imageUrl: 'assets/avatar.png',
-  
+
   //   },
   //     {
   //   name: 'Ralph Edwards',
@@ -75,31 +74,77 @@ export class UsersLeaveRequestsComponent implements OnInit {
   //   toDate: '21 Apr 2020',
   //   imageUrl: 'assets/avatar.png',
   // },
-    
+
   // ];
-leaveRequests:any[]=[];
+  leaveRequests: any[] = [];
+  // filteredRequests:any[]=[];
+  activeTab = 'requestPending';
 
-constructor(private leaveManagementService:LeaveManagementServiceService){}
+  constructor(private leaveManagementService: LeaveManagementServiceService) {}
 
-ngOnInit(): void {
-  this.loadUsersLeaveRequests();
+  ngOnInit(): void {
+    this.loadUsersLeaveRequests();
+  }
+
+  loadUsersLeaveRequests() {
+    this.leaveManagementService
+      .getUsersLeaveRequestHistory()
+      .subscribe((data) => {
+        this.leaveRequests = data.map((item: any) => ({
+          LeavePK: item.leavePK,
+          fullName: item.fullName,
+          designation: item.designation,
+          leaveType: item.leaveType,
+          duration: item.duration,
+          reason: item.reason,
+          fromDate: item.fromDate,
+          toDate: item.toDate,
+          imageUrl: 'assets/avatar.png',
+          status: item.status,
+        }));
+      });
+  }
+
+  switchTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  onLeaveAction(leavePK: number, action: string): void {
+    const payload = {
+      LeavePK: leavePK,
+      Action: action,
+    };
+
+    this.leaveManagementService
+      .userLeaveRequestActionUpdate(payload)
+      .subscribe({
+        next: (res) => {
+          console.log('Leave action successful:', res);
+          this.loadUsersLeaveRequests(); // Refresh the list
+        },
+        error: (err) => {
+          console.error('Leave action failed:', err);
+        },
+      });
+  }
+get filteredRequests():any[]{
+  return this.leaveRequests.filter(request =>
+    this.activeTab === 'requestPending' ? request.status === 'Pending' : request.status !== 'Pending'
+  )
+}
+// get requestPending() {
+//   return this.leaveRequests.filter(request => request.status === 'Pending');
+// }
+
+// get requestCompleted() {
+//   return this.leaveRequests.filter(request =>
+//     request.status === 'Approved' || request.status === 'Cancelled'
+//   );
+// }
+
+
 }
 
-loadUsersLeaveRequests(){
-  this.leaveManagementService.getUsersLeaveRequestHistory().subscribe((data)=>{
-    this.leaveRequests=data.map((item:any)=>({
-      fullName:item.fullName,
-      designation:item.designation,
-      leaveType:item.leaveType,
-      duration: item.duration ,
-      reason:item.reason,
-      fromDate:item.fromDate,
-      toDate:item.toDate,
-      imageUrl: 'assets/avatar.png'
-    }))
-  })
-}
 
-}
 
 

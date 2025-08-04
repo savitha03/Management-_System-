@@ -47,6 +47,10 @@ export class LeaveManagementServiceService {
   }
 
   getUsersLeaveRequestHistory():Observable<any>{
-    return this,this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action`);
+    return this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action`);
   }
+
+  userLeaveRequestActionUpdate(userData:{ LeavePK: number; Action: string }){
+    return this.http.post(`${this.appUrl}/api/LeaveManagement/leave-action/update`,userData).pipe(
+      map((data:any)=>(data)))}
 }

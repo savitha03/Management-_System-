@@ -174,7 +174,7 @@ span.status-rejected {
   font-weight: 600 !important;
 }
 
-.status-rejected {
+.status-cancelled {
   background-color: rgba(229, 115, 115, 0.2) !important; /* Red bg */
   color: #e57373 !important;
   font-weight: 600 !important;

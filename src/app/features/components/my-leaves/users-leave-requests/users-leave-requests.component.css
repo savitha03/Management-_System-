@@ -25,6 +25,35 @@ img.rounded-circle {
   padding: 0.5em 0.75em;
   border-radius: 1rem;
 }
+.tab-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+.tab-btn:hover {
+  background-color: #f0f4f8;
+  color: #1f7ec1;
+} 
+
+.tab-btn.active {
+  background-color: #289ee4;
+  color: white;
+}
+
+
+.tab-btn.active i {
+  color: white !important;
+}    
+
 /* .btn-primary {
   background-color:#1f7ec1 ;
   color:  #f0f4f8;
@@ -74,7 +103,7 @@ button {
   background-color: #eaf6ff;
 }
 
-.approve {
+.approve{
   background-color: #289ee4;
   color: #fff;
 }

@@ -35,6 +35,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrl: './employees-list.component.css',
 })
 export class EmployeesListComponent implements OnInit {
+
+  // isEdit: boolean = false;
+
+
   @Input() filterType: any;
   @Input() colDefs: ColDef[] = [];
   @Input() rowData: any[] = [];

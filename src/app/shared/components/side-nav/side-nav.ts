@@ -48,7 +48,7 @@ export class SideNav implements OnInit {
 
   mainMenu: MenuItem[] = [
     {
-      label: 'Personal-Details',
+      label: 'Personal Details',
       icon: 'bi bi-card-heading',
       link: 'personal-details',
     },

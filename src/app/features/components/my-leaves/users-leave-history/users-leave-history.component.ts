@@ -50,12 +50,12 @@ selectedEmployeeId: string | null = null;
       cellClass: (params) => {
         if (params.value === 'APPROVED') return 'ag-center status-approved';
         if (params.value === 'PENDING') return 'ag-center status-pending';
-        if (params.value === 'REJECTED') return 'ag-center status-rejected';
+        if (params.value === 'CANCELLED') return 'ag-center status-cancelled';
         return 'ag-center';
       },
       cellRenderer: (params: any) => {
         // Just return plain text, no span needed now
-        return params.value==='APPROVED'?'Approved': params.value==='PENDING'?'Pending':params.value==='REJECTED'?'Rejected':''
+        return params.value==='APPROVED'?'Approved': params.value==='PENDING'?'Pending':params.value==='CANCELLED'?'Cancelled':''
       },
     },
     {
