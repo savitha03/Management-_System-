@@ -269,7 +269,7 @@ export class LeaveHistory implements OnInit {
           fromDate: leave.fromDate?.slice(0, 10),
           toDate: leave.toDate?.slice(0, 10),
           duration:
-            leave.duration + ' ' + (Number(leave.duration) <= 1 ? 'day' : 'days'),
+            leave.duration ,
           leaveStatus: leave.leaveStatus,
           reason: leave.reason,
           leaveId:leave.leaveId

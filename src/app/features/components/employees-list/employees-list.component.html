@@ -25,21 +25,21 @@
     [suppressCellFocus]="true" (rowClicked)="onRowClicked($event)" (gridReady)="gridReady.emit($event)"></ag-grid-angular>
 
   <div class="my-3">
-    <label class="form-label fw-semibold d-block mb-2">Filter by Status:</label>
+    <label class="form-label fw-semibold d-block mb-2 small">Filter by Status:</label>
 
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline form-check-sm me-2">
       <input class="form-check-input" type="radio" name="statusFilter" id="showAll" value="all" [(ngModel)]="filterType"
         (change)="toggleActiveFilter()" />
       <label class="form-check-label" for="showAll">Show All</label>
     </div>
 
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline form-check-sm me-2">
       <input class="form-check-input" type="radio" name="statusFilter" id="showActive" value="active"
         [(ngModel)]="filterType" (change)="toggleActiveFilter()" />
       <label class="form-check-label" for="showActive">Show Active Only</label>
     </div>
 
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline form-check-sm">
       <input class="form-check-input" type="radio" name="statusFilter" id="showClosed" value="closed"
         [(ngModel)]="filterType" (change)="toggleActiveFilter()" />
       <label class="form-check-label" for="showClosed">Show Closed Only</label>

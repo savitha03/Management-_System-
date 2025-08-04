@@ -1,0 +1,9 @@
+.form-check-sm .form-check-input {
+  width: 0.8em;
+  height: 0.8em;
+  margin-top: 0.4rem;
+}
+
+.form-check-sm .form-check-label {
+  font-size: 0.9rem;
+}
