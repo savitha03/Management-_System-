@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
+import { GooseMenuService } from '../../services/gooseMenu.service';
+import { GetMainMenuItems } from 'ag-grid-community';
 
 export interface MenuItem {
   label: string;
@@ -21,7 +23,10 @@ export class SideNav implements OnInit {
   isCollapsed = false;
   isLeaveMenuOpen = false;
 
-  constructor(private router: Router) {
+  mainMenu: MenuItem[] = [];
+  bottomMenu: MenuItem[] = [];
+
+  constructor(private router: Router, private gooseMenu:GooseMenuService) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -35,7 +40,57 @@ export class SideNav implements OnInit {
     // Restore saved state from localStorage
     const saved = localStorage.getItem('isLeaveMenuOpen');
     this.isLeaveMenuOpen = saved === 'true';
+
+    const empCode = localStorage.getItem('empCode');
+    this.gooseMenu.getGooseMenu(empCode).subscribe((menu)=>{
+      console.log('Received menu:', menu);
+      const mainMenuItems = menu?.['MAINMENU']?? [];
+      const bottomMenuItems = menu?.['BOTTOMMENU']?? [];
+
+      this.mainMenu = mainMenuItems 
+      .filter((item:any)=> !item.Hidden && !item.Disabled)
+      .map(this.mapToMenuItem);
+
+      this.bottomMenu = bottomMenuItems
+      .filter((item:any)=> !item.Hidden && !item.Disabled)
+      .map(this.mapToMenuItem);
+    })
   }
+
+  private mapToMenuItem = (item: any): MenuItem => ({
+  label: item.LinkTitle,
+  icon: this.getIcon(item.LinkTitle),
+  link: item.LinkPath,
+  children: item.Children?.length
+    ? item.Children
+        .filter((child: any) => !child.Hidden && !child.Disabled)
+        .map((child: any) => ({
+          label: child.LinkTitle,
+          icon: this.getIcon(child.LinkTitle),
+          link: child.LinkPath,
+        }))
+    : [],
+});
+
+private getIcon(title: string): string {
+  const icons: Record<string, string> = {
+    'Personal Details': 'bi bi-card-heading',
+    'Employment Details': 'bi bi-person-badge',
+    'Employees List': 'bi bi-person-lines-fill',
+    'Leave Management': 'bi bi-kanban-fill',
+    'Apply Leave': 'bi bi-pencil-square small text-muted',
+    'Users Leave Request': 'bi bi-envelope-exclamation small text-muted',
+    'My Leave History': 'bi bi-clock-history small text-muted',
+    'Users Leave History': 'bi bi-person-check small text-muted',
+    'Leave Summary': 'bi bi-file-earmark-text-fill small text-muted',
+    'Announcements': 'bi bi-megaphone-fill',
+    'Notifications': 'bi bi-bell-fill',
+    'Settings': 'bi bi-gear-fill',
+  };
+  return icons[title] ?? 'bi bi-circle';
+}
+
+
 
   toggleLeaveMenu(): void {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
@@ -45,71 +100,4 @@ export class SideNav implements OnInit {
   saveState(): void {
     localStorage.setItem('isLeaveMenuOpen', String(this.isLeaveMenuOpen));
   }
-
-  mainMenu: MenuItem[] = [
-    {
-      label: 'Personal Details',
-      icon: 'bi bi-card-heading',
-      link: 'personal-details',
-    },
-    {
-      label: 'Employement Details',
-      icon: 'bi bi-person-badge',
-      link: 'employement-details',
-    },
-    {
-      label: 'Employees List ',
-      icon: 'bi bi-person-lines-fill',
-      link: 'employees',
-    },
-    {
-      label: 'Leave Management',
-      icon: 'bi bi-kanban-fill',
-      children: [
-        {
-          label: 'Apply Leave',
-          icon: 'bi bi-pencil-square small text-muted',
-          link: 'leaves/apply-leave',
-        },
-        {
-          label: 'Users Leave Request',
-          icon: 'bi bi-envelope-exclamation small text-muted',
-          link: 'leaves/users-leave-request',
-        },
-        {
-          label: 'My Leave History',
-          icon: 'bi bi-clock-history small text-muted',
-          link: 'leaves/history',
-        },
-        {
-          label: 'Users Leave History',
-          icon: 'bi bi-person-check small text-muted',
-          link: 'leaves/users-leave-history',
-        },
-        {
-          label: 'Leave Summary',
-          icon: 'bi bi-file-earmark-text-fill small text-muted',
-          link: 'leaves/leave-summary',
-        },
-      ],
-    },
-    {
-      label: 'Announcements',
-      icon: 'bi bi-megaphone-fill',
-      link: 'announcements',
-    },
-  ];
-
-  bottomMenu: MenuItem[] = [
-    {
-      label: 'Notifications',
-      icon: 'bi bi-bell-fill',
-      link: 'notifications',
-    },
-    {
-      label: 'Settings',
-      icon: 'bi bi-gear-fill',
-      link: 'settings',
-    },
-  ];
 }

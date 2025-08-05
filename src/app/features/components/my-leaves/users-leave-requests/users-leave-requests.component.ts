@@ -78,7 +78,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
   // ];
   leaveRequests: any[] = [];
   // filteredRequests:any[]=[];
-  activeTab = 'requestPending';
+  activeTab: string = 'requestPending';
 
   constructor(private leaveManagementService: LeaveManagementServiceService) {}
 
@@ -109,7 +109,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  onLeaveAction(leavePK: number, action: string): void {
+  onLeaveAction(leavePK: number, action:'APPROVED'|'CANCELLED') {
     const payload = {
       LeavePK: leavePK,
       Action: action,
@@ -127,21 +127,20 @@ export class UsersLeaveRequestsComponent implements OnInit {
         },
       });
   }
-get filteredRequests():any[]{
-  return this.leaveRequests.filter(request =>
-    this.activeTab === 'requestPending' ? request.status === 'Pending' : request.status !== 'Pending'
-  )
+
+ get filteredRequests(): any[] {
+  return this.activeTab === 'requestPending'
+      ? this.requestPending
+      : this.requestCompleted;
 }
-// get requestPending() {
-//   return this.leaveRequests.filter(request => request.status === 'Pending');
-// }
 
-// get requestCompleted() {
-//   return this.leaveRequests.filter(request =>
-//     request.status === 'Approved' || request.status === 'Cancelled'
-//   );
-// }
+get requestPending(){
+  return this.leaveRequests.filter(request => request.status === 'PENDING');
+}
 
+get requestCompleted(){
+  return this.leaveRequests.filter(request => request.status==='APPROVED' || request.status === 'CANCELLED');
+}
 
 }
 

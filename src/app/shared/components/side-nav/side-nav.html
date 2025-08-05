@@ -1,49 +1,58 @@
 <div class="bg-white border-end h-100 p-3 shadow-sm d-flex flex-column justify-content-between">
   <div>
-    <h6 class="text-uppercase text-muted fw-bold mb-2 px-2" style="font-size: 0.75rem;">Menu</h6>
     <ul class="nav flex-column custom-sidebar">
-
-      <!-- Main Menu Loop -->
-      <ng-container *ngFor="let item of mainMenu; let i = index">
-        <!-- Without Children -->
-        <li class="nav-item" *ngIf="!item.children">
-          <a [routerLink]="[item.link]" routerLinkActive="active"
-            class="nav-link d-flex align-items-center text-decoration-none">
-            <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
+      <ng-container *ngFor="let item of mainMenu">
+        
+        <!-- Without children -->
+        <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
+          <a [routerLink]="[item.link]"
+             routerLinkActive="active"
+             class="nav-link d-flex align-items-center text-decoration-none">
+            <i [class]="item.icon + ' me-2'"></i>
+            {{ item.label }}
           </a>
         </li>
 
-        <!-- With Children (Leave Management Dropdown) -->
-        <li class="nav-item" *ngIf="item.children && item.label === 'Leave Management'">
+      <!-- children -->
+        <li class="nav-item" *ngIf="item.children && item.children.length > 0">
           <a class="nav-link d-flex align-items-center text-decoration-none"
              role="button"
              (click)="toggleLeaveMenu()">
-            <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
-            <i class="bi bi-chevron-down ms-auto small"></i>
+            <i [class]="item.icon + ' me-2'"></i>
+            {{ item.label }}
+            <i class="bi ms-auto"
+               [ngClass]="isLeaveMenuOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
           </a>
-          <div [class.collapse]="!isLeaveMenuOpen" class="ps-2" [class.show]="isLeaveMenuOpen">
+          <div class="ps-3"
+               [ngClass]="{ 'collapse': !isLeaveMenuOpen, 'show': isLeaveMenuOpen }">
             <ul class="nav flex-column">
               <li class="nav-item" *ngFor="let child of item.children">
-                <a [routerLink]="[child.link]" routerLinkActive="active"
-                   class="nav-link d-flex align-items-center text-decoration-none">
-                  <i [class]="child.icon + ' me-2'"></i> {{ child.label }}
+                <a [routerLink]="[child.link]"
+                   routerLinkActive="active"
+                   class="nav-link d-flex align-items-center text-decoration-none text-truncate"
+                   style="white-space: nowrap;">
+                  <i [class]="child.icon + ' me-2'"></i>
+                  {{ child.label }}
                 </a>
               </li>
             </ul>
           </div>
         </li>
+
       </ng-container>
     </ul>
   </div>
 
-  <!-- Bottom Menu -->
+  
   <div>
     <hr />
     <ul class="nav flex-column custom-sidebar">
       <li class="nav-item" *ngFor="let item of bottomMenu">
-        <a [routerLink]="[item.link]" routerLinkActive="active"
+        <a [routerLink]="[item.link]"
+           routerLinkActive="active"
            class="nav-link d-flex align-items-center text-decoration-none">
-          <i [class]="item.icon + ' me-2'"></i> {{ item.label }}
+          <i [class]="item.icon + ' me-2'"></i>
+          {{ item.label }}
         </a>
       </li>
     </ul>

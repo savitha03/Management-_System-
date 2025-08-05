@@ -1,5 +1,5 @@
 .custom-sidebar .nav-link {
-  font-size: 0.95rem;
+  font-size: 0.90rem;
   padding: 10px 12px;
   border-radius: 6px;
   color: #6c757d;
@@ -18,4 +18,13 @@
 
 .custom-sidebar .nav-link.active i {
   color: white !important;
+}
+
+.custom-sidebar .nav-link {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.custom-sidebar .nav-item {
+  margin-bottom: 4px;
 }
