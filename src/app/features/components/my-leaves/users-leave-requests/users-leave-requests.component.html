@@ -12,7 +12,6 @@
       Request Completed
     </button>
   </div>
-
   <!-- Leave Cards -->
   <ng-container *ngIf="activeTab === 'requestPending'">
     <ng-scrollbar style="height: 80vh;">
@@ -95,7 +94,7 @@
 
             <!-- Show action buttons only in 'requestPending' -->
             <div *ngIf="activeTab === 'requestCompleted'" class="d-flex justify-content-end align-items-center mt-1 gap-3">
-              <button class="cancel" (click)="onLeaveAction(request.LeavePK, 'CANCELLED')">{{request.status==='APPROVED'?'Approved':'Cancelled'}}</button>
+              <button class="cancel" (click)="onLeaveAction(request.LeavePK,request.leaveStatus )">{{request.leaveStatus==='APPROVED'?'Approved':'Cancelled'}}</button>
             </div>
           </div>
         </div>

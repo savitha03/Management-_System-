@@ -4,6 +4,8 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { GooseMenuService } from '../../services/gooseMenu.service';
 import { GetMainMenuItems } from 'ag-grid-community';
+import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 export interface MenuItem {
   label: string;
@@ -23,10 +25,18 @@ export class SideNav implements OnInit {
   isCollapsed = false;
   isLeaveMenuOpen = false;
 
+  loggedInUser:any;
+
   mainMenu: MenuItem[] = [];
   bottomMenu: MenuItem[] = [];
 
-  constructor(private router: Router, private gooseMenu:GooseMenuService) {
+  constructor(private router: Router, private gooseMenu:GooseMenuService, private store: Store) {
+
+    this.store.select(selectAuthUser).subscribe((user:any) => {
+          if(user){
+            this.loggedInUser= user;
+          }
+        });
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -41,7 +51,7 @@ export class SideNav implements OnInit {
     const saved = localStorage.getItem('isLeaveMenuOpen');
     this.isLeaveMenuOpen = saved === 'true';
 
-    const empCode = localStorage.getItem('empCode');
+    const empCode = this.loggedInUser.empCode;
     this.gooseMenu.getGooseMenu(empCode).subscribe((menu)=>{
       console.log('Received menu:', menu);
       const mainMenuItems = menu?.['MAINMENU']?? [];
