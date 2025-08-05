@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsyncDetection, NgScrollbar } from "ngx-scrollbar";
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
+import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-users-leave-requests',
@@ -10,87 +12,31 @@ import { LeaveManagementServiceService } from '../../../services/leave-managemen
   styleUrl: './users-leave-requests.component.css',
 })
 export class UsersLeaveRequestsComponent implements OnInit {
-  //  leaveRequests = [
-  //   {
-  //     fullName: 'Jenny Wilson',
-  //     designation: 'UI/UX designer',
-  //     Reason: "Friend's Wedding Celebration",
-  //     leaveType: 'Casual',
-  //     duration: '2 Days',
-  //     fromDate: '10 Apr 2020',
-  //     toDate: '11 Apr 2020',
-  //     imageUrl: 'assets/avatar.png',
-
-  //   },
-  //   {
-  //     name: 'Courtney Henry',
-  //     designation: 'UI/UX designer',
-  //     Reason: 'Personal work',
-  //     leaveType: 'Casual',
-  //     duration: '2 Days',
-  //     fromDate: '10 Apr 2020',
-  //     toDate: '11 Apr 2020',
-  //     imageUrl: 'assets/avatar.png',
-
-  //   },
-  //   {
-  //     name: 'Brooklyn Simmons',
-  //     designation: 'UX Researcher',
-  //     Reason: 'Vacation',
-  //     leaveType: 'Casual',
-  //     duration: '4 Days',
-  //     fromDate: '10 Apr 2020',
-  //     toDate: '11 Apr 2020',
-  //     imageUrl: 'assets/avatar.png',
-
-  //   },
-  //     {
-  //   name: 'Ralph Edwards',
-  //   designation: 'Frontend Developer',
-  //   Reason: 'Medical Appointment',
-  //   leaveType: 'Sick',
-  //   duration: '1 Day',
-  //   fromDate: '15 Apr 2020',
-  //   toDate: '15 Apr 2020',
-  //   imageUrl: 'assets/avatar.png',
-  // },
-  // {
-  //   name: 'Savannah Nguyen',
-  //   designation: 'Product Designer',
-  //   Reason: 'Family Event',
-  //   leaveType: 'Casual',
-  //   duration: '2 Days',
-  //   fromDate: '18 Apr 2020',
-  //   toDate: '19 Apr 2020',
-  //   imageUrl: 'assets/avatar.png',
-  // },
-  // {
-  //   name: 'Wade Warren',
-  //   designation: 'QA Analyst',
-  //   Reason: 'Fever and fatigue',
-  //   leaveType: 'Sick',
-  //   duration: '2 Days',
-  //   fromDate: '20 Apr 2020',
-  //   toDate: '21 Apr 2020',
-  //   imageUrl: 'assets/avatar.png',
-  // },
-
-  // ];
+ 
   leaveRequests: any[] = [];
-  // filteredRequests:any[]=[];
   activeTab: string = 'requestPending';
   requestPending!: any[];
   requestCompleted!: any[];
+  loggedInUser:any;
 
-  constructor(private leaveManagementService: LeaveManagementServiceService) {}
-
-  ngOnInit(): void {
-    this.loadUsersLeaveRequests();
+  constructor(private leaveManagementService: LeaveManagementServiceService, private store: Store) {
+     this.store.select(selectAuthUser).subscribe((user:any) => {
+              if(user){
+                this.loggedInUser= user;
+                const empCode = this.loggedInUser.empCode;
+                this.loadUsersLeaveRequests(empCode);
+              }
+            });
   }
 
-  loadUsersLeaveRequests() {
+  ngOnInit(): void {
+    
+    // this.loadUsersLeaveRequests();
+  }
+
+  loadUsersLeaveRequests(empCode: string) {
     this.leaveManagementService
-      .getUsersLeaveRequestHistory()
+      .getUsersLeaveRequestHistory(empCode)
       .subscribe((data) => {
         this.leaveRequests = data.map((item: any) => ({
           LeavePK: item.leavePK,
@@ -126,7 +72,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Leave action successful:', res);
-          this.loadUsersLeaveRequests(); // Refresh the list
+          this.loadUsersLeaveRequests(this.loggedInUser.empCode); // Refresh the list
         },
         error: (err) => {
           console.error('Leave action failed:', err);

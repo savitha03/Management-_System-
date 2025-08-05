@@ -34,8 +34,8 @@ export class LeaveManagementServiceService {
   return this.http.get<LeaveRecord[]>(`${this.appUrl}/api/LeaveManagement/my-history`,{params:queryParams});
 }
 
-  getUsersLeaveHistory():Observable<any>{
-    return this.http.get(`${this.appUrl}/api/LeaveManagement/users-history`);
+  getUsersLeaveHistory(empCode:any):Observable<any>{
+    return this.http.get(`${this.appUrl}/api/LeaveManagement/users-history/${empCode}`);
   }
 
   UpdateEmployeeLeaveRequest(updateUser:any){
@@ -46,8 +46,8 @@ export class LeaveManagementServiceService {
     return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`,deleteUser);
   }
 
-  getUsersLeaveRequestHistory():Observable<any>{
-    return this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action`);
+  getUsersLeaveRequestHistory(empCode:any):Observable<any>{
+    return this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action/${empCode}`);
   }
 
   userLeaveRequestActionUpdate(userData:{ LeavePK: number; Action: string }){

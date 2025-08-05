@@ -22,5 +22,9 @@ export const  loginReducer = createReducer(
         ...state,
         error,
         loading:false
-    }))
+    })),
+
+    on(AuthActions.logout, () => ({
+    ...initialLoginState,
+  }))
 );
