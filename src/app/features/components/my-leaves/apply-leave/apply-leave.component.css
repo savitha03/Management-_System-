@@ -66,5 +66,58 @@ textarea {
   border: 1px solid #ced4da !important; /* or any normal border color */
 }
 
+.btn-primary {
+  background-color: #289ee4 !important;
+  border-color: #289ee4 !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1f7ec1 !important; /* a slightly darker blue */
+  border-color: #1f7ec1 !important;
+  box-shadow: 0 0 8px rgba(40, 158, 228, 0.6); /* subtle glow */
+}
+
+.leave-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.two-span {
+  grid-column: span 2;
+}
+.full-width {
+  grid-column: span 3;
+}
+.duration-field {
+  grid-column: span 1;
+}
+
+.reason-field {
+  grid-column: span 2;
+}
+
+.toast-container {
+  z-index: 1055;
+}
+.toast {
+  min-width: 250px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.form-control, .form-select {
+  padding: 4px 8px;
+}
+
+
+
+
  
 

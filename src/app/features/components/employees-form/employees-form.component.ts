@@ -46,19 +46,13 @@ export class EmployeesFormComponent implements OnInit {
   employmentTabEnabled: boolean = false;
   currentMode: 'Edit' | 'View' = 'View';
   form!: FormGroup
+  
 
 
 
   constructor(private modalService: NgbModal, private store: Store,private fb: FormBuilder) {}
 
-  ngOnInit(): void {
-
-  }
-
-
-
-
-
+  ngOnInit(): void {}
   navButtons(value: any) {
     if (value === 'next') {
       this.activeTab = 'employment';
@@ -102,35 +96,7 @@ export class EmployeesFormComponent implements OnInit {
 
     this.handleAppEvent.emit(event);
   }
-  // viewOrEdit(mode: 'Edit' | 'View'): void {
-  //   this.currentMode = mode;
-
-  //   if (mode === 'View') {
-  //     const editModal = this.modalService.open(CoreModalComponent, {
-  //       backdrop: 'static',
-  //       size: 'lg',
-  //       keyboard: false,
-  //     });
-
-  //     editModal.componentInstance.header = 'Confirmation';
-  //     editModal.componentInstance.content = `Do you want to edit ${
-  //       this.detailsForm.get('fullName').value
-  //     }'s Detail ?`;
-  //     editModal.componentInstance.isYesOrNo = true;
-
-  //     editModal.componentInstance.eventHandler$.subscribe((data: any) => {
-  //       if (data === 'Proceed') {
-  //         this.isEdit = mode === 'View';
-  //         this.activeViewOrEdit.emit(this.isEdit);
-  //         editModal.close();
-  //       }
-  //     });
-  //   }else{
-  //     this.isEdit = mode !== 'Edit';
-  //       this.activeViewOrEdit.emit(this.isEdit)
-  //   }
-  // }
-
+  
   unsavedChanges(callback: () => void): void {
   if (this.detailsForm?.dirty) {
     const saveChangesModal = this.modalService.open(CoreModalComponent, {

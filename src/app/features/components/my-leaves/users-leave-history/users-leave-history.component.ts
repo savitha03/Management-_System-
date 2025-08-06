@@ -47,8 +47,30 @@ export class UsersLeaveHistoryComponent implements OnInit {
     { headerName: 'Emp. ID', field: 'empId', width: 110 },
     { headerName: 'Emp Name', field: 'empName', width: 220 },
     { headerName: 'Leave Type', field: 'leaveType', width: 140 },
-    { headerName: 'From Date', field: 'fromDate', width: 140 },
-    { headerName: 'To Date', field: 'toDate', width: 140 },
+    { headerName: 'From Date', 
+      field: 'fromDate',
+      width: 140 ,
+      valueFormatter:(params)=>{
+        if(!params.value)return '';
+        return new Date(params.value).toLocaleDateString('en-GB',{
+          day:'2-digit',
+          month:'short',
+          year:'numeric'
+        });
+      }
+    },
+    { headerName: 'To Date',
+      field: 'toDate', 
+      width: 140 ,
+      valueFormatter:(params)=>{
+        if(!params.value)return '';
+        return new Date(params.value).toLocaleDateString('en-GB',{
+          day:'2-digit',
+          month:'short',
+          year:'numeric'
+        });
+      }
+    },
     { headerName: 'Duration', field: 'duration', width: 130 },
     {
       headerName: 'Leave Status',

@@ -18,33 +18,35 @@ import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave-requests.component';
 import { RouterModule } from "@angular/router";
+import { SharedService } from '../../../../shared/services/shared.service';
 
 
 
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CommonModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
 export class ApplyLeaveComponent implements OnInit {
   @Input() leaveData: any;
- 
-
-
-
+  @Input() leaveFormObject: any;
+  isEditable:boolean=false;
   loggedInUser: any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
   leaveType$!: Observable<any>;
   showTimeFields = false;
+  showSuccessToast=false;
+  leaveFormEntity: any = leaveFormObject;
 
   constructor(
     private fb: FormBuilder,
     private featureCommonService: FeatureCommonServiceService,
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
+    private sharedService: SharedService,
     private store:Store
   ) {
     this.store.select(selectAuthUser).subscribe((user:any) => {
@@ -57,15 +59,22 @@ export class ApplyLeaveComponent implements OnInit {
   ngOnInit(): void {
     this.loadDropdowns();
     this.formBuilder();
+    this.leaveForm.valueChanges.subscribe(() => {
+    this.clearValidation();
+  });
     if (this.leaveData) {
       this.leaveForm.patchValue(this.leaveData);
     }
+    this.leaveForm.disable();
+  
+
   }
 
   formBuilder() {
     this.leaveForm = this.formUtilServiceService.buildReactiveForm(
       this.leaveFormEnitity
     );
+    this.leaveForm = this.formUtilServiceService.buildReactiveForm(this.leaveFormEntity);
     this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
@@ -202,22 +211,10 @@ export class ApplyLeaveComponent implements OnInit {
       .subscribe((data) => (this.leaveType$ = of(data)));
   }
 
-  // apply() {
-  //   this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode); // Set empCode FIRST
-  //   if (this.leaveForm.valid) {
-  //     const leaveData = this.leaveForm.value;
-  //     this.leaveManagementService
-  //       .saveEmployeeLeaveRequest(leaveData)
-  //       .subscribe(()=>{
-  //         this.leaveSubmitted.emit(leaveData);
-  //         this.leaveForm.reset();
-  //       });
-  //   } else {
-  //     this.leaveForm.markAllAsTouched();
-  //   }
-  // }
+
   apply() {
   this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode);
+  
 
   if (this.leaveForm.valid) {
     const leaveData = {
@@ -230,11 +227,42 @@ export class ApplyLeaveComponent implements OnInit {
     this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe(() => {
       
       this.leaveForm.reset();
+      this.showSuccessToast = true;
+      this.clearValidation(); 
+      setTimeout(() => {
+      this.showSuccessToast = false;
+      }, 3000);
     });
   } else {
-    this.leaveForm.markAllAsTouched();
+    // this.leaveForm.markAllAsTouched();
+      const validationMessages = this.formUtilServiceService.parseValidationErrors(
+        this.leaveForm.controls,
+        this.leaveFormEntity
+      );
+
+    const uniqueMessages = validationMessages
+      .filter((item, index, array) =>
+        index === array.findIndex((el) => el.content === item.content)
+      )
+      .map((err) => err.content);
+    this.openValidationSlider(uniqueMessages);
   }
 }
+
+  enableEditing() {
+    this.leaveForm.enable();
+    this.isEditable = true;
+  }
+
+  clearValidation() {
+    this.sharedService.setValidationSubject(null);
+    this.sharedService.setValidationSliderSubject(false);
+  }
+
+  openValidationSlider(validation: any) {
+    this.sharedService.setValidationSliderSubject(true);
+    this.sharedService.setValidationSubject(validation);
+  }
 
 }
 

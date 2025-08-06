@@ -89,13 +89,7 @@ export const leaveFormObject: any = {
     label: 'Duration',
     value: '',
     type: 'InputText',
-    validations: [
-      {
-        validator: 'required',
-        value: true,
-        message: 'Duration should not be blank',
-      }
-    ],
+    validations: [],
     disabled: false,
   },
     reason: {

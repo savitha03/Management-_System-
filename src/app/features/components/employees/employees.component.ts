@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EmployeesFormComponent } from '../../components/employees-form/employees-form.component';
 import { EmployeesListComponent } from '../../components/employees-list/employees-list.component';
 import { ColDef, GridOptions } from 'ag-grid-community';
@@ -57,6 +57,7 @@ export class EmployeesComponent implements OnInit {
   stateList$!:Observable<any>;
   countryList$!: Observable<any>;
   
+  showSuccessToast=false;
 
 
   gridApi: any;
@@ -477,6 +478,11 @@ export class EmployeesComponent implements OnInit {
             this.detailsForm.disable();
             this.getEmployees();
             this.clearValidation();
+
+            this.showSuccessToast = true;
+            setTimeout(() => {
+              this.showSuccessToast = false;
+            }, 500);
           },
           error: (err) => console.error('Save error:', err),
         });

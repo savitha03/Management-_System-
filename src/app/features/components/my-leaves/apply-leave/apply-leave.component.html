@@ -1,49 +1,59 @@
 <div class="m-5">
   <div class="m-5">
-    <h4>Apply for Leave</h4>
-    <form [formGroup]="leaveForm" (ngSubmit)="apply()">
+    <div class="d-flex align-items-center gap-3">
+      <h4 class="mb-0">Apply for Leave</h4>
+      <button type="button" class="btn btn-primary btn-sm" (click)="enableEditing()" [disabled]="isEditable">
+        Apply Here
+      </button>
+    </div>
+    <form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
       <div class="leave-form-grid">
-        <!-- Leave Type -->
+
         <div class="mt-4">
           <label for="leaveType" class="form-label">Leave Type</label>
-          <select id="leaveType" formControlName="leaveType" class="form-select form-control" required>
+          <select id="leaveType" formControlName="leaveType" class="form-select form-control" required
+            [ngClass]="{ required: leaveForm.controls['leaveType'].errors && leaveForm.controls['leaveType']}">
             <option value="" disabled>Select Leave Type</option>
             <option *ngFor="let leaveType of leaveType$ | async" [ngValue]="leaveType.code">
               {{ leaveType.screenName }}
             </option>
           </select>
+
         </div>
 
-        <!-- From Date -->
         <div class="mt-4">
           <label for="fromDate" class="form-label">From Date</label>
-          <input type="date" id="fromDate" class="form-control" formControlName="fromDate" />
+          <input type="date" id="fromDate" class="form-control" formControlName="fromDate"
+            [ngClass]="{ required: leaveForm.controls['fromDate'].errors && leaveForm.controls['fromDate']}" />
+
         </div>
 
-        <!-- To Date -->
         <div class="mt-4">
           <label for="toDate" class="form-label">To Date</label>
-          <input
-            type="date"
-            id="toDate"
-            class="form-control"
-            formControlName="toDate"
+          <input type="date" id="toDate" class="form-control" formControlName="toDate"
             [min]="leaveForm.get('fromDate')?.value"
-          />
+            [ngClass]="{ required: leaveForm.controls['toDate'].errors && leaveForm.controls['toDate']}" />
           <small class="text-danger" *ngIf="leaveForm.get('toDate')?.hasError('dateBeforeFromDate')">
             To Date cannot be before From Date.
           </small>
         </div>
 
-        <!-- Time Fields (conditionally shown) -->
         <div *ngIf="showTimeFields">
           <label class="form-label mt-2">From Time</label>
           <input type="time" class="form-control" formControlName="fromTime" />
+          <small class="text-danger"
+            *ngIf="leaveForm.get('fromTime')?.hasError('required') && leaveForm.get('fromTime')?.touched">
+            From Time is required.
+          </small>
         </div>
 
         <div *ngIf="showTimeFields">
           <label class="form-label mt-2">To Time</label>
-          <input type="time" class="form-control" formControlName="toTime"/>
+          <input type="time" class="form-control" formControlName="toTime" />
+          <small class="text-danger"
+            *ngIf="leaveForm.get('toTime')?.hasError('required') && leaveForm.get('toTime')?.touched">
+            To Time is required.
+          </small>
         </div>
 
         <div *ngIf="showTimeFields">
@@ -51,30 +61,39 @@
           <input type="number" class="form-control" formControlName="totalHours" readonly />
         </div>
 
-        <!-- Duration -->
         <div>
           <label class="form-label mt-2">Duration</label>
-          <input type="text" class="form-control" formControlName="duration" readonly/>
+          <input type="text" class="form-control" formControlName="duration" readonly />
         </div>
 
-        <!-- Reason -->
+
         <div class="full-width mt-2">
           <label for="reason" class="form-label">Reason</label>
-          <textarea id="reason" class="form-control" formControlName="reason" rows="3" maxlength="5000"></textarea>
+          <textarea id="reason" class="form-control" formControlName="reason" rows="3" maxlength="5000"
+            [ngClass]="{ required: leaveForm.controls['reason'].errors && leaveForm.controls['reason']}"></textarea>
         </div>
       </div>
 
-      <!-- Submit Button -->
+
       <div class="buttons mt-4 justify-content-center">
-        <button type="submit" class="btn submit" [disabled]="leaveForm.invalid">
+        <button type="submit" class="btn submit" [disabled]="!isEditable">
           Submit
         </button>
       </div>
     </form>
   </div>
 </div>
-<!-- 
-<hr class="my-4" />
-<h5>Submitted Leave Requests</h5> -->
 
-
+<!-- Toast Container -->
+<div class="toast-container position-fixed start-50 translate-middle-x top-0 mt-3" *ngIf="showSuccessToast"
+  style="z-index: 1200">
+  <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        Leave applied successfully.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="showSuccessToast = false"
+        aria-label="Close"></button>
+    </div>
+  </div>
+</div>
