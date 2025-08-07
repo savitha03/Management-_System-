@@ -13,12 +13,12 @@
   <!-- Leave Cards -->
   <ng-container *ngIf="activeTab === 'requestPending'">
     <ng-scrollbar style="height: 65vh;">
-        <div *ngIf="!requestPending || requestPending.length === 0" 
+      <div *ngIf="!requestPending || requestPending.length === 0"
         class="d-flex justify-content-center align-items-center mt-5">
-     <h5>
-       No Pending Requests 
-    </h5>
-    </div>
+        <h5>
+          No Pending Requests
+        </h5>
+      </div>
       <div class="row g-4">
         <div class="col-md-6" *ngFor="let request of requestPending">
           <div class="card shadow-sm border-0 rounded-4 p-2" style="font-size: 0.85rem;">
@@ -59,11 +59,12 @@
     </ng-scrollbar>
   </ng-container>
 
+  <!-- requestCompleted -->
   <ng-container *ngIf="activeTab === 'requestCompleted'">
     <ng-scrollbar style="height: 65vh;">
       <div class="row g-4">
         <div class="col-md-6" *ngFor="let request of requestCompleted">
-          <div class="card shadow-sm border-0 rounded-4 p-2" style="font-size: 0.85rem;">
+          <div class="card shadow-sm border-0 rounded-4 p-2" style="font-size: 0.85rem; position: relative;">
             <div class="d-flex justify-content-between align-items-start">
               <div class="d-flex align-items-center">
                 <img [src]="request.imageUrl" class="rounded-circle me-3" width="50" height="50" alt="User avatar" />
@@ -88,16 +89,43 @@
                 {{ request.fromDate | date:'dd MMM yyyy' }} - {{ request.toDate | date:'dd MMM yyyy' }}
               </small>
             </div>
+            
+            <div class="position-relative d-flex justify-content-end">
+<div class="status-wrapper">
+  <div> 
+     <!-- {{request.leaveStatus.screeName}} by  -->
+    <button class="btn btn-outline-secondary" (click)="togglePopover(request)">
+    {{ request.leaveStatus === 'APPROVED' ? 'Approved' : 'Cancelled' }}
+  </button>
+  </div>
 
-            <!-- Show action buttons only in 'requestPending' -->
-            <div *ngIf="activeTab === 'requestCompleted'"
-              class="d-flex justify-content-end align-items-center mt-1 gap-3">
-              <button class="cancel"
-                (click)="onLeaveAction(request.LeavePK,request.leaveStatus )">{{request.leaveStatus==='APPROVED'?'Approved':'Cancelled'}}</button>
+
+  <div class="custom-popover" *ngIf="activePopover === request">
+    <div class="popover-header">
+      <strong>Change Status To</strong>
+      <span class="close-btn" (click)="closePopover()">×</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <ng-container [ngSwitch]="request.leaveStatus">
+        <ng-container *ngSwitchCase="'CANCELLED'">
+          <button class="btn-outline" (click)="changeStatus(request, 'PENDING')">Pending</button>
+          <button class="btn-outline primary" (click)="changeStatus(request, 'APPROVED')">Approve</button>
+        </ng-container>
+        <ng-container *ngSwitchCase="'APPROVED'">
+          <button class="btn-outline" (click)="changeStatus(request, 'PENDING')">Pending</button>
+          <button class="btn-outline danger" (click)="changeStatus(request, 'CANCELLED')">Cancel</button>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
             </div>
           </div>
         </div>
       </div>
     </ng-scrollbar>
   </ng-container>
+
 </div>

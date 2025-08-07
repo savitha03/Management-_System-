@@ -19,6 +19,9 @@ export class UsersLeaveRequestsComponent implements OnInit {
   requestCompleted!: any[];
   loggedInUser:any;
 
+  activePopover: any = null;
+
+
   constructor(private leaveManagementService: LeaveManagementServiceService, private store: Store) {
      this.store.select(selectAuthUser).subscribe((user:any) => {
               if(user){
@@ -49,6 +52,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
           toDate: item.toDate,
           imageUrl: 'assets/avatar.png',
           leaveStatus: item.leaveStatus,
+          updatedUser:item.updatedUser
         }));
 
         this.requestPending = this.leaveRequests.filter(request => request.leaveStatus === 'PENDING');
@@ -87,6 +91,32 @@ export class UsersLeaveRequestsComponent implements OnInit {
       : this.requestCompleted;
 }
 
+  togglePopover(request:any){
+    this.activePopover= this.activePopover ===request? null : request;
+  }
+
+  closePopover(){
+    this.activePopover = null;
+  }
+
+  changeStatus(request:any, newStatus:'APPROVED'|'CANCELLED'|'PENDING'){
+    const payload={
+      LeavePK:request.LeavePK,
+      Action: newStatus,
+      EmpCode:this.loggedInUser.empCode
+    };
+
+  this.leaveManagementService.userLeaveRequestActionUpdate(payload).subscribe({
+    next:(res)=>{
+      console.log('Status updated:', res);
+      this.activePopover = null;
+      this.loadUsersLeaveRequests(this.loggedInUser.empCode);
+    },
+    error: (err) => {
+      console.error('Status update failed:', err);
+    },
+  });
+  }
 // get requestPending(){
 //   return this.leaveRequests.filter(request => request.status === 'PENDING');
 // }

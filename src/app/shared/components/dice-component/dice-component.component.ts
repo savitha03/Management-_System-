@@ -12,9 +12,9 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 export class DiceComponentComponent implements ICellRendererAngularComp {
   position: 'right' | 'left' = 'right';
   actionLinks: any[] = [
-    {
-      screenName: 'NA',
-    },
+    // {
+    //   screenName: 'NA',
+    // },
     {
       screenName: 'Delete',
     },
@@ -34,4 +34,11 @@ export class DiceComponentComponent implements ICellRendererAngularComp {
   onClick() {
     alert('Dice clicked! ' + this.params.value);
   }
+
+  onActionClick(link: any) {
+  if (link.screenName === 'Delete') {
+    this.params.context.componentParent.deleteNewEmployeeRow(this.params.data);
+  }
+}
+
 }

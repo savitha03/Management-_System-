@@ -155,7 +155,7 @@ export class EmployeesComponent implements OnInit {
     this.employeeDetailsService.getEmployeeDetails().subscribe((data: any) => {
       this.allRowData = data;
       this.rowData = [...this.allRowData];
-      console.log(data);
+      // console.log(data);
       this.selectFirstRowAndShowDetails();
     });
   }
@@ -205,7 +205,7 @@ export class EmployeesComponent implements OnInit {
 
     this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
       next: (res) => {
-        console.log('Auto-saved changes:', res);
+        // console.log('Auto-saved changes:', res);
         const index = this.allRowData.findIndex(
           (emp) => emp.empCode === res.empCode
         );

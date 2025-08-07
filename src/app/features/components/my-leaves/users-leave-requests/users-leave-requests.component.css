@@ -111,3 +111,86 @@ button {
 .approve:hover {
   background-color: #148ed4;
 }
+.status-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-popover {
+  position: absolute;
+  top: 50%;
+  right: 100%; /* Place it to the left of the button */
+  transform: translateY(-50%) translateX(-12px); /* Pull it a bit away */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  min-width: 180px;
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+/* Optional: Add a left-pointing arrow */
+.custom-popover::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent white;
+}
+
+.popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 6px;
+  color: #888;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-outline {
+  padding: 5px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: #f2f2f2;
+}
+
+.btn-outline.primary {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.btn-outline.primary:hover {
+  background-color: #e6f9ed;
+}
+
+.btn-outline.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline.danger:hover {
+  background-color: #fbecec;
+}

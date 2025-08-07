@@ -53,7 +53,7 @@ export class SideNav implements OnInit {
 
     const empCode = this.loggedInUser.empCode;
     this.gooseMenu.getGooseMenu(empCode).subscribe((menu)=>{
-      console.log('Received menu:', menu);
+      // console.log('Received menu:', menu);
       const mainMenuItems = menu?.['MAINMENU']?? [];
       const bottomMenuItems = menu?.['BOTTOMMENU']?? [];
 
