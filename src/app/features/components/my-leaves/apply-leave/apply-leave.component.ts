@@ -19,6 +19,7 @@ import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave-requests.component';
 import { RouterModule } from "@angular/router";
 import { SharedService } from '../../../../shared/services/shared.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -47,7 +48,8 @@ export class ApplyLeaveComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
     private sharedService: SharedService,
-    private store:Store
+    private store:Store,
+    private toastr: ToastrService,
   ) {
     this.store.select(selectAuthUser).subscribe((user:any) => {
             if(user){
@@ -227,11 +229,12 @@ export class ApplyLeaveComponent implements OnInit {
     this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe(() => {
       
       this.leaveForm.reset();
-      this.showSuccessToast = true;
-      this.clearValidation(); 
-      setTimeout(() => {
-      this.showSuccessToast = false;
-      }, 3000);
+      this.toastr.success('Leave Applied Successfully!','Success')
+      // this.showSuccessToast = true;
+      // this.clearValidation(); 
+      // setTimeout(() => {
+      // this.showSuccessToast = false;
+      // }, 3000);
     });
   } else {
     // this.leaveForm.markAllAsTouched();

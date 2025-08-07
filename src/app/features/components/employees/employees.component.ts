@@ -20,6 +20,7 @@ import { Observable, of } from 'rxjs';
 import { EmployeeDetailsService } from '../../services/employee-details.service';
 import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employees',
@@ -132,7 +133,8 @@ export class EmployeesComponent implements OnInit {
     private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService,
     private employeeDetailsService: EmployeeDetailsService,
-    private modalService:NgbModal
+    private modalService:NgbModal,
+    private toastr: ToastrService,
   
   ) {}
 
@@ -351,89 +353,6 @@ export class EmployeesComponent implements OnInit {
 
   break;
 }
-
-      // case 'SAVE': {
-      //   if (this.detailsForm.invalid) {
-      //     this.detailsForm.markAllAsTouched();
-
-      //     const invalidControls = this.getInvalidControls(this.detailsForm);
-      //     console.warn('Invalid Form Controls');
-      //     invalidControls.forEach((controlName) => {
-      //       const control = this.detailsForm.get(controlName);
-      //       console.warn(
-      //         `Control "${controlName}" is invalid. Value:`,
-      //         control?.value
-      //       );
-      //     });
-
-      //     this.pageErrors = this.formUtilServiceService.parseValidationErrors(
-      //       this.detailsForm.controls,
-      //       this.detailsFormEntity
-      //     );
-
-      //     this.pageErrors = this.pageErrors.filter(
-      //       (item, index, array) =>
-      //         index ===
-      //         array.findIndex((element) => element.content === item.content)
-      //     );
-
-      //     let validationErrors = this.pageErrors.map((error) => error.content);
-
-      //     if (validationErrors) {
-      //       this.openValidationSlider(validationErrors);
-      //     }
-
-      //     return;
-      //   }
-
-      //   const formData = this.detailsForm.getRawValue();
-      //   console.log('Saving Employee Data:', formData);
-
-      //   if (this.isNewEmployee) {
-      //     // New employee - call save API
-      //     this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
-      //       next: (res) => {
-      //         console.log('Employee saved:', res);
-
-      //         this.allRowData = [res, ...this.allRowData];
-      //         this.toggleActiveFilter(this.filterType); // Refresh list
-      //         this.isNewEmployee = false;
-      //         this.isEdit = false;
-      //         this.detailsForm.disable();
-      //         this.getEmployees();
-      //         this.clearValidation();
-              
-      //       },
-      //       error: (err) => {
-      //         console.error('Save error:', err);
-      //       },
-      //     });
-      //   } else {
-      //     // Existing employee - call update API
-      //     this.employeeDetailsService
-      //       .updateEmployeeDetails(formData)
-      //       .subscribe({
-      //         next: (res) => {
-      //           console.log('Employee updated:', res);
-
-      //           const index = this.allRowData.findIndex(
-      //             (emp) => emp.empCode === res.empCode
-      //           );
-      //           if (index > -1) this.allRowData[index] = res;
-
-      //           this.toggleActiveFilter(this.filterType);
-      //           this.isEdit = false;
-      //           this.detailsForm.disable();
-      //         },
-      //         error: (err) => {
-      //           console.error('Update error:', err);
-      //         },
-      //       });
-      //   }
-
-      //   break;
-      // }
-
       case 'SAVE': {
   this.detailsForm.markAllAsTouched();
 
@@ -480,13 +399,11 @@ export class EmployeesComponent implements OnInit {
             this.detailsForm.disable();
             this.getEmployees();
             this.clearValidation();
-            
-            this.showSuccessToast = true;
-            setTimeout(() => {
-              this.showSuccessToast = false;
-            }, 500);
+            this.toastr.success('New Employee Added Successfully!', 'Success');
+           
           },
-          error: (err) => console.error('Save error:', err),
+          error: (err) => {console.error('Save error:', err);
+           this.toastr.error('Failed to save employee.', 'Error');}
         });
       } else {
         this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
@@ -498,6 +415,7 @@ export class EmployeesComponent implements OnInit {
             this.toggleActiveFilter(this.filterType);
             this.isEdit = false;
             this.detailsForm.disable();
+            this.toastr.success('Employee Detail Updated Successfully','Success');
           },
           error: (err) => console.error('Update error:', err),
         });

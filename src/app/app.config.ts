@@ -11,6 +11,8 @@ import { LoginEffects } from './auth/store/auth/login.effects';
 
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { MetaReducer } from '@ngrx/store';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 // ✅ Step 1: Create meta-reducer
 export function localStorageSyncReducer(reducer: any): any {
@@ -36,5 +38,13 @@ export const appConfig: ApplicationConfig = {
     ),
     provideEffects([LoginEffects]),
     provideStoreDevtools(),
+    provideAnimations(),
+    provideToastr({
+      timeOut: 3000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+      progressBar: true,
+      enableHtml: true,
+    })
   ],
 };
