@@ -4,6 +4,7 @@ import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import * as AuthActions from './login.actions';
 import { Auth } from '../../../core/auth/auth';
 import { Router } from '@angular/router';
+import { logout } from './login.actions';
 
 @Injectable()
 export class LoginEffects {
@@ -48,4 +49,14 @@ private router = inject(Router);
   );
 
   
+logout$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(logout),
+    tap(() => {
+      localStorage.clear(); // if you’re using persistence
+      this.router.navigate(['/login']);
+    })
+  ),
+  { dispatch: false } // no new action is dispatched
+);
 }

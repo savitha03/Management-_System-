@@ -10,6 +10,7 @@ import {
   NgModel,
   Validators,
 } from '@angular/forms';
+import {  NgIf } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { detailsFormObject } from '../../forms/employee-details.forms';
 import { FormUtilServiceService } from '../../../shared/services/form-util-service.service';
@@ -22,7 +23,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-employees',
-  imports: [EmployeesFormComponent, EmployeesListComponent, FormsModule],
+  imports: [EmployeesFormComponent, EmployeesListComponent, FormsModule,CommonModule,NgIf],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
@@ -432,6 +433,7 @@ export class EmployeesComponent implements OnInit {
 
       //   break;
       // }
+
       case 'SAVE': {
   this.detailsForm.markAllAsTouched();
 
@@ -478,7 +480,7 @@ export class EmployeesComponent implements OnInit {
             this.detailsForm.disable();
             this.getEmployees();
             this.clearValidation();
-
+            
             this.showSuccessToast = true;
             setTimeout(() => {
               this.showSuccessToast = false;

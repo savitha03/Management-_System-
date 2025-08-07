@@ -7,6 +7,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { CommonModule } from '@angular/common';
 import { NgModel } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { logout } from '../../../auth/store/auth/login.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-feature-container',
@@ -26,7 +28,8 @@ export class FeatureContainer implements OnInit {
   constructor(
     private authService: Auth,
     private router: Router,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private store:Store
   ) {}
 
   ngOnInit() {
@@ -46,8 +49,11 @@ export class FeatureContainer implements OnInit {
     switch (event.type) {
       case 'LOGOUT': {
         this.authService.logout();
+        // this.store.dispatch(logout());
         this.router.navigate(['auth']);
+
         break;
+
       }
     }
   }

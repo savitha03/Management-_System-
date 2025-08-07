@@ -65,6 +65,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
     const payload = {
       LeavePK: leavePK,
       Action: action,
+      EmpCode:this.loggedInUser.empCode
     };
 
     this.leaveManagementService

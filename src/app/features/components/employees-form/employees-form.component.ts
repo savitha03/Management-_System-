@@ -122,4 +122,9 @@ export class EmployeesFormComponent implements OnInit {
   }
 }
 
+onSave() {
+  // Save logic here
+  this.handleAppEvent.emit({ type: 'EMPLOYEE_SAVED' });
+}
+
 }

@@ -4,6 +4,7 @@ import { ThemeService } from '../../services/theme.service';
 import { SharedService } from '../../services/shared.service';
 import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
+import { logout } from '../../../auth/store/auth/login.actions';
 
 @Component({
   selector: 'app-top-nav',
@@ -67,10 +68,12 @@ export class TopNav implements OnInit {
   }
 
   logout() {
+    
     const payload = {
       type: 'LOGOUT',
     };
     this.actionEmitter.emit(payload);
+  
   }
 
   toggleDarkMode() {
