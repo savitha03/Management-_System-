@@ -129,53 +129,6 @@ export class LeaveHistory implements OnInit {
     wrapText: true,
   };
 
-  // rowData = [
-  //   {
-  //     empId: 'ST1176',
-  //     leaveType: 'Casual Leave',
-  //     fromDate: '2025-06-01',
-  //     toDate: '2025-06-03',
-  //     duration: '3 days',
-  //     status: 'Approved',
-  //     reason: 'Family trip',
-  //   },
-  //   {
-  //     empId: 'ST1176',
-  //     leaveType: 'Casual Leave',
-  //     fromDate: '2025-06-05',
-  //     toDate: '2025-06-06',
-  //     duration: '2 days',
-  //     status: 'Pending',
-  //     reason: 'Fever',
-  //   },
-  //   {
-  //     empId: 'ST1176',
-  //     leaveType: 'Casual Leave',
-  //     fromDate: '2025-05-28',
-  //     toDate: '2025-05-30',
-  //     duration: '3 days',
-  //     status: 'Approved',
-  //     reason: 'Personal work',
-  //   },
-  //   {
-  //     empId: 'ST1176',
-  //     leaveType: 'Overtime',
-  //     fromDate: '2025-06-02',
-  //     toDate: '2025-06-02',
-  //     duration: '1 day',
-  //     status: 'Rejected',
-  //     reason: 'No reason provided',
-  //   },
-  //   {
-  //     empId: 'ST1176',
-  //     leaveType: 'Casual Leave',
-  //     fromDate: '2025-06-07',
-  //     toDate: '2025-06-08',
-  //     duration: '2 days',
-  //     status: 'Pending',
-  //     reason: 'Back pain',
-  //   },
-  // ];
 
   rowData: any[] = [];
 

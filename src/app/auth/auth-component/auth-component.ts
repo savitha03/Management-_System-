@@ -28,8 +28,8 @@ export class AuthComponent implements OnInit {
 
   buildForm() {
     this.loginForm = this.fb.group({
-      empCode: ['', [Validators.required]],
-      password: ['', Validators.required],
+        empCode: ['',[Validators.required,Validators.pattern(/^[A-Z]+$/)]],
+        password: ['', Validators.required],
     });
   }
 

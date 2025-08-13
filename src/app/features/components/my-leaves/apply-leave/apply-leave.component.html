@@ -2,11 +2,13 @@
   <div class="m-5">
     <div class="d-flex align-items-center gap-3">
       <h4 class="mb-0">Apply for Leave</h4>
-      <button type="button" class="btn btn-primary btn-sm" (click)="enableEditing()" [disabled]="isEditable">
-        Apply Here
+      <button type="button" class="btn btn-sm" (click)="enableEditing()" [ngClass]="isEditable ? 'btn-danger' :'btn-primary'">
+        {{isEditable?'Cancel Apply' : 'Apply Here'}}
       </button>
     </div>
-    <form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
+
+    <ng-scrollbar class="mt-2" style="height: 60vh;">
+      <form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
       <div class="leave-form-grid">
 
         <div class="mt-4">
@@ -41,19 +43,19 @@
         <div *ngIf="showTimeFields">
           <label class="form-label mt-2">From Time</label>
           <input type="time" class="form-control" formControlName="fromTime" />
-          <small class="text-danger"
+          <!-- <small class="text-danger"
             *ngIf="leaveForm.get('fromTime')?.hasError('required') && leaveForm.get('fromTime')?.touched">
             From Time is required.
-          </small>
+          </small> -->
         </div>
 
         <div *ngIf="showTimeFields">
           <label class="form-label mt-2">To Time</label>
           <input type="time" class="form-control" formControlName="toTime" />
-          <small class="text-danger"
+          <!-- <small class="text-danger"
             *ngIf="leaveForm.get('toTime')?.hasError('required') && leaveForm.get('toTime')?.touched">
             To Time is required.
-          </small>
+          </small> -->
         </div>
 
         <div *ngIf="showTimeFields">
@@ -77,10 +79,13 @@
 
       <div class="buttons mt-4 justify-content-center">
         <button type="submit" class="btn submit" [disabled]="!isEditable">
-          Submit
+          Apply
         </button>
       </div>
-    </form>
+    </form> 
+    </ng-scrollbar>
+
+    
   </div>
 </div>
 

@@ -20,13 +20,14 @@ import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave
 import { RouterModule } from "@angular/router";
 import { SharedService } from '../../../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
+import { AsyncDetection, NgScrollbar, NgScrollbarModule } from "ngx-scrollbar";
 
 
 
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule,NgScrollbarModule],
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
@@ -252,9 +253,19 @@ export class ApplyLeaveComponent implements OnInit {
   }
 }
 
-  enableEditing() {
-    this.leaveForm.enable();
-    this.isEditable = true;
+  // enableEditing() {
+  //   this.leaveForm.enable();
+  //   this.isEditable = true;
+  // }
+
+  enableEditing(){
+    
+    this.isEditable = !this.isEditable;
+    if(this.isEditable){
+      this.leaveForm.enable();
+    }else{
+      this.leaveForm.disable();
+    }
   }
 
   clearValidation() {

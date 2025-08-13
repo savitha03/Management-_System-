@@ -24,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employees',
-  imports: [EmployeesFormComponent, EmployeesListComponent, FormsModule,CommonModule,NgIf],
+  imports: [EmployeesFormComponent, EmployeesListComponent, FormsModule,CommonModule],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })

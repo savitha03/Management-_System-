@@ -25,7 +25,7 @@
             <ng-scrollbar style="height: 55vh;">
                 <h5 class="mt-2">Employee Details</h5>
                 <form [formGroup]="detailsForm" class="mt-4">
-                    <!-- (ngSubmit)="next()" -->
+
                     <div class="form-grid">
                         <div>
                             <label>Employee Code</label>
@@ -38,8 +38,6 @@
                                 <option *ngFor="let empStatus of empStatus$ |async" [ngValue]="empStatus.code">
                                     {{empStatus.screenName}}
                                 </option>
-                                <!-- <option value="ACTIVE">Active</option>
-                                <option value="CLOSED">Closed</option> -->
                             </select>
                         </div>
                         <div>
@@ -58,7 +56,7 @@
                                 formControlName="dateOfBirth" />
                         </div>
 
-                        <!-- {{genderList$ | async |json}} -->
+
                         <div>
                             <label>Gender</label>
                             <select formControlName="gender"
@@ -67,9 +65,6 @@
                                 <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
                                     {{gender.screenName}}
                                 </option>
-                                <!-- <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option> -->
                             </select>
                         </div>
                         <div>
@@ -81,8 +76,6 @@
                                     [ngValue]="maritalStatus.code">
                                     {{maritalStatus.screenName}}
                                 </option>
-                                <!-- <option value="Single">Single</option>
-                                <option value="Married">Married</option> -->
                             </select>
                         </div>
                         <div>
@@ -173,11 +166,6 @@
                                         <option *ngFor="let role of role$|async" [ngValue]="role.code">
                                             {{role.screenName}}
                                         </option>
-                                        <!-- <option value="developer">Developer</option>
-                                        <option value="qa">QA</option>
-                                        <option value="teamLead">Team Lead</option>
-                                        <option value="projectManager">Project Manager</option>
-                                        <option value="teamManager">Team Manager</option> -->
                                     </select>
                                 </div>
                                 <div>
@@ -203,9 +191,6 @@
                                             [ngValue]="projectManager.code">
                                             {{projectManager.screenName}}
                                         </option>
-                                        <!-- <option value="PM1">Ramesh Thulasingam</option>
-                                        <option value="PM2">Dinesh Vidhyasagar</option>
-                                        <option value="PM3">Ganesh Gunasekaran</option>  -->
                                     </select>
                                 </div>
                                 <div>
@@ -216,10 +201,6 @@
                                         <option *ngFor="let teamLead of teamLead$|async" [ngValue]="teamLead.code">
                                             {{teamLead.screenName}}
                                         </option>
-                                        <!-- <option value="TL1">TL1</option>
-                                        <option value="TL2">TL2</option>
-                                        <option value="TL3">TL3</option>
-                                        <option value="TL4">TL4</option> -->
                                     </select>
                                 </div>
                             </div>
@@ -247,9 +228,6 @@
                                     [ngValue]="employmentStatus.code">
                                     {{employmentStatus.screenName}}
                                 </option>
-                                <!-- <option value="trainee">Trainee</option>
-                                <option value="contract">Contract</option>
-                                <option value="permanent">Permanent</option>  -->
                             </select>
 
                         </div>
@@ -282,8 +260,6 @@
                                         <option *ngFor="let currency of currency$ |async" [ngValue]="currency.code">
                                             {{currency.screenName}}
                                         </option>
-                                        <!-- <option value="Rupee">Rupee</option>
-                                        <option value="Dollar">Dollar</option> -->
                                     </select>
                                 </div>
 
@@ -301,10 +277,6 @@
                                             [ngValue]="payFrequency.code">
                                             {{payFrequency.screenName}}
                                         </option>
-                                        <!-- <option value="Daily">Daily</option>
-                                        <option value="Weekly">Weekly</option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Yearly">Yearly</option> -->
                                     </select>
                                 </div>
                             </div>

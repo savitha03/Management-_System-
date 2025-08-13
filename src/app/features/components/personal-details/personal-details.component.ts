@@ -34,6 +34,9 @@ export class PersonalDetailsComponent implements OnInit {
   genderList$!: Observable<any>;
   maritalStatus$!: Observable<any>;
   role$!: Observable<any>;
+  teamHRHead$! :Observable<any>;
+  projectManager$! :Observable<any>;
+  teamLead$! :Observable<any>;
 
 
   constructor(
@@ -76,11 +79,6 @@ export class PersonalDetailsComponent implements OnInit {
   switchTab(tab: string) {
     this.activeTab = tab;
   }
-  // onSubmit() {
-  //   if (this.activeTab === 'employee') {
-  //   } else {
-  //   }
-  // }
 
   formBuilder() {
     this.employeeForm = this.fb.group({
@@ -131,6 +129,9 @@ export class PersonalDetailsComponent implements OnInit {
         this.employeeForm.get('gender')?.disable();
         this.employeeForm.get('maritalStatus')?.disable();
         this.teamsForm.get('designation')?.disable();
+        this.teamsForm.get('teamAndHrHead')?.disable();
+        this.teamsForm.get('projectManager')?.disable();
+        this.teamsForm.get('teamLead')?.disable();
       });
     // this.detailsService.getEmployeePersonalDetails(empId).subscribe((data:any)=>{
     //   this.employeeForm.patchValue(data);
@@ -159,5 +160,17 @@ export class PersonalDetailsComponent implements OnInit {
       .subscribe((data) => {
         this.role$ = of(data);
       });
+      this.featureCommonService.getTeamDropdownLists('TEAMHRHEAD')
+      .subscribe((data)=>{
+        this.teamHRHead$ = of(data);
+      })
+       this.featureCommonService.getTeamDropdownLists('PROJECTMGR')
+      .subscribe((data)=>{
+        this.projectManager$ = of(data);
+      })
+        this.featureCommonService.getTeamDropdownLists('TEAMLEADER')
+      .subscribe((data)=>{
+        this.teamLead$ = of(data);
+      })
   }
 }

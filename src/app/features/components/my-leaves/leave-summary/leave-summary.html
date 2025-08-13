@@ -16,22 +16,22 @@
           <div class="d-flex align-items-center mb-4">
             <i [class]="selectedLeave.icon + ' display-5 me-3'"></i>
             <div>
-              <h3 class="mb-0 fw-bold">{{ selectedLeave.label }}</h3>
+              <h3 class="mb-0 fw-bold">{{ selectedLeave.leaveType }}</h3>
               <small class="text-light">Summary</small>
             </div>
           </div>
           <div class="details-grid">
             <div class="detail-box">
               <p class="label">Total Leave Available</p>
-              <p class="value">{{ selectedLeave.count }}</p>
-            </div>
-            <div class="detail-box">
-              <p class="label"> Leave Taken</p>
-              <p class="value">{{ selectedLeave.taken }}</p>
+              <p class="value">{{ selectedLeave.leaveRemaining }}</p>
             </div>
             <div class="detail-box">
               <p class="label">Leave Scheduled</p>
-              <p class="value">{{ selectedLeave.scheduled }}</p>
+              <p class="value">{{ selectedLeave.leaveScheduled }}</p>
+            </div>
+            <div class="detail-box">
+              <p class="label"> Leave Taken</p>
+              <p class="value">{{ selectedLeave.leaveTaken }}</p>
             </div>
           </div>
         </div>
