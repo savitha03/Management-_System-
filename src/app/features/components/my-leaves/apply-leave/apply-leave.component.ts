@@ -17,30 +17,28 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave-requests.component';
-import { RouterModule } from "@angular/router";
+import { RouterModule } from '@angular/router';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
-import { AsyncDetection, NgScrollbar, NgScrollbarModule } from "ngx-scrollbar";
-
-
+import { AsyncDetection, NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-apply-leave',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule,NgScrollbarModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, NgScrollbarModule],
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
 export class ApplyLeaveComponent implements OnInit {
   @Input() leaveData: any;
   @Input() leaveFormObject: any;
-  isEditable:boolean=false;
+  isEditable: boolean = false;
   loggedInUser: any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
   leaveType$!: Observable<any>;
   showTimeFields = false;
-  showSuccessToast=false;
+  showSuccessToast = false;
   leaveFormEntity: any = leaveFormObject;
 
   constructor(
@@ -49,35 +47,35 @@ export class ApplyLeaveComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
     private sharedService: SharedService,
-    private store:Store,
-    private toastr: ToastrService,
+    private store: Store,
+    private toastr: ToastrService
   ) {
-    this.store.select(selectAuthUser).subscribe((user:any) => {
-            if(user){
-              this.loggedInUser= user;
-            }
-          });
+    this.store.select(selectAuthUser).subscribe((user: any) => {
+      if (user) {
+        this.loggedInUser = user;
+      }
+    });
   }
 
   ngOnInit(): void {
     this.loadDropdowns();
     this.formBuilder();
     this.leaveForm.valueChanges.subscribe(() => {
-    this.clearValidation();
-  });
+      this.clearValidation();
+    });
     if (this.leaveData) {
       this.leaveForm.patchValue(this.leaveData);
     }
     this.leaveForm.disable();
-  
-
   }
 
   formBuilder() {
     this.leaveForm = this.formUtilServiceService.buildReactiveForm(
       this.leaveFormEnitity
     );
-    this.leaveForm = this.formUtilServiceService.buildReactiveForm(this.leaveFormEntity);
+    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
+      this.leaveFormEntity
+    );
     this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
@@ -214,56 +212,57 @@ export class ApplyLeaveComponent implements OnInit {
       .subscribe((data) => (this.leaveType$ = of(data)));
   }
 
-
   apply() {
-  this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode);
-  
+    this.leaveForm.get('empCode')?.patchValue(this.loggedInUser.empCode);
 
-  if (this.leaveForm.valid) {
-    const leaveData = {
-      ...this.leaveForm.value,
-      name: this.loggedInUser?.name || 'Anonymous',
-      designation: this.loggedInUser?.designation || 'Employee',
-      profile: this.loggedInUser?.profile || 'https://i.pravatar.cc/150?img=8',
-    };
+    if (this.leaveForm.valid) {
+      const leaveData = {
+        ...this.leaveForm.value,
+        name: this.loggedInUser?.name || 'Anonymous',
+        designation: this.loggedInUser?.designation || 'Employee',
+        profile:
+          this.loggedInUser?.profile || 'https://i.pravatar.cc/150?img=8',
+      };
 
-    this.leaveManagementService.saveEmployeeLeaveRequest(leaveData).subscribe(() => {
-      
-      this.leaveForm.reset();
-      this.toastr.success('Leave Applied Successfully!','Success')
-      // this.showSuccessToast = true;
-      // this.clearValidation(); 
-      // setTimeout(() => {
-      // this.showSuccessToast = false;
-      // }, 3000);
-    });
-  } else {
-    // this.leaveForm.markAllAsTouched();
-      const validationMessages = this.formUtilServiceService.parseValidationErrors(
-        this.leaveForm.controls,
-        this.leaveFormEntity
-      );
+      this.leaveManagementService
+        .saveEmployeeLeaveRequest(leaveData)
+        .subscribe({
+          next: () => {
+            this.leaveForm.reset();
+            this.leaveForm.disable();
+            this.isEditable = false;
+            this.toastr.success('Leave Applied Successfully!', 'Success');
+          },
+          error: (err: any) => {
+            const errorMessage =
+              err?.error?.message ||
+              'Something went wrong while applying leave';
+            this.toastr.error(errorMessage, 'Error');
+          },
+        });
+    } else {
+      const validationMessages =
+        this.formUtilServiceService.parseValidationErrors(
+          this.leaveForm.controls,
+          this.leaveFormEntity
+        );
 
-    const uniqueMessages = validationMessages
-      .filter((item, index, array) =>
-        index === array.findIndex((el) => el.content === item.content)
-      )
-      .map((err) => err.content);
-    this.openValidationSlider(uniqueMessages);
+      const uniqueMessages = validationMessages
+        .filter(
+          (item, index, array) =>
+            index === array.findIndex((el) => el.content === item.content)
+        )
+        .map((err) => err.content);
+
+      this.openValidationSlider(uniqueMessages);
+    }
   }
-}
-
-  // enableEditing() {
-  //   this.leaveForm.enable();
-  //   this.isEditable = true;
-  // }
-
-  enableEditing(){
-    
+  enableEditing() {
     this.isEditable = !this.isEditable;
-    if(this.isEditable){
+    if (this.isEditable) {
       this.leaveForm.enable();
-    }else{
+    } else {
+      this.leaveForm.reset();
       this.leaveForm.disable();
     }
   }
@@ -277,7 +276,6 @@ export class ApplyLeaveComponent implements OnInit {
     this.sharedService.setValidationSliderSubject(true);
     this.sharedService.setValidationSubject(validation);
   }
-
 }
 
 @Component({
@@ -287,7 +285,12 @@ export class ApplyLeaveComponent implements OnInit {
   template: `
     <div class="modal-header">
       <h5 class="modal-title">Update Leave</h5>
-      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"
+      ></button>
     </div>
     <div class="modal-body">
       <div class="mt-3">
@@ -396,33 +399,32 @@ export class ApplyLeaveComponent implements OnInit {
                 ></textarea>
               </div>
             </div>
-
-            <!-- Submit Button -->
-            <!-- <div class="buttons mt-2 justify-content-center">
-       
-        <button type="submit" class="btn submit" [disabled]="leaveForm.invalid">
-          Submit
-        </button>
-      </div> -->
           </form>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Cancel</button>
-      <button type="button" class="btn btn-outline-primary" (click)="update()">Update</button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="activeModal.close('Close click')"
+      >
+        Cancel
+      </button>
+      <button type="button" class="btn btn-outline-primary" (click)="update()">
+        Update
+      </button>
     </div>
   `,
   styleUrls: ['./apply-leave.component.css'],
 })
 export class UpdateLeaveComponent implements OnInit {
   @Input() leaveData: any;
-  @Input() header:any;
-  @Input() content:any;
+  @Input() header: any;
+  @Input() content: any;
   @Output() eventHandler$ = new EventEmitter();
 
-
-  loggedInUser:any;
+  loggedInUser: any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
   leaveType$!: Observable<any>;
@@ -433,31 +435,29 @@ export class UpdateLeaveComponent implements OnInit {
     private featureCommonService: FeatureCommonServiceService,
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
-    public activeModal:NgbActiveModal,
-    private store:Store
+    public activeModal: NgbActiveModal,
+    private store: Store
   ) {
-    this.store.select(selectAuthUser).subscribe((user:any) => {
-        if(user){
-          this.loggedInUser= user;
-        }
-      });
+    this.store.select(selectAuthUser).subscribe((user: any) => {
+      if (user) {
+        this.loggedInUser = user;
+      }
+    });
   }
 
   ngOnInit(): void {
-    // this.loadDropdowns();
-    this.formBuilder();
-      this.featureCommonService.getDropdownLists('LEAVETYPE').subscribe(data => {
-    this.leaveType$ = of(data);
-
-    // ✅ Now that dropdown values are loaded, patch the form
-    if (this.leaveData) {
-      this.leaveForm.patchValue(this.leaveData);
-    }
-  });
-
-
-    
    
+    this.formBuilder();
+    this.featureCommonService
+      .getDropdownLists('LEAVETYPE')
+      .subscribe((data) => {
+        this.leaveType$ = of(data);
+
+      //  dropdown values are loaded, patch the form
+        if (this.leaveData) {
+          this.leaveForm.patchValue(this.leaveData);
+        }
+      });
   }
 
   formBuilder() {
@@ -606,20 +606,16 @@ export class UpdateLeaveComponent implements OnInit {
       const leaveData = this.leaveForm.value;
       this.leaveManagementService
         .saveEmployeeLeaveRequest(leaveData)
-        .subscribe({
-        });
+        .subscribe({});
     } else {
       this.leaveForm.markAllAsTouched();
     }
   }
-  update(){
-   
+  update() {
     const payload = {
       type: 'UPDATE',
-      value : this.leaveForm.getRawValue()
-    }
-
+      value: this.leaveForm.getRawValue(),
+    };
     this.eventHandler$.emit(payload);
   }
-
 }

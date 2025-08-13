@@ -115,34 +115,37 @@
                                     </select>
                                 </div>
             </div>
-             <div class="form-grid mt-4">
+            <div class="form-grid mt-4">
                 <div>
                     <label for="teamAndHrHead">Team and HR Head</label>
-                     <select formControlName="teamAndHrHead" [ngClass]="{required: teamsForm.controls['teamAndHrHead'].errors}">
-                    <option value="">--Select Team and HR Head--</option> 
-                    <option *ngFor="let teamAndHrHead of teamHRHead$|async" [ngValue]="teamAndHrHead.code">
-                        {{teamAndHrHead.screenName}}
-                    </option>
-                    </select>
+                    <input type="text" readonly formControlName="teamAndHrHead" name="teamAndHrHead" id="teamAndHrHead" readonly />
+                    <!-- <select formControlName="teamManager">
+                        <option value="" disabled>--Select Team Manager--</option>
+                        <option value="">Manikandan Natarajan</option>
+                        <option value="">Krishnakumar Gajain</option>
+                        <option value="">Rajesh Doraiappa</option>
+                    </select> -->
                 </div>
                  <div>
                     <label for="projectManager">Project Manager</label>
-                     <select formControlName="projectManager" [ngClass]="{required: teamsForm.controls['projectManager'].errors}">
-                    <option value="">--Select Team and HR Head--</option> 
-                    <option *ngFor="let projectManager of projectManager$|async" [ngValue]="projectManager.code">
-                        {{projectManager.screenName}}
-                    </option>
-                    </select>
+                    <input type="text" readonly formControlName="projectManager" name="projectManager" id="projectManager" readonly />
+                    <!-- <select formControlName="projectManager">
+                        <option value="" disabled>--Select Project Manager--</option>
+                        <option value="">Ramesh Thulasingam</option>
+                        <option value="">Dinesh Vidhyasagar</option>
+                        <option value="">Ganesh Gunasekaran</option>
+                    </select> -->
                 </div>
                    <div>
                     <label for="teamLead">Team Lead</label>
-                     <select formControlName="teamLead" [ngClass]="{required: teamsForm.controls['projectManager'].errors}">
-                    <option value="">--Select Team and HR Head--</option> 
-                    <option *ngFor="let teamLead of teamLead$|async" [ngValue]="teamLead.code">
-                        {{teamLead.screenName}}
-                    </option>
-                    </select>
-                    <!-- <input type="text" readonly formControlName="teamLead" name="teamLead" id="teamLead" readonly /> -->
+                    <input type="text" readonly formControlName="teamLead" name="teamLead" id="teamLead" readonly />
+                    <!-- <select formControlName="teamLead">
+                        <option value="" disabled>--Select Team Lead--</option>
+                        <option value="">TL1</option>
+                        <option value="">TL2</option>
+                        <option value="">TL3</option>
+                        <option value="">TL4</option>
+                    </select> -->
                 </div>
              </div>
         </form>

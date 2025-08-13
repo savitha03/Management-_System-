@@ -13,7 +13,7 @@ import { Observable, of } from 'rxjs';
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
 import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
-
+ 
 @Component({
   selector: 'app-personal-details',
   standalone: true,
@@ -28,17 +28,14 @@ export class PersonalDetailsComponent implements OnInit {
   teamsForm!: FormGroup;
   selectedRow: any = null;
   loggedInUser:any;
-  
-  
-
+ 
+ 
+ 
   genderList$!: Observable<any>;
   maritalStatus$!: Observable<any>;
   role$!: Observable<any>;
-  teamHRHead$! :Observable<any>;
-  projectManager$! :Observable<any>;
-  teamLead$! :Observable<any>;
-
-
+ 
+ 
   constructor(
     private fb: FormBuilder,
     private detailsService: DetailsServiceService,
@@ -53,16 +50,16 @@ export class PersonalDetailsComponent implements OnInit {
   }
   ngOnInit(): void {
    
-
-    
+ 
+   
     this.formBuilder();
-    
-
+   
+ 
     this.loadEmployeeData(this.loggedInUser.empCode);
-
+ 
    this.loadDropdowns();
-
-
+ 
+ 
 //     this.store.select(selectAuthUser).subscribe((user:any) => {
 //   if (user) {
 //     console.log('Logged-in user:', user);
@@ -75,11 +72,16 @@ export class PersonalDetailsComponent implements OnInit {
   //       ? this.selectedRow.dateOfBirth.split('T')[0]
   //       : ''
   //  }
-
+ 
   switchTab(tab: string) {
     this.activeTab = tab;
   }
-
+  // onSubmit() {
+  //   if (this.activeTab === 'employee') {
+  //   } else {
+  //   }
+  // }
+ 
   formBuilder() {
     this.employeeForm = this.fb.group({
       empCode: ['', Validators.required],
@@ -90,9 +92,9 @@ export class PersonalDetailsComponent implements OnInit {
       maritalStatus: ['', Validators.required],
       nationality: ['', Validators.required],
     });
-
+ 
     // this.employeeForm.disable();
-
+ 
     this.contactForm = this.fb.group({
       empCode: [null],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -107,7 +109,7 @@ export class PersonalDetailsComponent implements OnInit {
       zipCode: ['', Validators.required],
       country: ['', Validators.required],
     });
-
+ 
     this.teamsForm = this.fb.group({
       empCode: [null],
       designation: ['', Validators.required],
@@ -116,7 +118,7 @@ export class PersonalDetailsComponent implements OnInit {
       teamLead: ['', Validators.required],
     });
   }
-
+ 
   loadEmployeeData(empId: any) {
     this.detailsService
       .getEmployeePersonalDetails(empId)
@@ -129,9 +131,6 @@ export class PersonalDetailsComponent implements OnInit {
         this.employeeForm.get('gender')?.disable();
         this.employeeForm.get('maritalStatus')?.disable();
         this.teamsForm.get('designation')?.disable();
-        this.teamsForm.get('teamAndHrHead')?.disable();
-        this.teamsForm.get('projectManager')?.disable();
-        this.teamsForm.get('teamLead')?.disable();
       });
     // this.detailsService.getEmployeePersonalDetails(empId).subscribe((data:any)=>{
     //   this.employeeForm.patchValue(data);
@@ -145,7 +144,7 @@ export class PersonalDetailsComponent implements OnInit {
       this.teamsForm.patchValue(data);
     });
   }
-
+ 
   loadDropdowns(){
     this.featureCommonService.getDropdownLists('GENDER').subscribe((data) => {
           this.genderList$ = of(data);
@@ -160,17 +159,6 @@ export class PersonalDetailsComponent implements OnInit {
       .subscribe((data) => {
         this.role$ = of(data);
       });
-      this.featureCommonService.getTeamDropdownLists('TEAMHRHEAD')
-      .subscribe((data)=>{
-        this.teamHRHead$ = of(data);
-      })
-       this.featureCommonService.getTeamDropdownLists('PROJECTMGR')
-      .subscribe((data)=>{
-        this.projectManager$ = of(data);
-      })
-        this.featureCommonService.getTeamDropdownLists('TEAMLEADER')
-      .subscribe((data)=>{
-        this.teamLead$ = of(data);
-      })
   }
 }
+ 

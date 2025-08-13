@@ -54,7 +54,7 @@ export class LeaveManagementServiceService {
     return this.http.post(`${this.appUrl}/api/LeaveManagement/leave-action/update`,userData).pipe(
       map((data:any)=>(data)))}
   
-getMyLeaveSummary(empCode: string): Observable<any> {
+  getMyLeaveSummary(empCode: string): Observable<any> {
   return this.http.get(`${this.appUrl}/api/LeaveManagement/my-leave-summary`, {
     params: { empCode }
   });

@@ -17,8 +17,4 @@ export class FeatureCommonServiceService {
   getTeamDropdownLists(type:string){
     return this.http.get(`${this.appUrl}/api/common/team-type/${type}`);
   }
-
-  getTimeDropDown(){
-    return this.http.get(`${this.appUrl}/api/common/GetTimeDropDown`);
-  }
 }
