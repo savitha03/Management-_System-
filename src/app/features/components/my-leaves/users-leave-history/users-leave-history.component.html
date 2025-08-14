@@ -1,16 +1,26 @@
+<div class="mb-4">
+  <label for="employeeSelect">Search Employee <span class="text-danger">*</span></label>
 
- <div class="mb-4">
-    <label for="employeeSelect">Search Employee <span class="text-danger">*</span></label> 
-    
-            <ng-select style="width: 300px;" id="employeeSelect" [items]="filteredEmployees" bindLabel="name" bindValue="id"
-        placeholder="Search by Employee Name " [(ngModel)]="selectedEmployeeId" [typeahead]="employeeInput$"
-        [searchFn]="customSearchFn" (change)="onEmployeeSelect()" class="ng-select-input">
-        <ng-template ng-option-tmp let-item="item">
-          {{ item.id }} - {{ item.name }} 
-        </ng-template>
-    </ng-select>
- </div>
-<div style="width: 100%; height: 27rem;" >
+  <ng-select
+      id="employeeSelect"
+      [items]="filteredEmployees"
+      bindLabel="fullName"
+      bindValue="empCode"
+      placeholder="Search by Employee Name"
+      [(ngModel)]="selectedEmployeeId"
+      [typeahead]="employeeInput$"
+      [searchFn]="customSearchFn"
+      (change)="onEmployeeSelect()"
+      style="width:300px"
+      class="ng-select-input">
+
+      <ng-template ng-option-tmp let-item="item">
+        {{ item.empCode }} - {{ item.fullName }}
+      </ng-template>
+  </ng-select>
+</div>
+
+<div style="width: 100%; height: 27rem;">
     <ag-grid-angular [columnDefs]="columnDefs" [rowData]="filteredRowData" [pagination]="true"
         [defaultColDef]="defaultColDef" style="width: 100%; height: 100%;" [suppressCellFocus]="true">
     </ag-grid-angular>

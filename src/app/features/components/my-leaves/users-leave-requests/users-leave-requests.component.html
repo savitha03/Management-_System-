@@ -89,38 +89,42 @@
                 {{ request.fromDate | date:'dd MMM yyyy' }} - {{ request.toDate | date:'dd MMM yyyy' }}
               </small>
             </div>
-            
+
             <div class="position-relative d-flex justify-content-end">
-<div class="status-wrapper">
-  <div> 
-     <!-- {{request.leaveStatus.screeName}} by  -->
-    <button class="btn btn-outline-secondary" (click)="togglePopover(request)">
-    {{ request.leaveStatus === 'APPROVED' ? 'Approved' : 'Cancelled' }}
-  </button>
-  </div>
+              <div class="status-wrapper">
+                <div>
+                  <!-- {{request.leaveStatus.screeName}} by  -->
+                  <button class="btn btn-outline-secondary" (click)="togglePopover(request); $event.stopPropagation()">
+                    {{ request.leaveStatus === 'APPROVED' ? 'Approved' : 'Cancelled' }}
+                  </button>
+                </div>
 
 
-  <div class="custom-popover" *ngIf="activePopover === request">
-    <div class="popover-header">
-      <strong>Change Status To</strong>
-      <span class="close-btn" (click)="closePopover()">×</span>
-    </div>
-    <div class="d-flex justify-content-between">
-      <ng-container [ngSwitch]="request.leaveStatus">
-        <ng-container *ngSwitchCase="'CANCELLED'">
-          <button class="btn-outline" (click)="changeStatus(request, 'PENDING')">Pending</button>
-          <button class="btn-outline primary" (click)="changeStatus(request, 'APPROVED')">Approve</button>
-        </ng-container>
-        <ng-container *ngSwitchCase="'APPROVED'">
-          <button class="btn-outline" (click)="changeStatus(request, 'PENDING')">Pending</button>
-          <button class="btn-outline danger" (click)="changeStatus(request, 'CANCELLED')">Cancel</button>
-        </ng-container>
-      </ng-container>
-    </div>
-  </div>
-</div>
+                <div class="custom-popover" *ngIf="activePopover === request" #popover
+                  (click)="$event.stopPropagation()">
+                  <div class="popover-header">
+                    <strong>Change Status To</strong>
+                    <span class="close-btn" (click)="closePopover()">×</span>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <ng-container [ngSwitch]="request.leaveStatus">
+                      <ng-container *ngSwitchCase="'CANCELLED'">
+                        <button class=" btn-outline"
+                          (click)="changeStatus(request, 'PENDING')">Pending</button>
+                        <button class=" btn-outline primary"
+                          (click)="changeStatus(request, 'APPROVED')">Approve</button>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'APPROVED'">
+                        <button class=" btn-outline"
+                          (click)="changeStatus(request, 'PENDING')">Pending</button>
+                        <button class=" btn-outline danger"
+                          (click)="changeStatus(request, 'CANCELLED')">Cancel</button>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
 
-
+              </div>
             </div>
           </div>
         </div>

@@ -5,13 +5,17 @@ import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ThemeService } from '../../../../shared/services/theme.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
+import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
+interface Employee {
+  empCode: string;
+  fullName: string;
+}
 @Component({
   selector: 'app-leave-history',
   standalone: true,
@@ -20,12 +24,16 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrls: ['./users-leave-history.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
+
+
 export class UsersLeaveHistoryComponent implements OnInit {
+
   loggedInUser: any;
   rowData: any[] = [];
   filteredRowData: any[] = [];
   selectedEmployeeId: string | null = null;
   isDarkMode = false;
+  name$!: Observable<any>;
 
   leaveTypeLabels: { [key: string]: string } = {
     CASUAL: 'Casual Leave',
@@ -34,13 +42,8 @@ export class UsersLeaveHistoryComponent implements OnInit {
     OVERTIME: 'OverTime',
   };
 
-  dropdownList = [
-    { id: 'ST1176', name: 'Vigneshwaran T' },
-    { id: 'T2506', name: 'Savitha B' },
-    { id: 'T2503', name: 'Ravishankar S' },
-  ];
-
-  filteredEmployees = this.dropdownList;
+  dropdownList: any[] =[];
+  filteredEmployees : any[] =[];
   employeeInput$ = new Subject<string>();
 
   columnDefs: ColDef[] = [
@@ -109,11 +112,13 @@ export class UsersLeaveHistoryComponent implements OnInit {
     resizable: true,
     wrapText: true,
   };
+ 
 
   constructor(
     private themeService: ThemeService,
     private leaveManagementService: LeaveManagementServiceService,
-    private store: Store
+    private store: Store,
+    private featureCommonService: FeatureCommonServiceService,
   ) {
     this.store.select(selectAuthUser).subscribe((user: any) => {
       if (user) {
@@ -125,11 +130,12 @@ export class UsersLeaveHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadDropdowns();
     this.employeeInput$.subscribe((searchText) => {
       this.filteredEmployees = this.dropdownList.filter((emp) =>
-        (emp.name + ' ' + emp.id)
+        (emp.fullName + ' ' + emp.empCode)
           .toLowerCase()
-          .includes(searchText.toLowerCase())
+          .includes(searchText?.toLowerCase())
       );
     });
 
@@ -170,8 +176,8 @@ export class UsersLeaveHistoryComponent implements OnInit {
   customSearchFn(term: string, item: any) {
     term = term.toLowerCase();
     return (
-      item.id.toLowerCase().includes(term) ||
-      item.name.toLowerCase().includes(term)
+      item.empCode.toLowerCase().includes(term) ||
+      item.fullName.toLowerCase().includes(term)
     );
   }
 
@@ -185,4 +191,19 @@ export class UsersLeaveHistoryComponent implements OnInit {
       alert(`Deleted pending leave for ${rowData.empId}`);
     }
   }
+
+   
+    loadDropdowns(){
+     this.featureCommonService.getEmployeeNameDropdownLists().subscribe((data:any)=>{
+      this.name$ = of(data);
+      this.dropdownList=data;
+      this.filteredEmployees = this.dropdownList;
+    })
+  }
 }
+
+  // this.featureCommonService
+  //     .getDropdownLists('DESIGNATION')
+  //     .subscribe((data) => {
+  //       this.role$ = of(data);
+  //     });

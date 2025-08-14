@@ -143,12 +143,38 @@ export class EmployeesComponent implements OnInit {
     this.formBuilder();
     this.loadDropdowns();
     this.getEmployees();
-
     if (this.isEdit) {
       this.detailsForm.enable();
     } else {
       this.detailsForm.disable();
     }
+    this.sharedService.appEvent$.subscribe((data: any) => {
+      switch (data.name) {
+        case 'NAVIGATED_BY_MENU': {
+          if (this.detailsForm.invalid) {
+            this.sharedService.setIsValidation(true);
+            const validationMessages =
+              this.formUtilServiceService.parseValidationErrors(
+                this.detailsForm.controls,
+                this.detailsFormEntity
+              );
+
+            const uniqueMessages = validationMessages
+              .filter(
+                (item, index, array) =>
+                  index === array.findIndex((el) => el.content === item.content)
+              )
+              .map((err) => err.content);
+
+            this.openValidationSlider(uniqueMessages);
+          } else {
+            this.sharedService.setIsValidation(false);
+          }
+          return;
+        }
+      }
+    }
+  )
   }
 
   getEmployees() {
@@ -377,7 +403,7 @@ export class EmployeesComponent implements OnInit {
   // ✅ VALID FORM → SHOW CONFIRMATION MODAL
   const modalRef = this.modalService.open(CoreModalComponent, {
     backdrop: 'static',
-    size: 'lg',
+    size: 'md',
     keyboard: false,
   });
 
@@ -436,7 +462,7 @@ export class EmployeesComponent implements OnInit {
       if (mode === 'View') {
         const editModal = this.modalService.open(CoreModalComponent, {
           backdrop: 'static',
-          size: 'lg',
+          size: 'md',
           keyboard: false,
         });
 
@@ -451,17 +477,23 @@ export class EmployeesComponent implements OnInit {
             editModal.close();
           }
         });
-      } else {
+      }  else if (mode === 'Edit') {
         const saveModal = this.modalService.open(CoreModalComponent, {
           backdrop: 'static',
-          size: 'lg',
+          size: 'md',
           keyboard: false,
         });
-        saveModal.componentInstance.header = 'Confirmation';
-        saveModal.componentInstance.content = `Do you want to edit ${detailsForm.get('fullName')?.value}'s Detail ?`;
+        saveModal.componentInstance.header = 'Save Confirmation';
+        saveModal.componentInstance.content = `Do you want to save changes  ${detailsForm.get('fullName')?.value}'s Detail ?`;
         saveModal.componentInstance.isYesOrNo = true;
 
-
+        saveModal.componentInstance.eventHandler$.subscribe((data:any)=>{
+          if(data==='Proceed'){
+            this.isEdit=false;
+            this.activeViewOrEdit(this.isEdit);
+            saveModal.close();
+          }
+        })
         this.isEdit = mode !== 'Edit';
         this.activeViewOrEdit(this.isEdit)
       }

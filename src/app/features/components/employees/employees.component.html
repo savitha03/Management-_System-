@@ -4,7 +4,7 @@
             <app-employees-list [filterType]="filterType" [colDefs]="colDefs" [rowData]="rowData"
                 [defaultColDefs]="defaultColDefs" [gridApi]="gridApi" [gridColumnApi]="gridColumnApi"
                 [gridOptions]="gridOptions" (applicationEventService)="handleAppEvent($event)"
-                (gridReady)="onGridReady($event)">
+                (gridReady)="onGridReady($event)" [isEdit]="isEdit">
             </app-employees-list>
         </div>
         <div class="col-md-7">

@@ -43,14 +43,26 @@
 
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">From Time</label>
-            <input type="time" class="form-control" formControlName="fromTime"
-              [ngClass]="{ required: leaveForm.controls['fromTime'].errors && leaveForm.controls['fromTime']}" />
+            <select class="form-select form-control" formControlName="fromTime" 
+            [ngClass]="{ required: leaveForm.controls['fromTime'].errors && leaveForm.controls['fromTime']}">
+              <option value="" disabled>Select From Time</option>
+              <option *ngFor="let time of time$ | async" [ngValue]="time.code">
+                {{ time.screenName }}
+              </option>
+            </select>
+        
           </div>
 
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">To Time</label>
-            <input type="time" class="form-control" formControlName="toTime"
-              [ngClass]="{ required: leaveForm.controls['toTime'].errors && leaveForm.controls['toTime']}" />
+            <select class="form-select form-control" formControlName="toTime"
+             [ngClass]="{ required: leaveForm.controls['toTime'].errors && leaveForm.controls['toTime']}" >
+              <option value="" disabled>Select To Time</option>
+              <option *ngFor="let time of time$ | async" [ngValue]="time.code">
+                {{time.screenName}}
+              </option>
+            </select>
+           
           </div>
 
           <div *ngIf="showTimeFields">

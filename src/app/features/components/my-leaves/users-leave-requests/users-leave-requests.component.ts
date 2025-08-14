@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsyncDetection, NgScrollbar } from "ngx-scrollbar";
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
@@ -19,6 +19,7 @@ export class UsersLeaveRequestsComponent implements OnInit {
   requestCompleted!: any[];
   loggedInUser:any;
 
+  @ViewChild('popover') popover!: ElementRef;
   activePopover: any = null;
 
 
@@ -90,6 +91,13 @@ export class UsersLeaveRequestsComponent implements OnInit {
       ? this.requestPending
       : this.requestCompleted;
 }
+
+ @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.activePopover && this.popover && !this.popover.nativeElement.contains(event.target)) {
+      this.closePopover();
+    }
+  }
 
   togglePopover(request:any){
     this.activePopover= this.activePopover ===request? null : request;

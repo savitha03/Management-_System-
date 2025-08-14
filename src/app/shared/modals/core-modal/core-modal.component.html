@@ -7,13 +7,13 @@
 </div>
 <div class="modal-footer">
 	<ng-container *ngIf="isYesOrNo">
-		<button type="button" class="btn btn-outline-secondary"
+		<button type="button" class="btn btn-sm btn-outline-secondary"
 			(click)="activeModal.close('Close click')">No</button>
-		<button type="button" class="btn btn-outline-success" (click)="proceed()">Yes</button>
+		<button type="button" class="btn btn-sm btn-outline-success" (click)="proceed()">Yes</button>
 	</ng-container>
 	<ng-container *ngIf="!isYesOrNo">
-		<button type="button" class="btn btn-outline-secondary"
+		<button type="button" class="btn btn-sm btn-outline-secondary"
 			(click)="activeModal.close('Close click')">Cancel</button>
-		<button type="button" class="btn btn-outline-danger" (click)="proceed()">Proceed</button>
+		<button type="button" class="btn btn-sm btn-outline-danger" (click)="proceed()">Proceed</button>
 	</ng-container>
 </div>

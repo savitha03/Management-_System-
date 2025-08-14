@@ -17,4 +17,14 @@ export class FeatureCommonServiceService {
   getTeamDropdownLists(type:string){
     return this.http.get(`${this.appUrl}/api/common/team-type/${type}`);
   }
+
+  getEmployeeNameDropdownLists(){
+    return this.http.get(`${this.appUrl}/api/common/names`)
+  }
+
+  //   getEmployeeNameDropdownLists(p0:string): Observable<EmployeeName[]>{
+  //   let queryParams = new HttpParams();
+  //   queryParams=queryParams.append('empCode',p0)
+  //   return this.http.get<EmployeeName[]>(`${this.appUrl}/api/common/names`,{params:queryParams})
+  // }
 }

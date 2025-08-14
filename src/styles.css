@@ -360,3 +360,16 @@ body.dark-mode .tab-btn.active {
 .required{
   border-left: 5px solid red !important;
 }
+
+/* Force override for active menu links in sidebar */
+.custom-sidebar .nav-item > .nav-link.active,
+.custom-sidebar .nav-item > .nav-link.active:focus,
+.custom-sidebar .nav-item > .nav-link.active:hover {
+  background-color: #f0f4f8;
+  color: #1f7ec1;
+}
+
+.custom-sidebar .nav-item > .nav-link.active i {
+  background-color: #289ee4 !important;
+  color: white !important;
+}

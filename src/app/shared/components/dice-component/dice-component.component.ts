@@ -12,9 +12,9 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 export class DiceComponentComponent implements ICellRendererAngularComp {
   position: 'right' | 'left' = 'right';
   actionLinks: any[] = [
-    // {
-    //   screenName: 'NA',
-    // },
+    {
+      screenName: 'NA',
+    },
     {
       screenName: 'Delete',
     },

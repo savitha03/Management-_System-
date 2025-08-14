@@ -202,7 +202,7 @@ export class LeaveHistory implements OnInit {
     
     const deleteModal = this.modalService.open(CoreModalComponent,{
       backdrop:"static",
-      size:"lg",
+      size:"md",
       keyboard:false
     });
 

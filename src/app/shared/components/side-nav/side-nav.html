@@ -2,59 +2,54 @@
   <div>
     <ul class="nav flex-column custom-sidebar">
       <ng-container *ngFor="let item of mainMenu">
-        
+
         <!-- Without children -->
         <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
-          <a [routerLink]="[item.link]"
-             routerLinkActive="active"
-             class="nav-link d-flex align-items-center text-decoration-none">
+        <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
+          <a href="javascript:void(0)" (click)="handleMenuClick($event, item)" [ngClass]="{ 'active': isActive(item) }"
+            class="nav-link d-flex align-items-center text-decoration-none">
             <i [class]="item.icon + ' me-2'"></i>
             {{ item.label }}
           </a>
         </li>
-
       <!-- children -->
         <li class="nav-item" *ngIf="item.children && item.children.length > 0">
-          <a class="nav-link d-flex align-items-center text-decoration-none"
-             role="button"
-             (click)="toggleLeaveMenu()">
+          <a class="nav-link d-flex align-items-center text-decoration-none" role="button" (click)="toggleLeaveMenu()">
             <i [class]="item.icon + ' me-2'"></i>
             {{ item.label }}
-            <i class="bi ms-auto"
-               [ngClass]="isLeaveMenuOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            <i class="bi ms-auto" [ngClass]="isLeaveMenuOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
           </a>
-          <div class="ps-3"
-               [ngClass]="{ 'collapse': !isLeaveMenuOpen, 'show': isLeaveMenuOpen }">
+          <div class="ps-3" [ngClass]="{ 'collapse': !isLeaveMenuOpen, 'show': isLeaveMenuOpen }">
             <ul class="nav flex-column">
               <li class="nav-item" *ngFor="let child of item.children">
-                <a [routerLink]="[child.link]"
-                   routerLinkActive="active"
-                   class="nav-link d-flex align-items-center text-decoration-none text-truncate"
-                   style="white-space: nowrap;">
+                <a href="javascript:void(0)" (click)="handleMenuClick($event, child)"
+                  [ngClass]="{ 'active': isActive(child) }"
+                  class="nav-link d-flex align-items-center text-decoration-none text-truncate"
+                  style="white-space: nowrap;">
                   <i [class]="child.icon + ' me-2'"></i>
                   {{ child.label }}
                 </a>
+
               </li>
             </ul>
           </div>
         </li>
-
       </ng-container>
     </ul>
   </div>
 
-  
+  <!-- Without children -->
   <div>
     <hr />
     <ul class="nav flex-column custom-sidebar">
       <li class="nav-item" *ngFor="let item of bottomMenu">
-        <a [routerLink]="[item.link]"
-           routerLinkActive="active"
-           class="nav-link d-flex align-items-center text-decoration-none">
+        <a href="javascript:void(0)" (click)="handleMenuClick($event, item)" [ngClass]="{ 'active': isActive(item) }"
+          class="nav-link d-flex align-items-center text-decoration-none">
           <i [class]="item.icon + ' me-2'"></i>
           {{ item.label }}
         </a>
       </li>
+
     </ul>
   </div>
 </div>

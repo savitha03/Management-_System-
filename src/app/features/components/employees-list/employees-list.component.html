@@ -29,19 +29,19 @@
 
     <div class="form-check form-check-inline form-check-sm me-2">
       <input class="form-check-input" type="radio" name="statusFilter" id="showAll" value="all" [(ngModel)]="filterType"
-        (change)="toggleActiveFilter()"  />
+        (change)="toggleActiveFilter()" [disabled]="isEdit" />
       <label class="form-check-label" for="showAll">Show All</label>
     </div>
 
     <div class="form-check form-check-inline form-check-sm me-2">
       <input class="form-check-input" type="radio" name="statusFilter" id="showActive" value="active"
-        [(ngModel)]="filterType" (change)="toggleActiveFilter()"  />
+        [(ngModel)]="filterType" (change)="toggleActiveFilter()" [disabled]="isEdit"  />
       <label class="form-check-label" for="showActive">Show Active Only</label>
     </div>
 
     <div class="form-check form-check-inline form-check-sm">
       <input class="form-check-input" type="radio" name="statusFilter" id="showClosed" value="closed"
-        [(ngModel)]="filterType" (change)="toggleActiveFilter()"  />
+        [(ngModel)]="filterType" (change)="toggleActiveFilter()" [disabled]="isEdit" />
       <label class="form-check-label" for="showClosed">Show Closed Only</label>
     </div>
   </div>

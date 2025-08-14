@@ -41,6 +41,11 @@ export class ApplyLeaveComponent implements OnInit {
   showSuccessToast = false;
   leaveFormEntity: any = leaveFormObject;
 
+  fromTimeOptions: any[] = [];
+  toTimeOptions: any[] = [];
+
+  time$!: Observable<any>;
+
   constructor(
     private fb: FormBuilder,
     private featureCommonService: FeatureCommonServiceService,
@@ -67,15 +72,36 @@ export class ApplyLeaveComponent implements OnInit {
       this.leaveForm.patchValue(this.leaveData);
     }
     this.leaveForm.disable();
+    this.sharedService.appEvent$.subscribe((data: any) => {
+      switch (data.name) {
+        case 'NAVIGATED_BY_MENU': {
+          if (this.leaveForm.invalid) {
+            this.sharedService.setIsValidation(true);
+            const validationMessages =
+              this.formUtilServiceService.parseValidationErrors(
+                this.leaveForm.controls,
+                this.leaveFormEntity
+              );
+
+            const uniqueMessages = validationMessages
+              .filter(
+                (item, index, array) =>
+                  index === array.findIndex((el) => el.content === item.content)
+              )
+              .map((err) => err.content);
+
+            this.openValidationSlider(uniqueMessages);
+          } else {
+            this.sharedService.setIsValidation(false);
+          }
+          return;
+        }
+      }
+    });
   }
 
   formBuilder() {
-    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
-      this.leaveFormEnitity
-    );
-    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
-      this.leaveFormEntity
-    );
+    this.buildForm();
     this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
@@ -189,10 +215,8 @@ export class ApplyLeaveComponent implements OnInit {
         const toT = this.parseTimeToDate(toTime);
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
-        if (diffHrs < 4) {
+        if (diffHrs <= 4) {
           this.leaveForm.get('duration')?.setValue('0 day');
-        } else if (diffHrs >= 4 && diffHrs < 6) {
-          this.leaveForm.get('duration')?.setValue('0.5 day');
         } else {
           this.leaveForm.get('duration')?.setValue('1 day');
         }
@@ -210,6 +234,10 @@ export class ApplyLeaveComponent implements OnInit {
     this.featureCommonService
       .getDropdownLists('LEAVETYPE')
       .subscribe((data) => (this.leaveType$ = of(data)));
+    this.featureCommonService
+      .getDropdownLists('TIME')
+      .subscribe((data) => (this.time$ = of(data)));
+    // .subscribe((data:any[])=>())
   }
 
   apply() {
@@ -228,8 +256,10 @@ export class ApplyLeaveComponent implements OnInit {
         .saveEmployeeLeaveRequest(leaveData)
         .subscribe({
           next: () => {
+            this.buildForm();
             this.leaveForm.reset();
             this.leaveForm.disable();
+            this.sharedService.setIsValidation(false);
             this.isEditable = false;
             this.toastr.success('Leave Applied Successfully!', 'Success');
           },
@@ -262,9 +292,17 @@ export class ApplyLeaveComponent implements OnInit {
     if (this.isEditable) {
       this.leaveForm.enable();
     } else {
+      this.buildForm();
       this.leaveForm.reset();
       this.leaveForm.disable();
+      this.sharedService.setIsValidation(false);
     }
+  }
+
+  buildForm() {
+    this.leaveForm = this.formUtilServiceService.buildReactiveForm(
+      this.leaveFormEnitity
+    );
   }
 
   clearValidation() {

@@ -101,7 +101,7 @@ export class EmployeesFormComponent implements OnInit {
   if (this.detailsForm?.dirty) {
     const saveChangesModal = this.modalService.open(CoreModalComponent, {
       backdrop: 'static',
-      size: 'lg',
+      size: 'md',
       keyboard: false,
     });
 
