@@ -113,7 +113,12 @@ export const detailsFormObject: any = {
         validator: 'required',
         value: true,
         message: 'Employee Phone number should not be blank',
-      }],
+      },
+      {
+      validator: 'pattern',
+      value: '^[0-9]{10}$',
+      message: 'Phone number must contain 10 digits',
+    }],
     disabled: false,
   },
   alternateNumber: {
@@ -121,7 +126,13 @@ export const detailsFormObject: any = {
     label: 'Alternate Number',
     value: '',
     type: 'InputText',
-    validations: [],
+    validations: [
+      {
+      validator: 'pattern',
+      value: '^[0-9]{10}$',
+      message: 'Alternate number must contain 10 digits',
+    }
+    ],
     disabled: false,
   },
   email: {
@@ -187,6 +198,12 @@ export const detailsFormObject: any = {
         value: true,
         message: 'Employee Zip Code should not be blank',
       },
+    {
+      validator: 'pattern',
+      value: '^[0-9]{6}$',
+      message: 'Zip Code must contain 6 digits',
+    }
+      
     ],
     disabled: false,
   },

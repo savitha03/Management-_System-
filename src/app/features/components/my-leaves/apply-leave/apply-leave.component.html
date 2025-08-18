@@ -2,10 +2,20 @@
   <div class="m-5">
     <div class="d-flex align-items-center gap-3">
       <h4 class="mb-0">Apply for Leave</h4>
-      <button type="button" class="btn btn-sm" (click)="enableEditing()"
+      <!-- <button type="button" class="btn btn-sm" (click)="enableEditing()"
         [ngClass]="isEditable ? 'btn-danger' :'btn-primary'">
         {{isEditable?'Cancel Apply' : 'Apply Here'}}
-      </button>
+      </button> -->
+      <!-- Apply Here -->
+<button *ngIf="!isEditable" type="button" class="btn btn-sm btn-primary" (click)="startApplying()">
+  Apply Here
+</button>
+
+<!-- Cancel Apply -->
+<button *ngIf="isEditable" type="button" class="btn btn-sm btn-danger" (click)="cancelApplying()">
+  Cancel Apply
+</button>
+
     </div>
 
     <ng-scrollbar class="mt-2" style="height: 60vh;">

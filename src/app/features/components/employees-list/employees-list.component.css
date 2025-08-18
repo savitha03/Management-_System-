@@ -7,3 +7,8 @@
 .form-check-sm .form-check-label {
   font-size: 0.9rem;
 }
+
+.disabled-cell {
+  pointer-events: none;  /* disable click */
+  opacity: 0.5;          /* greyed-out look */
+}

@@ -373,3 +373,6 @@ body.dark-mode .tab-btn.active {
   background-color: #289ee4 !important;
   color: white !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

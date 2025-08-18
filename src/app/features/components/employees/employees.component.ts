@@ -24,7 +24,12 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employees',
-  imports: [EmployeesFormComponent, EmployeesListComponent, FormsModule,CommonModule],
+  imports: [
+    EmployeesFormComponent,
+    EmployeesListComponent,
+    FormsModule,
+    CommonModule,
+  ],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
@@ -33,7 +38,6 @@ export class EmployeesComponent implements OnInit {
   isNewEmployee = false;
   selectedRow: any = null;
   currentMode: 'Edit' | 'View' = 'View';
-
 
   //   resetFormState() {
   //   this.isNewEmployee = false;
@@ -52,15 +56,14 @@ export class EmployeesComponent implements OnInit {
   currency$!: Observable<any>;
   payFrequency$!: Observable<any>;
   role$!: Observable<any>;
-  teamHRHead$! : Observable<any>;
-  projectManager$! :Observable<any>;
-  teamLead$! :Observable<any>;
-  cityList$! :Observable<any>;
-  stateList$!:Observable<any>;
+  teamHRHead$!: Observable<any>;
+  projectManager$!: Observable<any>;
+  teamLead$!: Observable<any>;
+  cityList$!: Observable<any>;
+  stateList$!: Observable<any>;
   countryList$!: Observable<any>;
-  
-  showSuccessToast=false;
 
+  showSuccessToast = false;
 
   gridApi: any;
   gridColumnApi: any;
@@ -98,13 +101,14 @@ export class EmployeesComponent implements OnInit {
       width: 260,
       resizable: true,
       cellRenderer: (params: any) => {
+        
         const isActive =
           params.data.empStatus === 'ACTIVE'
             ? true
             : params.data.empStatus === 'CLOSED'
             ? false
             : null;
-        
+
         const icon =
           isActive === true
             ? '<i class="bi bi-bookmark-check-fill text-success me-2"></i>'
@@ -112,6 +116,8 @@ export class EmployeesComponent implements OnInit {
             ? '<i class="bi bi-bookmark-x-fill text-danger me-2"></i>'
             : '';
         return `${icon}${params.value}`;
+
+
       },
     },
   ];
@@ -133,9 +139,8 @@ export class EmployeesComponent implements OnInit {
     private sharedService: SharedService,
     private featureCommonService: FeatureCommonServiceService,
     private employeeDetailsService: EmployeeDetailsService,
-    private modalService:NgbModal,
-    private toastr: ToastrService,
-  
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -168,13 +173,17 @@ export class EmployeesComponent implements OnInit {
 
             this.openValidationSlider(uniqueMessages);
           } else {
+            if(!this.detailsForm.invalid && this.detailsForm.dirty){
+              this.unsavedChanges();
+              this.sharedService.setIsValidation(true);
+              return
+            }
             this.sharedService.setIsValidation(false);
           }
           return;
         }
       }
-    }
-  )
+    });
   }
 
   getEmployees() {
@@ -226,43 +235,54 @@ export class EmployeesComponent implements OnInit {
   }
 
   onRowSelected(row: any) {
-  if (this.isEdit && this.detailsForm.dirty && !this.isNewEmployee) {
-    const formData = this.detailsForm.getRawValue();
+    if (this.isEdit && this.detailsForm.dirty && !this.isNewEmployee) {
+      const formData = this.detailsForm.getRawValue();
 
-    this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
-      next: (res) => {
-        // console.log('Auto-saved changes:', res);
-        const index = this.allRowData.findIndex(
-          (emp) => emp.empCode === res.empCode
-        );
-        if (index > -1) this.allRowData[index] = res;
-      },
-      error: (err) => {
-        console.error('Auto-save failed:', err);
-      },
-    });
+      this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+        next: (res) => {
+          // console.log('Auto-saved changes:', res);
+          const index = this.allRowData.findIndex(
+            (emp) => emp.empCode === res.empCode
+          );
+              const formData = {
+      ...res,
+      dateOfBirth: this.selectedRow.dateOfBirth
+        ? this.selectedRow.dateOfBirth.split(' ')[0]
+        : '',
+      joinedDate: this.selectedRow.joinedDate
+        ? this.selectedRow.joinedDate.split(' ')[0]
+        : '',
+    };
+          if (index > -1) this.allRowData[index] = formData;
+             this.selectedRow = row;
+
+
+        },
+        error: (err) => {
+          console.error('Auto-save failed:', err);
+        },
+      });
+    }
+
+    this.selectedRow = row;
+    const formData = {
+      ...this.selectedRow,
+      dateOfBirth: this.selectedRow.dateOfBirth
+        ? this.selectedRow.dateOfBirth.split('T')[0]
+        : '',
+      joinedDate: this.selectedRow.joinedDate
+        ? this.selectedRow.joinedDate.split('T')[0]
+        : '',
+    };
+
+    this.detailsForm.patchValue(formData);
+    this.activeTab = 'personal';
+
+    if (!this.isNewEmployee) {
+      this.isEdit = false;
+      this.detailsForm.disable();
+    }
   }
-
-  this.selectedRow = row;
-  const formData = {
-    ...this.selectedRow,
-    dateOfBirth: this.selectedRow.dateOfBirth
-      ? this.selectedRow.dateOfBirth.split('T')[0]
-      : '',
-    joinedDate: this.selectedRow.joinedDate
-      ? this.selectedRow.joinedDate.split('T')[0]
-      : '',
-  };
-
-  this.detailsForm.patchValue(formData);
-  this.activeTab = 'personal';
-
-  if (!this.isNewEmployee) {
-    this.isEdit = false;
-    this.detailsForm.disable();
-  }
-}
-
 
   formBuilder() {
     this.detailsForm = this.formUtilServiceService.buildReactiveForm(
@@ -277,36 +297,37 @@ export class EmployeesComponent implements OnInit {
       //   break;
       // }
       case 'ROW_CLICKED': {
-      if (this.isNewEmployee && this.detailsForm.invalid) {
-    this.detailsForm.markAllAsTouched();
+        if (this.isNewEmployee && this.detailsForm.invalid) {
+          this.detailsForm.markAllAsTouched();
 
-    const validationMessages = this.formUtilServiceService.parseValidationErrors(
-      this.detailsForm.controls,
-      this.detailsFormEntity
-    );
+          const validationMessages =
+            this.formUtilServiceService.parseValidationErrors(
+              this.detailsForm.controls,
+              this.detailsFormEntity
+            );
 
-    const uniqueMessages = validationMessages
-      .filter((item, index, array) =>
-        index === array.findIndex((el) => el.content === item.content)
-      )
-      .map((err) => err.content);
+          const uniqueMessages = validationMessages
+            .filter(
+              (item, index, array) =>
+                index === array.findIndex((el) => el.content === item.content)
+            )
+            .map((err) => err.content);
 
-    this.openValidationSlider(uniqueMessages);
-    setTimeout(() => {
-      this.gridApi.forEachNode((node: any) => {
-        if (node.rowIndex === 0) {
-          node.setSelected(true);
+          this.openValidationSlider(uniqueMessages);
+          setTimeout(() => {
+            this.gridApi.forEachNode((node: any) => {
+              if (node.rowIndex === 0) {
+                node.setSelected(true);
+              }
+            });
+          });
+
+          return;
         }
-      });
-    });
 
-    
-    return;
-  }
-
-  this.onRowSelected(event.value.selectedRow);
-  break;
-}
+        this.onRowSelected(event.value.selectedRow);
+        break;
+      }
 
       case 'TOGGLE_ACTIVE': {
         this.toggleActiveFilter(event.value.filterType);
@@ -335,171 +356,210 @@ export class EmployeesComponent implements OnInit {
         break;
       }
       case 'NEW_EMPLOYEE': {
-  if (this.isNewEmployee && this.detailsForm.invalid) {
-    this.detailsForm.markAllAsTouched();
+        if (this.isNewEmployee && this.detailsForm.invalid) {
+          this.detailsForm.markAllAsTouched();
 
-    const validationMessages = this.formUtilServiceService.parseValidationErrors(
-      this.detailsForm.controls,
-      this.detailsFormEntity
-    );
+          const validationMessages =
+            this.formUtilServiceService.parseValidationErrors(
+              this.detailsForm.controls,
+              this.detailsFormEntity
+            );
 
-    const uniqueMessages = validationMessages
-      .filter((item, index, array) =>
-        index === array.findIndex((el) => el.content === item.content)
-      )
-      .map((err) => err.content);
+          const uniqueMessages = validationMessages
+            .filter(
+              (item, index, array) =>
+                index === array.findIndex((el) => el.content === item.content)
+            )
+            .map((err) => err.content);
 
-    this.openValidationSlider(uniqueMessages);
-    return; 
-  }
-
-  const newRow = this.getDefaultEmployee();
-
-  this.isNewEmployee = true;
-  this.isEdit = true;
-
-  this.allRowData = [newRow, ...this.allRowData];
-  this.toggleActiveFilter(this.filterType);
-  this.selectedRow = newRow;
-  this.detailsForm.reset(newRow);
-  this.detailsForm.enable();
-
-  this.detailsForm.markAllAsTouched();
-  this.detailsForm.get('empCode')!.setErrors({ required: true });
-
-  if (this.gridApi) {
-    setTimeout(() => {
-      this.gridApi.forEachNode((node: any) => {
-        if (node.rowIndex === 0) {
-          node.setSelected(true);
+          this.openValidationSlider(uniqueMessages);
+          return;
         }
-      });
-    }, 50);
-  }
 
-  break;
-}
+        const newRow = this.getDefaultEmployee();
+
+        this.isNewEmployee = true;
+        this.isEdit = true;
+
+        this.allRowData = [newRow, ...this.allRowData];
+        this.toggleActiveFilter(this.filterType);
+        this.selectedRow = newRow;
+        this.detailsForm.reset(newRow);
+        this.detailsForm.enable();
+
+        this.detailsForm.markAllAsTouched();
+        this.detailsForm.get('empCode')!.setErrors({ required: true });
+
+        if (this.gridApi) {
+          setTimeout(() => {
+            this.gridApi.forEachNode((node: any) => {
+              if (node.rowIndex === 0) {
+                node.setSelected(true);
+              }
+            });
+          }, 50);
+        }
+
+        break;
+      }
       case 'SAVE': {
-  this.detailsForm.markAllAsTouched();
+        this.detailsForm.markAllAsTouched();
 
-  if (this.detailsForm.invalid) {
-    const invalidControls = this.getInvalidControls(this.detailsForm);
-    this.pageErrors = this.formUtilServiceService.parseValidationErrors(
-      this.detailsForm.controls,
-      this.detailsFormEntity
-    );
-    this.pageErrors = this.pageErrors.filter(
-      (item, index, array) =>
-        index === array.findIndex((element) => element.content === item.content)
-    );
+        if (this.detailsForm.invalid) {
+          const invalidControls = this.getInvalidControls(this.detailsForm);
+          this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+            this.detailsForm.controls,
+            this.detailsFormEntity
+          );
+          this.pageErrors = this.pageErrors.filter(
+            (item, index, array) =>
+              index ===
+              array.findIndex((element) => element.content === item.content)
+          );
 
-    const validationErrors = this.pageErrors.map((error) => error.content);
-    if (validationErrors.length > 0) {
-      this.openValidationSlider(validationErrors);
-    }
-    return;
-  }
+          const validationErrors = this.pageErrors.map(
+            (error) => error.content
+          );
+          if (validationErrors.length > 0) {
+            this.openValidationSlider(validationErrors);
+          }
+          return;
+        }
 
-  // ✅ VALID FORM → SHOW CONFIRMATION MODAL
-  const modalRef = this.modalService.open(CoreModalComponent, {
+        // ✅ VALID FORM → SHOW CONFIRMATION MODAL
+        const modalRef = this.modalService.open(CoreModalComponent, {
+          backdrop: 'static',
+          size: 'md',
+          keyboard: false,
+        });
+
+        modalRef.componentInstance.header = 'Confirmation';
+        modalRef.componentInstance.content = `Are you sure you want to save the employee details?`;
+        modalRef.componentInstance.isYesOrNo = true;
+
+        modalRef.componentInstance.eventHandler$.subscribe((response: any) => {
+          if (response === 'Proceed') {
+            const formData = this.detailsForm.getRawValue();
+
+            if (this.isNewEmployee) {
+              this.employeeDetailsService
+                .saveEmployeeDetails(formData)
+                .subscribe({
+                  next: (res) => {
+                    this.allRowData = [res, ...this.allRowData];
+                    this.toggleActiveFilter(this.filterType);
+                    this.isNewEmployee = false;
+                    this.isEdit = false;
+                    this.detailsForm.disable();
+                    this.getEmployees();
+                    this.clearValidation();
+                    this.toastr.success(
+                      'New Employee Added Successfully!',
+                      'Success'
+                    );
+                  },
+                  error: (err) => {
+                    console.error('Save error:', err);
+                    this.toastr.error('Failed to save employee.', 'Error');
+                  },
+                });
+            } else {
+              this.employeeDetailsService
+                .updateEmployeeDetails(formData)
+                .subscribe({
+                  next: (res) => {
+                    const index = this.allRowData.findIndex(
+                      (emp) => emp.empCode === res.empCode
+                    );
+                    if (index > -1) this.allRowData[index] = res;
+                    this.toggleActiveFilter(this.filterType);
+                    this.isEdit = false;
+                    this.detailsForm.disable();
+                    this.toastr.success(
+                      'Employee Detail Updated Successfully',
+                      'Success'
+                    );
+                  },
+                  error: (err) => console.error('Update error:', err),
+                });
+            }
+
+            modalRef.close();
+          }
+        });
+
+        break;
+      }
+
+      case 'VIEW_OR_EDIT': {
+        const { mode, detailsForm } = event.value;
+        this.currentMode = mode;
+
+        if (mode === 'View') {
+          const editModal = this.modalService.open(CoreModalComponent, {
+            backdrop: 'static',
+            size: 'md',
+            keyboard: false,
+          });
+
+          editModal.componentInstance.header = 'Confirmation';
+          editModal.componentInstance.content = `Do you want to edit ${
+            detailsForm.get('fullName')?.value
+          }'s Detail ?`;
+          editModal.componentInstance.isYesOrNo = true;
+
+          editModal.componentInstance.eventHandler$.subscribe((data: any) => {
+            if (data === 'Proceed') {
+              this.isEdit = true;
+              this.activeViewOrEdit(this.isEdit);
+              editModal.close();
+            }
+          });
+        } else if (mode === 'Edit') {
+  const saveModal = this.modalService.open(CoreModalComponent, {
     backdrop: 'static',
     size: 'md',
     keyboard: false,
   });
 
-  modalRef.componentInstance.header = 'Confirmation';
-  modalRef.componentInstance.content = `Are you sure you want to save the employee details?`;
-  modalRef.componentInstance.isYesOrNo = true;
+  saveModal.componentInstance.header = 'Save Confirmation';
+  saveModal.componentInstance.content = `Do you want to save changes ${detailsForm.get('fullName')?.value}'s Detail ?`;
+  saveModal.componentInstance.isYesOrNo = true;
 
-  modalRef.componentInstance.eventHandler$.subscribe((response: any) => {
-    if (response === 'Proceed') {
+  saveModal.componentInstance.eventHandler$.subscribe((data: any) => {
+    if (data === 'Proceed') {
+      // ✅ Save and switch to view
       const formData = this.detailsForm.getRawValue();
+      this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+        next: (res) => {
+          const index = this.allRowData.findIndex(emp => emp.empCode === res.empCode);
+          if (index > -1) this.allRowData[index] = res;
+          this.toggleActiveFilter(this.filterType);
 
-      if (this.isNewEmployee) {
-        this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
-          next: (res) => {
-            this.allRowData = [res, ...this.allRowData];
-            this.toggleActiveFilter(this.filterType);
-            this.isNewEmployee = false;
-            this.isEdit = false;
-            this.detailsForm.disable();
-            this.getEmployees();
-            this.clearValidation();
-            this.toastr.success('New Employee Added Successfully!', 'Success');
-           
-          },
-          error: (err) => {console.error('Save error:', err);
-           this.toastr.error('Failed to save employee.', 'Error');}
-        });
-      } else {
-        this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
-          next: (res) => {
-            const index = this.allRowData.findIndex(
-              (emp) => emp.empCode === res.empCode
-            );
-            if (index > -1) this.allRowData[index] = res;
-            this.toggleActiveFilter(this.filterType);
-            this.isEdit = false;
-            this.detailsForm.disable();
-            this.toastr.success('Employee Detail Updated Successfully','Success');
-          },
-          error: (err) => console.error('Update error:', err),
-        });
-      }
+          this.isEdit = false; // switch to View mode
+          this.activeViewOrEdit(this.isEdit);
+          this.detailsForm.disable();
 
-      modalRef.close();
+          this.toastr.success('Employee Detail Updated Successfully', 'Success');
+          saveModal.close();
+
+            this.detailsForm.reset(res);
+            this.detailsForm.markAsPristine();
+        },
+        error: (err) => console.error('Update error:', err),
+      });
+    } else {
+      
+      this.isEdit = true;
+      this.activeViewOrEdit(this.isEdit);
+      saveModal.close();
     }
   });
 
-  break;
+ 
 }
-
-
-      case'VIEW_OR_EDIT':{
-       const { mode, detailsForm } = event.value;
-      this.currentMode = mode;
-
-      if (mode === 'View') {
-        const editModal = this.modalService.open(CoreModalComponent, {
-          backdrop: 'static',
-          size: 'md',
-          keyboard: false,
-        });
-
-        editModal.componentInstance.header = 'Confirmation';
-        editModal.componentInstance.content = `Do you want to edit ${detailsForm.get('fullName')?.value}'s Detail ?`;
-        editModal.componentInstance.isYesOrNo = true;
-
-        editModal.componentInstance.eventHandler$.subscribe((data: any) => {
-          if (data === 'Proceed') {
-            this.isEdit = true;
-            this.activeViewOrEdit(this.isEdit);
-            editModal.close();
-          }
-        });
-      }  else if (mode === 'Edit') {
-        const saveModal = this.modalService.open(CoreModalComponent, {
-          backdrop: 'static',
-          size: 'md',
-          keyboard: false,
-        });
-        saveModal.componentInstance.header = 'Save Confirmation';
-        saveModal.componentInstance.content = `Do you want to save changes  ${detailsForm.get('fullName')?.value}'s Detail ?`;
-        saveModal.componentInstance.isYesOrNo = true;
-
-        saveModal.componentInstance.eventHandler$.subscribe((data:any)=>{
-          if(data==='Proceed'){
-            this.isEdit=false;
-            this.activeViewOrEdit(this.isEdit);
-            saveModal.close();
-          }
-        })
-        this.isEdit = mode !== 'Edit';
-        this.activeViewOrEdit(this.isEdit)
+ break;
       }
-
-      break;
-    }
     }
   }
 
@@ -574,13 +634,13 @@ export class EmployeesComponent implements OnInit {
       .subscribe((data) => {
         this.emptStatus$ = of(data);
       });
-    this.featureCommonService.getDropdownLists('CITY').subscribe((data)=>{
+    this.featureCommonService.getDropdownLists('CITY').subscribe((data) => {
       this.cityList$ = of(data);
     });
-     this.featureCommonService.getDropdownLists('STATE').subscribe((data)=>{
+    this.featureCommonService.getDropdownLists('STATE').subscribe((data) => {
       this.stateList$ = of(data);
     });
-     this.featureCommonService.getDropdownLists('COUNTRY').subscribe((data)=>{
+    this.featureCommonService.getDropdownLists('COUNTRY').subscribe((data) => {
       this.countryList$ = of(data);
     });
     this.featureCommonService.getDropdownLists('CURRENCY').subscribe((data) => {
@@ -596,19 +656,66 @@ export class EmployeesComponent implements OnInit {
       .subscribe((data) => {
         this.role$ = of(data);
       });
-      this.featureCommonService.getTeamDropdownLists('TEAMHRHEAD')
-      .subscribe((data)=>{
+    this.featureCommonService
+      .getTeamDropdownLists('TEAMHRHEAD')
+      .subscribe((data) => {
         this.teamHRHead$ = of(data);
-      })
-       this.featureCommonService.getTeamDropdownLists('PROJECTMGR')
-      .subscribe((data)=>{
+      });
+    this.featureCommonService
+      .getTeamDropdownLists('PROJECTMGR')
+      .subscribe((data) => {
         this.projectManager$ = of(data);
-      })
-       this.featureCommonService.getTeamDropdownLists('TEAMLEADER')
-      .subscribe((data)=>{
+      });
+    this.featureCommonService
+      .getTeamDropdownLists('TEAMLEADER')
+      .subscribe((data) => {
         this.teamLead$ = of(data);
-      })
-    
+      });
+  }
+
+  unsavedChanges(): void {
+    if (this.detailsForm?.dirty) {
+      const saveChangesModal = this.modalService.open(CoreModalComponent, {
+        backdrop: 'static',
+        size: 'md',
+        keyboard: false,
+      });
+
+      saveChangesModal.componentInstance.header = 'Confirmation';
+      saveChangesModal.componentInstance.content = `You have unsaved changes. Do you want to save them?`;
+      saveChangesModal.componentInstance.isYesOrNo = true;
+
+      saveChangesModal.componentInstance.eventHandler$.subscribe(
+        (data: any) => {
+          if (data === 'Proceed') {
+            const formData = this.detailsForm.getRawValue();
+              this.employeeDetailsService
+                .updateEmployeeDetails(formData)
+                .subscribe({
+                  next: (res) => {
+                    const index = this.allRowData.findIndex(
+                      (emp) => emp.empCode === res.empCode
+                    );
+                    if (index > -1) this.allRowData[index] = res;
+                    this.toggleActiveFilter(this.filterType);
+                    this.isEdit = false;
+                    this.detailsForm.disable();
+                    this.toastr.success(
+                      'Employee Detail Updated Successfully',
+                      'Success'
+                    );
+                      this.detailsForm.reset(res);
+                      this.detailsForm.markAsPristine();
+                  },
+                  error: (err) => console.error('Update error:', err),
+                });
+            this.detailsForm.markAsPristine(); // clear dirty state
+            this.sharedService.setIsValidation(false);
+            saveChangesModal.close();
+          }
+        }
+      );
+    }
   }
 
   selectFirstRowAndShowDetails() {

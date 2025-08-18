@@ -30,7 +30,7 @@
                         <div>
                             <label>Employee Code</label>
                             <input [ngClass]="{ required: detailsForm.controls['empCode'].errors }" type="text"
-                                formControlName="empCode" />
+                                formControlName="empCode" (input)="onEmpCodeInput($event)" />
                         </div>
                         <div>
                             <label>Employee Status</label>
@@ -102,6 +102,7 @@
                                 <div>
                                     <label>Alternate Number</label>
                                     <input type="text" formControlName="alternateNumber"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10"
                                         [ngClass]="{ required: detailsForm.controls['alternateNumber'].errors }" />
                                 </div>
                                 <div>
@@ -138,6 +139,7 @@
                                 <div>
                                     <label>Zip Code</label>
                                     <input type="text" formControlName="zipCode"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="6"
                                         [ngClass]="{ required: detailsForm.controls['zipCode'].errors }" />
                                 </div>
                                 <div>
@@ -293,7 +295,8 @@
     <div class="buttons mt-4  text-end" *ngIf="activeTab==='employment'">
         <div class="d-flex justify-content-between">
             <button class="btn submit" (click)="navButtons('previous')">Previous</button>
-            <button class="btn submit" (click)="navButtons('save')">Save</button>
+            <button class="btn submit" (click)="navButtons(isUpdateMode()?'update':'save')">
+                {{isUpdateMode()?'Update':'Save'}}</button>
             <!-- [disabled]="!isEmployeeDetailsValid" -->
         </div>
     </div>

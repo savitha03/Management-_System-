@@ -36,16 +36,6 @@ export class AuthComponent implements OnInit {
   formActions(event: any) {
     switch (event) {
       case 'LOGIN': {
-        // const payload = {
-        //   userName: this.loginForm.get('userName')?.value,
-        //   password: this.loginForm.get('password')?.value,
-        // };
-        // this.authService.login(this.loginForm.getRawValue()).subscribe((data: any) => {
-        //   if (data) {
-        //     this.router.navigate(['simplesolve']);
-        //   } else {
-        //   }
-        // });
         this.store.dispatch(login({ payload: this.loginForm.getRawValue() }));
       }
     }

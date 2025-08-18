@@ -13,7 +13,7 @@ import { FeatureCommonServiceService } from '../../../services/feature-common-se
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
 import { leaveFormObject } from '../../../forms/apply-leave.forms';
 import { FormUtilServiceService } from '../../../../shared/services/form-util-service.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { UsersLeaveRequestsComponent } from '../users-leave-requests/users-leave-requests.component';
@@ -21,6 +21,7 @@ import { RouterModule } from '@angular/router';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { AsyncDetection, NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
+import { CoreModalComponent } from '../../../../shared/modals/core-modal/core-modal.component';
 
 @Component({
   selector: 'app-apply-leave',
@@ -53,7 +54,8 @@ export class ApplyLeaveComponent implements OnInit {
     private leaveManagementService: LeaveManagementServiceService,
     private sharedService: SharedService,
     private store: Store,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal
   ) {
     this.store.select(selectAuthUser).subscribe((user: any) => {
       if (user) {
@@ -287,17 +289,46 @@ export class ApplyLeaveComponent implements OnInit {
       this.openValidationSlider(uniqueMessages);
     }
   }
-  enableEditing() {
-    this.isEditable = !this.isEditable;
-    if (this.isEditable) {
-      this.leaveForm.enable();
-    } else {
-      this.buildForm();
-      this.leaveForm.reset();
-      this.leaveForm.disable();
-      this.sharedService.setIsValidation(false);
-    }
+  startApplying() {
+    this.isEditable = true;
+    this.leaveForm.enable();
   }
+  cancelApplying() {
+    const modalRef = this.modalService.open(CoreModalComponent, {
+      backdrop: 'static',
+      size: 'md',
+      keyboard: false,
+    });
+    modalRef.componentInstance.header = 'Cancel Apply';
+    modalRef.componentInstance.content =
+      'Are you sure you want to cancel applying?';
+    modalRef.componentInstance.isYesOrNo = true;
+
+    modalRef.componentInstance.eventHandler$.subscribe((result: string) => {
+      if (result === 'Proceed') {
+        // this.leaveForm.reset();
+        this.formBuilder();
+        this.leaveForm.disable();
+        this.isEditable = false;
+        this.sharedService.setIsValidation(false);
+        this.showTimeFields = false;
+      }
+
+      modalRef.close();
+    });
+  }
+  // enableEditing() {
+  //   this.isEditable = !this.isEditable;
+  //   if (this.isEditable) {
+  //     this.leaveForm.enable();
+  //   } else {
+  //     this.buildForm();
+  //     this.leaveForm.reset();
+  //     this.leaveForm.disable();
+  //     this.sharedService.setIsValidation(false);
+  //     this.showTimeFields = false;
+  //   }
+  // }
 
   buildForm() {
     this.leaveForm = this.formUtilServiceService.buildReactiveForm(
@@ -375,14 +406,7 @@ export class ApplyLeaveComponent implements OnInit {
                   formControlName="toDate"
                   [min]="leaveForm.get('fromDate')?.value"
                 />
-                <small
-                  class="text-danger"
-                  *ngIf="
-                    leaveForm.get('toDate')?.hasError('dateBeforeFromDate')
-                  "
-                >
-                  To Date cannot be before From Date.
-                </small>
+              
               </div>
 
               <!-- Time Fields (conditionally shown) -->
@@ -484,14 +508,13 @@ export class UpdateLeaveComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
     this.formBuilder();
     this.featureCommonService
       .getDropdownLists('LEAVETYPE')
       .subscribe((data) => {
         this.leaveType$ = of(data);
 
-      //  dropdown values are loaded, patch the form
+        //  dropdown values are loaded, patch the form
         if (this.leaveData) {
           this.leaveForm.patchValue(this.leaveData);
         }

@@ -54,21 +54,49 @@ export class EmployeesFormComponent implements OnInit {
 
   ngOnInit(): void {}
   navButtons(value: any) {
-    if (value === 'next') {
-      this.activeTab = 'employment';
-    } else if (value === 'previous') {
-      this.activeTab = 'personal';
-    } else if (value === 'save') {
-      const event: any = {
-        name: 'SAVE',
-        component: 'EmployeesFormComponent',
-        value: null,
-      };
-      this.handleAppEvent.emit(event);
-    } else {
-    }
-    this.activeTabEmitter(value);
+  if (value === 'next') {
+    this.activeTab = 'employment';
+  } else if (value === 'previous') {
+    this.activeTab = 'personal';
+  } else if (value === 'save') {
+    // Direct save
+    const event: any = {
+      name: 'SAVE',
+      component: 'EmployeesFormComponent',
+      value: this.detailsForm.value,
+    };
+    this.handleAppEvent.emit(event);
+
+  } else if (value === 'update') {
+    // 🔥 Show confirmation popup before update
+    const updateModal = this.modalService.open(CoreModalComponent, {
+      backdrop: 'static',
+      size: 'md',
+      keyboard: false,
+    });
+
+    updateModal.componentInstance.header = 'Confirmation';
+    updateModal.componentInstance.content = `Do you want to update employee details?`;
+    updateModal.componentInstance.isYesOrNo = true;
+
+    updateModal.componentInstance.eventHandler$.subscribe((data: any) => {
+      if (data === 'Proceed') {
+        const event: any = {
+          name: 'UPDATE',
+          component: 'EmployeesFormComponent',
+          value: this.detailsForm.value,
+        };
+        this.handleAppEvent.emit(event);
+
+        this.detailsForm.markAsPristine(); // reset dirty state
+        updateModal.close();
+      }
+    });
   }
+
+  this.activeTabEmitter(value);
+}
+
 
   activeTabEmitter(value: any) {
     const payload = {
@@ -97,34 +125,19 @@ export class EmployeesFormComponent implements OnInit {
     this.handleAppEvent.emit(event);
   }
   
-  unsavedChanges(callback: () => void): void {
-  if (this.detailsForm?.dirty) {
-    const saveChangesModal = this.modalService.open(CoreModalComponent, {
-      backdrop: 'static',
-      size: 'md',
-      keyboard: false,
-    });
-
-    saveChangesModal.componentInstance.header = 'Confirmation';
-    saveChangesModal.componentInstance.content = `You have unsaved changes. Do you want to discard them?`;
-    saveChangesModal.componentInstance.isYesOrNo = true;
-
-    saveChangesModal.componentInstance.eventHandler$.subscribe((data: any) => {
-      if (data === 'Proceed') {
-        this.detailsForm.reset(); // optionally reset form
-        this.detailsForm.markAsPristine(); // clear dirty state
-        callback(); // proceed with the action (e.g., navigate)
-        saveChangesModal.close();
-      }
-    });
-  } else {
-    callback(); // no unsaved changes — proceed directly
-  }
-}
 
 onSave() {
   // Save logic here
   this.handleAppEvent.emit({ type: 'EMPLOYEE_SAVED' });
 }
 
+isUpdateMode(): boolean {
+  return this.currentMode === 'Edit'&& this.detailsForm?.dirty;
+}
+
+onEmpCodeInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const upperValue = input.value.toUpperCase();
+  this.detailsForm.get('empCode')?.setValue(upperValue, { emitEvent: false });
+}
 }
