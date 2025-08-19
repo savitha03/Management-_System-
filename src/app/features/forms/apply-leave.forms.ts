@@ -10,7 +10,7 @@ export const leaveFormObject: any = {
     validations: null,
     disabled: false,
   },
-     leaveId: {
+    leaveId: {
     id: uuidv4(),
     label: 'Leave Id',
     value: '',

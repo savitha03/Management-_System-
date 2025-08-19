@@ -88,11 +88,15 @@ export class EmployeesComponent implements OnInit {
       sortable: false,
       filter: false,
       cellRenderer: DiceComponentComponent,
-      cellRendererParams: (params: any) => ({
-        actionLinks: [],
-        item: { ...params.data, index: params.rowIndex },
-        hostComponent: 'EmployeesListComponent',
-      }),
+      cellRendererParams: (params: any) => {
+        console.log(params, 'Test');
+        
+        return {
+          actionLinks: [],
+          item: { ...params.data, index: params.node.rowIndex },
+          hostComponent: 'EmployeesComponent',
+        }
+      },
     },
     { headerName: 'Emp Code', field: 'empCode', width: 120, filter: true },
     {
@@ -132,6 +136,7 @@ export class EmployeesComponent implements OnInit {
     filter: true,
   };
   pageErrors: any[] = [];
+  activeRowId: any;
 
   constructor(
     private fb: FormBuilder,
@@ -182,6 +187,41 @@ export class EmployeesComponent implements OnInit {
           }
           return;
         }
+        case 'DICE_MENU_CLICK': {
+          console.log(data, 'Test');
+          if(this.activeRowId) {
+            if (this.gridApi) {
+              const firstRowNode = this.gridApi.getDisplayedRowAtIndex(data?.value?.index);
+              const params = {
+                columns: ['diceId'],
+                rowNodes: [firstRowNode],
+              };
+              const instances = this.gridApi.getCellRendererInstances(params);
+              if (instances.length > 0) {
+                const _params: any = instances[0];
+                const links = [{ codeCode: 'NA', screenName: 'NA', actionType: '' }]
+                _params.actionLinks = links;
+              }
+            }
+          } else {
+            if (this.gridApi) {
+              const firstRowNode = this.gridApi.getDisplayedRowAtIndex(data?.value?.index);
+              const params = {
+                columns: ['diceId'],
+                rowNodes: [firstRowNode],
+              };
+              const instances = this.gridApi.getCellRendererInstances(params);
+              if (instances.length > 0) {
+                const _params: any = instances[0];
+                const links = [{ codeCode: 'DELETE', screenName: 'Delete', actionType: '' }]
+                _params.actionLinks = links;
+              }
+            }
+          }
+          return
+        } 
+        default:
+          return
       }
     });
   }
@@ -235,6 +275,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   onRowSelected(row: any) {
+    this.activeRowId = row.empPk;  
     if (this.isEdit && this.detailsForm.dirty && !this.isNewEmployee) {
       const formData = this.detailsForm.getRawValue();
 
@@ -469,7 +510,7 @@ export class EmployeesComponent implements OnInit {
                 .subscribe({
                   next: (res) => {
                     const index = this.allRowData.findIndex(
-                      (emp) => emp.empCode === res.empCode
+                      (emp) => emp.empPk === res.empPk
                     );
                     if (index > -1) this.allRowData[index] = res;
                     this.toggleActiveFilter(this.filterType);

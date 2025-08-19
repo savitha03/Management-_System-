@@ -7,3 +7,7 @@
   --ag-row-border-color: #333333;
   /* add more overrides as needed */
 }
+
+.text-primary{
+  color: #289ee4 !important;
+}

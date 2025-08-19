@@ -13,7 +13,6 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 import { MetaReducer } from '@ngrx/store';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { LoaderInterceptor } from './shared/interceptors/loader.interceptor';
 
 // ✅ Step 1: Create meta-reducer
 export function localStorageSyncReducer(reducer: any): any {
@@ -32,11 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoaderInterceptor,
-      multi: true
-    },
+    
     provideStore(
       { auth: loginReducer },
       {

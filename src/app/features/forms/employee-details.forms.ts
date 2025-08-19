@@ -2,6 +2,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const detailsFormObject: any = {
+  empPk: {
+    id: uuidv4(),
+    label: 'Employee PK',
+    value: null,
+    type: 'Hidden Field',
+    validations: null,
+    disabled: false,
+  },
   empCode: {
     id: uuidv4(),
     label: 'Employee ID',

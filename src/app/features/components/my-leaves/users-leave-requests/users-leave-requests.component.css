@@ -194,3 +194,7 @@ button {
 .btn-outline.danger:hover {
   background-color: #fbecec;
 }
+
+.text-primary{
+  color: #289ee4 !important;
+}

@@ -89,9 +89,12 @@
                 {{ request.fromDate | date:'dd MMM yyyy' }} - {{ request.toDate | date:'dd MMM yyyy' }}
               </small>
             </div>
-
-            <div class="position-relative d-flex justify-content-end">
-              <div class="status-wrapper">
+            
+            <div class="position-relative ">
+              <div class="status-wrapper d-flex justify-content-between">
+                <div class="mt-2 fw-semibold text-primary">
+              {{ request.leaveStatus }} by {{ request.updatedUser }}
+            </div>
                 <div>
                   <!-- {{request.leaveStatus.screeName}} by  -->
                   <button class="btn btn-outline-secondary" (click)="togglePopover(request); $event.stopPropagation()">
@@ -106,7 +109,7 @@
                     <strong>Change Status To</strong>
                     <span class="close-btn" (click)="closePopover()">×</span>
                   </div>
-                  <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between gap-2">
                     <ng-container [ngSwitch]="request.leaveStatus">
                       <ng-container *ngSwitchCase="'CANCELLED'">
                         <button class=" btn-outline"

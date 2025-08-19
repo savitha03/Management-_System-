@@ -25,12 +25,13 @@ import {
 import { filter } from 'rxjs';
 import { DiceComponentComponent } from '../../../shared/components/dice-component/dice-component.component';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-employees-list',
-  imports: [AgGridModule, FormsModule],
+  imports: [AgGridModule, FormsModule,CommonModule],
   templateUrl: './employees-list.component.html',
   styleUrl: './employees-list.component.css',
 })
