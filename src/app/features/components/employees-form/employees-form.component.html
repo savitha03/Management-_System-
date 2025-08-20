@@ -289,14 +289,14 @@
         </div>
     </div>
     <div class="buttons mt-4  text-end" *ngIf="activeTab==='personal'">
-        <button class="btn submit" (click)="navButtons('next')">Next</button>
+        <button class="btn-sm btn submit" (click)="navButtons('next')">Next</button>
         <!-- [disabled]="!isPersonalDetailsValid -->
     </div>
     <div class="buttons mt-4  text-end" *ngIf="activeTab==='employment'">
         <div class="d-flex justify-content-between">
-            <button class="btn submit" (click)="navButtons('previous')">Previous</button>
-            <button *ngIf="!this.detailsForm.get('empPk').value" class="btn submit" (click)="navButtons('save')">Save</button>
-            <button *ngIf="this.detailsForm.get('empPk').value" class="btn submit" (click)="navButtons('update')">Update</button>
+            <button class="btn-sm btn submit" (click)="navButtons('previous')">Previous</button>
+            <button *ngIf="!this.detailsForm.get('empPk').value" class="btn-sm btn submit" (click)="navButtons('save')">Save</button>
+            <button *ngIf="this.detailsForm.get('empPk').value" class="btn-sm btn submit" (click)="navButtons('update')">Update</button>
             <!-- [disabled]="!isEmployeeDetailsValid" -->
         </div>
     </div>

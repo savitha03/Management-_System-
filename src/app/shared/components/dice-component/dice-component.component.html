@@ -1,13 +1,23 @@
 <ng-template #popContent>
   <div class="list-group">
-    <button type="button" class="btn" *ngFor="let link of actionLinks"  (click)="triggerEvent(link)">
+    <button
+      type="button"
+      class="btn"
+      *ngFor="let link of actionLinks"
+      (click)="triggerEvent(link)">
       {{ link.screenName }}
     </button>
   </div>
 </ng-template>
 
-
-<button type="button" class="btn btn-sm btn-outline-light btn-icon dice-menu" [ngbPopover]="popContent"
-  [placement]="position" [disabled]="actionLinks === null || actionLinks === []" container="body" title="Dice Menu" (click)="onActionClick()">
+<button
+  type="button"
+  class="btn btn-sm btn-outline-light btn-icon dice-menu"
+  [ngbPopover]="popContent"
+  [placement]="position"
+  [disabled]="!actionLinks || actionLinks.length === 0"
+  container="body"
+  title="Dice Menu"
+  (click)="onActionClick(actionLinks)">
   <i class="bi bi-grid-fill text-primary"></i>
 </button>

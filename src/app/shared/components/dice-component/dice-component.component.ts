@@ -20,6 +20,7 @@ export interface IDiceMenu {
 export class DiceComponentComponent implements ICellRendererAngularComp {
   position: 'right' | 'left' = 'right';
   @Input() disabled = false;
+   @Input() rowNode: any; 
   item: any;
   actionLinks: IDiceMenu[] | any;
   // actionLinks: any[] = [
@@ -52,22 +53,29 @@ export class DiceComponentComponent implements ICellRendererAngularComp {
     alert('Dice clicked! ' + this.params.value);
   }
 
-  onActionClick() {
+onActionClick(actionLinks: any[]) {
+  const event: IApplicationEvent = {
+    name: 'DICE_MENU_CLICK',
+    component: 'EmployeesComponent',
+    value: {
+      item: this.item,
+      rowNode: this.params?.node, // keep rowNode so delete works
+      actionLinks
+    }
+  };
+  this.sharedService.emitAnEvent(event);
+}
+
+triggerEvent(link: any) {
+  if (link.codeCode === 'DELETE') {
     const event: IApplicationEvent = {
-      name: 'DICE_MENU_CLICK',
-      component: 'AgencyInfoComponent',
-      value: this.item,
+      name: 'DELETE_NEW_ROW',
+      component: 'EmployeesComponent',
+      value: { item: this.item, rowNode: this.params?.node }
     };
     this.sharedService.emitAnEvent(event);
   }
+}
 
-  triggerEvent(link: any) {
-    // const event: IApplicationEvent = {
-    //   name: link.codeCode,
-    //   component: 'DiceMenuComponentNewVersion',
-    //   value: { ...this.item, index: this.index, hostComponent: this.hostComponent },
-    // };
-    // this.applicationEventService.emitAnEvent(event);
-  }
 
 }

@@ -89,13 +89,18 @@ export class EmployeesComponent implements OnInit {
       filter: false,
       cellRenderer: DiceComponentComponent,
       cellRendererParams: (params: any) => {
+        const isNew = !params.data.empPk; // new row = no primary key
+        const actionLinks = isNew
+      ? [{ codeCode: 'DELETE', screenName: 'Delete', actionType: '' }]
+      : [{ codeCode: 'NA', screenName: 'NA', actionType: '' }];
+
         console.log(params, 'Test');
         
         return {
-          actionLinks: [],
-          item: { ...params.data, index: params.node.rowIndex },
-          hostComponent: 'EmployeesComponent',
-        }
+      actionLinks,
+      item: { ...params.data, index: params.node.rowIndex },
+      hostComponent: 'EmployeesComponent',
+    };
       },
     },
     { headerName: 'Emp Code', field: 'empCode', width: 120, filter: true },
@@ -178,50 +183,48 @@ export class EmployeesComponent implements OnInit {
 
             this.openValidationSlider(uniqueMessages);
           } else {
-            if(!this.detailsForm.invalid && this.detailsForm.dirty){
+            if (!this.detailsForm.invalid && this.detailsForm.dirty) {
               this.unsavedChanges();
               this.sharedService.setIsValidation(true);
-              return
+              return;
             }
             this.sharedService.setIsValidation(false);
           }
           return;
         }
-        case 'DICE_MENU_CLICK': {
-          console.log(data, 'Test');
-          if(this.activeRowId) {
-            if (this.gridApi) {
-              const firstRowNode = this.gridApi.getDisplayedRowAtIndex(data?.value?.index);
-              const params = {
-                columns: ['diceId'],
-                rowNodes: [firstRowNode],
-              };
-              const instances = this.gridApi.getCellRendererInstances(params);
-              if (instances.length > 0) {
-                const _params: any = instances[0];
-                const links = [{ codeCode: 'NA', screenName: 'NA', actionType: '' }]
-                _params.actionLinks = links;
-              }
-            }
-          } else {
-            if (this.gridApi) {
-              const firstRowNode = this.gridApi.getDisplayedRowAtIndex(data?.value?.index);
-              const params = {
-                columns: ['diceId'],
-                rowNodes: [firstRowNode],
-              };
-              const instances = this.gridApi.getCellRendererInstances(params);
-              if (instances.length > 0) {
-                const _params: any = instances[0];
-                const links = [{ codeCode: 'DELETE', screenName: 'Delete', actionType: '' }]
-                _params.actionLinks = links;
-              }
-            }
-          }
-          return
-        } 
+
         default:
-          return
+          return;
+      }
+    });
+    this.sharedService.appEvent$.subscribe((data: any) => {
+      switch (data.name) {
+        case 'DELETE_NEW_ROW': {
+          if (this.gridApi && data.value?.rowNode) {
+            const rowDataToRemove = data.value.rowNode.data;
+
+            // remove from backing array
+            this.allRowData = this.allRowData.filter(
+              (emp) => emp !== rowDataToRemove
+            );
+
+            // update grid
+            this.rowData = [...this.allRowData];
+
+            this.selectFirstRowAndShowDetails();
+            this.isEdit=false;
+            this.detailsForm.disable();
+          }
+          break;
+        }
+        case 'DICE_MENU_CLICK': {
+          // console.log('Existing row clicked', data.value);
+          // handle existing row menu click here
+          break;
+        }
+
+        default:
+          return;
       }
     });
   }
@@ -288,10 +291,10 @@ export class EmployeesComponent implements OnInit {
               const formData = {
       ...res,
       dateOfBirth: this.selectedRow.dateOfBirth
-        ? this.selectedRow.dateOfBirth.split(' ')[0]
+        ? this.selectedRow.dateOfBirth.split('T')[0]
         : '',
       joinedDate: this.selectedRow.joinedDate
-        ? this.selectedRow.joinedDate.split(' ')[0]
+        ? this.selectedRow.joinedDate.split('T')[0]
         : '',
     };
           if (index > -1) this.allRowData[index] = formData;
@@ -338,7 +341,8 @@ export class EmployeesComponent implements OnInit {
       //   break;
       // }
       case 'ROW_CLICKED': {
-        if (this.isNewEmployee && this.detailsForm.invalid) {
+        if(event.value.selectedRow.empPk !== this.activeRowId ){
+          if (this.isNewEmployee && this.detailsForm.invalid) {
           this.detailsForm.markAllAsTouched();
 
           const validationMessages =
@@ -364,6 +368,7 @@ export class EmployeesComponent implements OnInit {
           });
 
           return;
+        }
         }
 
         this.onRowSelected(event.value.selectedRow);
