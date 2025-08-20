@@ -294,7 +294,8 @@ export class ApplyLeaveComponent implements OnInit {
     this.leaveForm.enable();
   }
   cancelApplying() {
-    const modalRef = this.modalService.open(CoreModalComponent, {
+    if(this.leaveForm.dirty){
+          const modalRef = this.modalService.open(CoreModalComponent, {
       backdrop: 'static',
       size: 'md',
       keyboard: false,
@@ -310,12 +311,20 @@ export class ApplyLeaveComponent implements OnInit {
         this.formBuilder();
         this.leaveForm.disable();
         this.isEditable = false;
-        this.sharedService.setIsValidation(false);
+        // this.sharedService.setIsValidation(false);
         this.showTimeFields = false;
+        this.clearValidation();
       }
-
       modalRef.close();
     });
+    }else{
+       this.formBuilder();
+        this.leaveForm.disable();
+        this.isEditable = false;
+        this.showTimeFields = false;
+        this.clearValidation();
+    }
+
   }
   // enableEditing() {
   //   this.isEditable = !this.isEditable;
@@ -358,110 +367,91 @@ export class ApplyLeaveComponent implements OnInit {
         type="button"
         class="btn-close"
         aria-label="Close"
-        (click)="activeModal.dismiss('Cross click')"
+        (click)="close()"
       ></button>
     </div>
     <div class="modal-body">
       <div class="mt-3">
         <div>
-          <form [formGroup]="leaveForm" (ngSubmit)="apply()">
-            <div class="leave-form-grid">
-              <!-- Leave Type -->
-              <div class="mt-2">
-                <label for="leaveType" class="form-label">Leave Type</label>
-                <select
-                  id="leaveType"
-                  formControlName="leaveType"
-                  class="form-select form-control"
-                  required
-                >
-                  <option value="" disabled>Select Leave Type</option>
-                  <option
-                    *ngFor="let leaveType of leaveType$ | async"
-                    [ngValue]="leaveType.code"
-                  >
-                    {{ leaveType.screenName }}
-                  </option>
-                </select>
-              </div>
+<form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
+  <div class="leave-form-grid">
 
-              <!-- From Date -->
-              <div class="mt-2">
-                <label for="fromDate" class="form-label">From Date</label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  class="form-control"
-                  formControlName="fromDate"
-                />
-              </div>
+    <!-- Leave Type -->
+    <div class="mt-2">
+      <label for="leaveType" class="form-label">Leave Type</label>
+      <select id="leaveType" formControlName="leaveType" class="form-select form-control" required
+        [ngClass]="{ required: leaveForm.controls['leaveType'].errors && leaveForm.controls['leaveType']}">
+        <option value="" disabled>Select Leave Type</option>
+        <option *ngFor="let leaveType of leaveType$ | async" [ngValue]="leaveType.code">
+          {{ leaveType.screenName }}
+        </option>
+      </select>
+    </div>
 
-              <!-- To Date -->
-              <div class="mt-2">
-                <label for="toDate" class="form-label">To Date</label>
-                <input
-                  type="date"
-                  id="toDate"
-                  class="form-control"
-                  formControlName="toDate"
-                  [min]="leaveForm.get('fromDate')?.value"
-                />
-              
-              </div>
+    <!-- From Date -->
+    <div class="mt-2">
+      <label for="fromDate" class="form-label">From Date</label>
+      <input type="date" id="fromDate" class="form-control" formControlName="fromDate"
+        [ngClass]="{ required: leaveForm.controls['fromDate'].errors && leaveForm.controls['fromDate']}" />
+    </div>
 
-              <!-- Time Fields (conditionally shown) -->
-              <div *ngIf="showTimeFields">
-                <label class="form-label mt-2">From Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="fromTime"
-                />
-              </div>
+    <!-- To Date -->
+    <div class="mt-2">
+      <label for="toDate" class="form-label">To Date</label>
+      <input type="date" id="toDate" class="form-control" formControlName="toDate"
+        [min]="leaveForm.get('fromDate')?.value"
+        [ngClass]="{ required: leaveForm.controls['toDate'].errors && leaveForm.controls['toDate']}" />
+      <small class="text-danger" *ngIf="leaveForm.get('toDate')?.hasError('dateBeforeFromDate')">
+        To Date cannot be before From Date.
+      </small>
+    </div>
 
-              <div *ngIf="showTimeFields">
-                <label class="form-label mt-2">To Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  formControlName="toTime"
-                />
-              </div>
+    <!-- From Time -->
+    <div *ngIf="showTimeFields">
+      <label class="form-label mt-2">From Time</label>
+      <select class="form-select form-control" formControlName="fromTime"
+        [ngClass]="{ required: leaveForm.controls['fromTime'].errors && leaveForm.controls['fromTime']}">
+        <option value="" disabled>Select From Time</option>
+        <option *ngFor="let time of time$ | async" [ngValue]="time.code">
+          {{ time.screenName }}
+        </option>
+      </select>
+    </div>
 
-              <div *ngIf="showTimeFields">
-                <label class="form-label mt-2">Total Hours</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="totalHours"
-                  readonly
-                />
-              </div>
+    <!-- To Time -->
+    <div *ngIf="showTimeFields">
+      <label class="form-label mt-2">To Time</label>
+      <select class="form-select form-control" formControlName="toTime"
+        [ngClass]="{ required: leaveForm.controls['toTime'].errors && leaveForm.controls['toTime']}">
+        <option value="" disabled>Select To Time</option>
+        <option *ngFor="let time of time$ | async" [ngValue]="time.code">
+          {{ time.screenName }}
+        </option>
+      </select>
+    </div>
 
-              <!-- Duration -->
-              <div>
-                <label class="form-label mt-2">Duration</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="duration"
-                  readonly
-                />
-              </div>
+    <!-- Total Hours -->
+    <div *ngIf="showTimeFields">
+      <label class="form-label mt-2">Total Hours</label>
+      <input type="number" class="form-control" formControlName="totalHours" readonly />
+    </div>
 
-              <!-- Reason -->
-              <div class="full-width mt-2">
-                <label for="reason" class="form-label">Reason</label>
-                <textarea
-                  id="reason"
-                  class="form-control"
-                  formControlName="reason"
-                  rows="3"
-                  maxlength="5000"
-                ></textarea>
-              </div>
-            </div>
-          </form>
+    <!-- Duration -->
+    <div>
+      <label class="form-label mt-2">Duration</label>
+      <input type="text" class="form-control" formControlName="duration" readonly />
+    </div>
+
+    <!-- Reason -->
+    <div class="full-width mt-2">
+      <label for="reason" class="form-label">Reason</label>
+      <textarea id="reason" class="form-control" formControlName="reason" rows="3" maxlength="5000"
+        [ngClass]="{ required: leaveForm.controls['reason'].errors && leaveForm.controls['reason']}"></textarea>
+    </div>
+  </div>
+
+</form>
+
         </div>
       </div>
     </div>
@@ -492,6 +482,8 @@ export class UpdateLeaveComponent implements OnInit {
   leaveType$!: Observable<any>;
   showTimeFields = false;
 
+  time$!: Observable<any>;
+
   constructor(
     private fb: FormBuilder,
     private featureCommonService: FeatureCommonServiceService,
@@ -509,16 +501,17 @@ export class UpdateLeaveComponent implements OnInit {
 
   ngOnInit(): void {
     this.formBuilder();
-    this.featureCommonService
-      .getDropdownLists('LEAVETYPE')
-      .subscribe((data) => {
-        this.leaveType$ = of(data);
+    this.loadDropdowns()
+    // this.featureCommonService
+    //   .getDropdownLists('LEAVETYPE')
+    //   .subscribe((data) => {
+    //     this.leaveType$ = of(data);
 
-        //  dropdown values are loaded, patch the form
+    //     //  dropdown values are loaded, patch the form
         if (this.leaveData) {
           this.leaveForm.patchValue(this.leaveData);
         }
-      });
+    //   });
   }
 
   formBuilder() {
@@ -659,6 +652,9 @@ export class UpdateLeaveComponent implements OnInit {
     this.featureCommonService
       .getDropdownLists('LEAVETYPE')
       .subscribe((data) => (this.leaveType$ = of(data)));
+      this.featureCommonService
+      .getDropdownLists('TIME')
+      .subscribe((data) => (this.time$ = of(data)));
   }
 
   apply() {
@@ -676,6 +672,12 @@ export class UpdateLeaveComponent implements OnInit {
     const payload = {
       type: 'UPDATE',
       value: this.leaveForm.getRawValue(),
+    };
+    this.eventHandler$.emit(payload);
+  }
+  close(){
+    const payload={
+      type:'CLOSE'
     };
     this.eventHandler$.emit(payload);
   }

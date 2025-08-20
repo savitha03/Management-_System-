@@ -47,8 +47,8 @@ export class UsersLeaveHistoryComponent implements OnInit {
   employeeInput$ = new Subject<string>();
 
   columnDefs: ColDef[] = [
-    { headerName: 'Emp. ID', field: 'empId', width: 110 },
-    { headerName: 'Emp Name', field: 'empName', width: 220, filter:false },
+    { headerName: 'Emp. ID', field: 'empId', width: 90 ,filter:false},
+    { headerName: 'Emp Name', field: 'empName', width: 200, filter:false },
     { headerName: 'Leave Type', field: 'leaveType', width: 140 },
     { headerName: 'From Date', 
       field: 'fromDate',

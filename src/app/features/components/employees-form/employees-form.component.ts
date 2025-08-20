@@ -68,7 +68,6 @@ export class EmployeesFormComponent implements OnInit {
     this.handleAppEvent.emit(event);
 
   } else if (value === 'update') {
-    // 🔥 Show confirmation popup before update
     const updateModal = this.modalService.open(CoreModalComponent, {
       backdrop: 'static',
       size: 'md',

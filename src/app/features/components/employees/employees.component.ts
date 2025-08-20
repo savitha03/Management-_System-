@@ -210,6 +210,7 @@ export class EmployeesComponent implements OnInit {
             this.selectFirstRowAndShowDetails();
             this.isEdit = false;
             this.detailsForm.disable();
+            // this.clearValidation();
           }
           break;
         }

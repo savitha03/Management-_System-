@@ -221,19 +221,9 @@ export class LeaveHistory implements OnInit {
             deleteModal.close();
           }
         }
-      );
-       
-        
-        // this.leaveManagementService.DeleteEmployeeLeaveRequest(rowData.leaveId).subscribe(() => {
-        // this.rowData = this.rowData.filter(row => row.leaveId !== rowData.leaveId);
-        // });
-
+      ); 
       }
-    })
-
-
-
-  }
+    })}
 
   loadLeaveHistory() {
     this.leaveManagementService
