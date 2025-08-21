@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../../core/auth/auth';
 import { SideNav } from '../../../shared/components/side-nav/side-nav';
@@ -16,7 +16,7 @@ import { Store } from '@ngrx/store';
   templateUrl: './feature-container.html',
   styleUrl: './feature-container.css',
 })
-export class FeatureContainer implements OnInit {
+export class FeatureContainer implements OnInit , OnDestroy {
   public validationSlider$: any;
   public validationErrors$: any;
   validationErrors: any;
@@ -49,14 +49,16 @@ export class FeatureContainer implements OnInit {
     switch (event.type) {
       case 'LOGOUT': {
         this.authService.logout();
-        // this.store.dispatch(logout());
         this.router.navigate(['auth']);
-
         break;
 
       }
     }
   }
 
-  
+  ngOnDestroy(): void {
+    this.sharedService.setValidationSliderSubject(null);
+    this.sharedService.setValidationSubject(null);
+    this.sharedService.setIsValidation(null);
+  }
 }

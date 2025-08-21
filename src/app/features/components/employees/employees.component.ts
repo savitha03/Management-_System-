@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { EmployeesFormComponent } from '../../components/employees-form/employees-form.component';
 import { EmployeesListComponent } from '../../components/employees-list/employees-list.component';
 import { ColDef, GridOptions } from 'ag-grid-community';
@@ -15,7 +15,7 @@ import { detailsFormObject } from '../../forms/employee-details.forms';
 import { FormUtilServiceService } from '../../../shared/services/form-util-service.service';
 import { FeatureCommonServiceService } from '../../services/feature-common-service.service';
 import { SharedService } from '../../../shared/services/shared.service';
-import { Observable, of } from 'rxjs';
+import { distinctUntilChanged, Observable, of, Subject, takeUntil } from 'rxjs';
 import { EmployeeDetailsService } from '../../services/employee-details.service';
 import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -32,7 +32,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
-export class EmployeesComponent implements OnInit {
+export class EmployeesComponent implements OnInit, OnDestroy{
   isEdit = false;
   isNewEmployee = false;
   selectedRow: any = null;
@@ -138,6 +138,7 @@ export class EmployeesComponent implements OnInit {
   };
   pageErrors: any[] = [];
   activeRowId: any;
+  public _destroyed$: any = new Subject();
 
   constructor(
     private fb: FormBuilder,
@@ -159,7 +160,7 @@ export class EmployeesComponent implements OnInit {
     } else {
       this.detailsForm.disable();
     }
-    this.sharedService.appEvent$.subscribe((data: any) => {
+    this.sharedService.appEvent$.pipe(takeUntil(this._destroyed$), distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((data: any) => {
       switch (data.name) {
         case 'NAVIGATED_BY_MENU': {
           if (this.detailsForm.invalid) {
@@ -755,5 +756,10 @@ export class EmployeesComponent implements OnInit {
         }
       }
     }, 100); // Wait for grid and data to render
+  }
+
+  ngOnDestroy(): void {
+    this._destroyed$.next();
+    this._destroyed$.complete();
   }
 }

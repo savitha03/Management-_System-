@@ -19,7 +19,7 @@
     </div>
 
     <ng-scrollbar class="mt-2" style="height: 60vh;">
-      <form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
+      <form class="mt-2" [formGroup]="leaveForm" >
         <div class="leave-form-grid">
 
           <div class="mt-4">
@@ -36,14 +36,14 @@
 
           <div class="mt-4">
             <label for="fromDate" class="form-label">From Date</label>
-            <input type="date" id="fromDate" class="form-control" formControlName="fromDate"
+            <input type="date" id="fromDate" class="form-control" formControlName="fromDate" (change)="checkDateEquality()"  (change)="calculateDuration()" 
               [ngClass]="{ required: leaveForm.controls['fromDate'].errors && leaveForm.controls['fromDate']}" />
           </div>
 
           <div class="mt-4">
             <label for="toDate" class="form-label">To Date</label>
             <input type="date" id="toDate" class="form-control" formControlName="toDate"
-              [min]="leaveForm.get('fromDate')?.value"
+              [min]="leaveForm.get('fromDate')?.value" (change)="checkDateEquality()" (change)="calculateDuration()"
               [ngClass]="{ required: leaveForm.controls['toDate'].errors && leaveForm.controls['toDate']}" />
             <small class="text-danger" *ngIf="leaveForm.get('toDate')?.hasError('dateBeforeFromDate')">
               To Date cannot be before From Date.
@@ -53,7 +53,7 @@
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">From Time</label>
             <select class="form-select form-control" formControlName="fromTime" 
-            [ngClass]="{ required: leaveForm.controls['fromTime'].errors && leaveForm.controls['fromTime']}">
+            [ngClass]="{ required: leaveForm.controls['fromTime'].errors && leaveForm.controls['fromTime']}" (change)="calculateDuration()" (change)="calculateTotalHours()">
               <option value="" disabled>Select From Time</option>
               <option *ngFor="let time of time$ | async" [ngValue]="time.code">
                 {{ time.screenName }}
@@ -65,7 +65,7 @@
           <div *ngIf="showTimeFields">
             <label class="form-label mt-2">To Time</label>
             <select class="form-select form-control" formControlName="toTime"
-             [ngClass]="{ required: leaveForm.controls['toTime'].errors && leaveForm.controls['toTime']}" >
+             [ngClass]="{ required: leaveForm.controls['toTime'].errors && leaveForm.controls['toTime']}" (change)="calculateDuration()" (change)="calculateTotalHours()" >
               <option value="" disabled>Select To Time</option>
               <option *ngFor="let time of time$ | async" [ngValue]="time.code">
                 {{time.screenName}}
@@ -94,9 +94,9 @@
 
 
         <div class="buttons mt-4 justify-content-center">
-          <button type="submit" class="btn submit" [disabled]=" !isEditable">
-            Apply
-          </button>
+         <button type="button" class="btn btn-sm btn-warn" [disabled]=" !isEditable" (click)="apply()">
+        Apply
+      </button>
         </div>
       </form>
     </ng-scrollbar>

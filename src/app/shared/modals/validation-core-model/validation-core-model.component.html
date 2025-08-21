@@ -1,0 +1,12 @@
+<div class="modal-header">
+	<h5 class="modal-title">Validations</h5>
+	<button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+	<div *ngFor="let error of errors">
+		<p class="text-danger">{{error}}</p>
+	</div>
+</div>
+<div class="modal-footer d-flex justify-content-center">
+	<button type="button" class="btn btn-sm btn-primary" (click)="activeModal.dismiss('Cross click')">Close</button>
+</div>

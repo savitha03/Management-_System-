@@ -40,6 +40,12 @@ body {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+
+.btn-warn{
+  background-color: #f99700 !important;
+  color: white !important;
+}
+
 .text-primary{
   color: #289ee4 !important;
 }

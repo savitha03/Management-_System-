@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { distinctUntilChanged, Observable, of, Subject, takeUntil } from 'rxjs';
 import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
 import { leaveFormObject } from '../../../forms/apply-leave.forms';
@@ -22,6 +22,7 @@ import { SharedService } from '../../../../shared/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { AsyncDetection, NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModalComponent } from '../../../../shared/modals/core-modal/core-modal.component';
+import { ValidationCoreModelComponent } from '../../../../shared/modals/validation-core-model/validation-core-model.component';
 
 @Component({
   selector: 'app-apply-leave',
@@ -30,7 +31,7 @@ import { CoreModalComponent } from '../../../../shared/modals/core-modal/core-mo
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
-export class ApplyLeaveComponent implements OnInit {
+export class ApplyLeaveComponent implements OnInit, OnDestroy {
   @Input() leaveData: any;
   @Input() leaveFormObject: any;
   isEditable: boolean = false;
@@ -46,6 +47,7 @@ export class ApplyLeaveComponent implements OnInit {
   toTimeOptions: any[] = [];
 
   time$!: Observable<any>;
+  public _destroyed$: any = new Subject();
 
   constructor(
     private fb: FormBuilder,
@@ -74,7 +76,7 @@ export class ApplyLeaveComponent implements OnInit {
       this.leaveForm.patchValue(this.leaveData);
     }
     this.leaveForm.disable();
-    this.sharedService.appEvent$.subscribe((data: any) => {
+    this.sharedService.appEvent$.pipe(takeUntil(this._destroyed$), distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe((data: any) => {
       switch (data.name) {
         case 'NAVIGATED_BY_MENU': {
           if (this.leaveForm.invalid) {
@@ -217,10 +219,12 @@ export class ApplyLeaveComponent implements OnInit {
         const toT = this.parseTimeToDate(toTime);
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
-        if (diffHrs <= 4) {
-          this.leaveForm.get('duration')?.setValue('0 day');
-        } else {
+        if (diffHrs >0 && diffHrs <=4) {
+          this.leaveForm.get('duration')?.setValue('0.5 day');
+        } else if(diffHrs >4 && diffHrs <8) {
           this.leaveForm.get('duration')?.setValue('1 day');
+        } else if(diffHrs ==0){
+          this.leaveForm.get('duration')?.setValue('0 day');
         }
       } else {
         this.leaveForm.get('duration')?.setValue('');
@@ -263,6 +267,7 @@ export class ApplyLeaveComponent implements OnInit {
             this.leaveForm.disable();
             this.sharedService.setIsValidation(false);
             this.isEditable = false;
+            this.showTimeFields = false;
             this.toastr.success('Leave Applied Successfully!', 'Success');
           },
           error: (err: any) => {
@@ -354,6 +359,11 @@ export class ApplyLeaveComponent implements OnInit {
     this.sharedService.setValidationSliderSubject(true);
     this.sharedService.setValidationSubject(validation);
   }
+
+  ngOnDestroy(): void {
+    this._destroyed$.next();
+    this._destroyed$.complete();
+  }
 }
 
 @Component({
@@ -373,7 +383,7 @@ export class ApplyLeaveComponent implements OnInit {
     <div class="modal-body">
       <div class="mt-3">
         <div>
-<form class="mt-2" [formGroup]="leaveForm" (ngSubmit)="apply()">
+<form class="mt-2" [formGroup]="leaveForm" >
   <div class="leave-form-grid">
 
     <!-- Leave Type -->
@@ -455,15 +465,15 @@ export class ApplyLeaveComponent implements OnInit {
         </div>
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer d-flex justify-content-evenly">
       <button
         type="button"
-        class="btn btn-outline-secondary"
+        class="btn btn-sm btn-warn"
         (click)="activeModal.close('Close click')"
       >
         Cancel
       </button>
-      <button type="button" class="btn btn-outline-primary" (click)="update()">
+      <button type="button" class="btn btn-sm btn-warn" (click)="update()">
         Update
       </button>
     </div>
@@ -476,6 +486,7 @@ export class UpdateLeaveComponent implements OnInit {
   @Input() content: any;
   @Output() eventHandler$ = new EventEmitter();
 
+  public validationErrors$: any;
   loggedInUser: any;
   leaveForm!: FormGroup;
   leaveFormEnitity: any = leaveFormObject;
@@ -483,6 +494,7 @@ export class UpdateLeaveComponent implements OnInit {
   showTimeFields = false;
 
   time$!: Observable<any>;
+  validationErrors: any;
 
   constructor(
     private fb: FormBuilder,
@@ -490,7 +502,9 @@ export class UpdateLeaveComponent implements OnInit {
     private formUtilServiceService: FormUtilServiceService,
     private leaveManagementService: LeaveManagementServiceService,
     public activeModal: NgbActiveModal,
-    private store: Store
+    private store: Store,
+    private sharedService:SharedService,
+    private modalService : NgbModal,
   ) {
     this.store.select(selectAuthUser).subscribe((user: any) => {
       if (user) {
@@ -631,11 +645,9 @@ export class UpdateLeaveComponent implements OnInit {
         const toT = this.parseTimeToDate(toTime);
         const diffHrs = (toT.getTime() - fromT.getTime()) / (1000 * 60 * 60);
 
-        if (diffHrs < 4) {
-          this.leaveForm.get('duration')?.setValue('0 day');
-        } else if (diffHrs >= 4 && diffHrs < 6) {
+        if (diffHrs >0 && diffHrs <=4) {
           this.leaveForm.get('duration')?.setValue('0.5 day');
-        } else {
+        } else if(diffHrs >4 && diffHrs <8) {
           this.leaveForm.get('duration')?.setValue('1 day');
         }
       } else {
@@ -669,16 +681,99 @@ export class UpdateLeaveComponent implements OnInit {
     }
   }
   update() {
-    const payload = {
+    if(this.leaveForm.invalid){
+
+        const validationMessages =
+        this.formUtilServiceService.parseValidationErrors(
+          this.leaveForm.controls,
+          this.leaveFormEnitity
+        );
+
+      const uniqueMessages = validationMessages
+        .filter(
+          (item, index, array) =>
+            index === array.findIndex((el) => el.content === item.content)
+        )
+        .map((err) => err.content);
+
+        this.sharedService.setValidationSubject(uniqueMessages);
+
+        this.validationErrors$ = this.sharedService.getValidationSubject();
+        this.validationErrors$?.subscribe((data: any) => {
+          this.validationErrors = data;
+        });
+
+
+      const validationModal = this.modalService.open(ValidationCoreModelComponent,{
+        backdrop:'static',
+        keyboard:false
+      })
+
+      validationModal.componentInstance.header = "Validations"
+      validationModal.componentInstance.errors = this.validationErrors
+    }else{
+      const payload = {
       type: 'UPDATE',
       value: this.leaveForm.getRawValue(),
     };
     this.eventHandler$.emit(payload);
+    }
   }
-  close(){
-    const payload={
-      type:'CLOSE'
-    };
-    this.eventHandler$.emit(payload);
+close() {
+  if (this.leaveForm.dirty) {
+       if (this.leaveForm.invalid) {
+      const validationMessages = this.formUtilServiceService.parseValidationErrors(
+        this.leaveForm.controls,
+        this.leaveFormEnitity
+      );
+
+      const uniqueMessages = validationMessages
+        .filter(
+          (item, index, array) =>
+            index === array.findIndex((el) => el.content === item.content)
+        )
+        .map((err) => err.content);
+
+      this.sharedService.setValidationSubject(uniqueMessages);
+
+      this.validationErrors$ = this.sharedService.getValidationSubject();
+      this.validationErrors$?.subscribe((data: any) => {
+        this.validationErrors = data;
+      });
+
+      const validationModal = this.modalService.open(ValidationCoreModelComponent, {
+        backdrop: 'static',
+        keyboard: false
+      });
+
+      validationModal.componentInstance.header = "Validations";
+      validationModal.componentInstance.errors = this.validationErrors;
+
+      // Stop here, do not proceed to discard confirmation
+      return;
+    }
+    const modalRef = this.modalService.open(CoreModalComponent, {
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    modalRef.componentInstance.header = 'Cancel Update';
+    modalRef.componentInstance.content = 'Do you want to discard unsaved changes?';
+    modalRef.componentInstance.isYesOrNo = true;
+
+    modalRef.componentInstance.eventHandler$.subscribe((result: string) => {
+      if (result === 'Proceed') {
+        // Reset the form to default values
+        this.leaveForm.reset(this.leaveData); // restoring original data
+        this.activeModal.close('Close click'); // close the modal
+      }
+      modalRef.close();
+
+      // If user selects NO, just close confirmation popup and stay
+    });
+  } else {
+    this.activeModal.close('Close click');
   }
+}
+
 }

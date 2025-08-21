@@ -68,7 +68,6 @@ export class TopNav implements OnInit {
   }
 
   logout() {
-    
     const payload = {
       type: 'LOGOUT',
     };
