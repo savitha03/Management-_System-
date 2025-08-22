@@ -14,6 +14,7 @@ import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
 import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
 import { Observable, of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
@@ -45,27 +46,7 @@ export class LeaveHistory implements OnInit {
       headerName: 'Leave Type',
       field: 'leaveType',
       width: 140,
-      // cellRenderer: (params: any) => {
-      //   // Just return plain text, no span needed now
-      //   // return params.value === 'APPROVED'
-      //   //   ? 'Approved'
-      //   //   : params.value === 'PENDING'
-      //   //   ? 'Pending'
-      //   //   : params.value === 'CANCELLED'
-      //   //   ? 'Cancelled'
-      //   //   : '';
-
-      //   this.leaveType$.subscribe((data:any)=>{
-      //     data.forEach((element:any) => {
-      //       if(element && (element.code === params.value)){
-      //         return element.screenName
-      //       }
-      //     });
-      //   })
-
-      //   return ''
-      // },
-    },
+      },
     {
       headerName: 'From Date',
       field: 'fromDate',
@@ -172,7 +153,8 @@ export class LeaveHistory implements OnInit {
     private leaveManagementService: LeaveManagementServiceService,
     private modalService: NgbModal,
     private featureCommonService: FeatureCommonServiceService,
-    private store: Store
+    private store: Store,
+    private toastr: ToastrService,
   ) {
     this.store.select(selectAuthUser).subscribe((user: any) => {
       if (user) {
@@ -213,27 +195,38 @@ export class LeaveHistory implements OnInit {
     };
 
     editModal.componentInstance.eventHandler$.subscribe((data: any) => {
-      if (data.type === 'UPDATE') {
-        const updateUser = {
-          leaveId: data.value.leaveId,
-          empCode: data.value.empCode,
-          leaveType: data.value.leaveType,
-          fromDate: data.value.fromDate,
-          toDate: data.value.toDate,
-          fromTime: data.value.fromTime,
-          toTime: data.value.toTime,
-          reason: data.value.reason,
-          duration: data.value.duration,
-        };
-        this.leaveManagementService
-          .UpdateEmployeeLeaveRequest(updateUser)
-          .subscribe((data) => {
-            if (data) {
-              this.loadLeaveHistory();
-              editModal.close();
-            }
-          });
-      }
+     if (data.type === 'UPDATE') {
+  const updateUser = {
+    leaveId: data.value.leaveId,
+    empCode: data.value.empCode,
+    leaveType: data.value.leaveType,
+    fromDate: data.value.fromDate,
+    toDate: data.value.toDate,
+    fromTime: data.value.fromTime,
+    toTime: data.value.toTime,
+    reason: data.value.reason,
+    duration: data.value.duration,
+  };
+
+  this.leaveManagementService
+    .UpdateEmployeeLeaveRequest(updateUser)
+    .subscribe({
+      next: (data) => {
+        if (data) {
+          this.toastr.success('Leave Updated Successfully!', 'Success');
+          this.loadLeaveHistory();
+          editModal.close();
+        }
+      },
+      error: (err: any) => {
+        const errorMessage =
+          err?.error?.message ||
+          'Something went wrong while updating leave';
+        this.toastr.error(errorMessage, 'Error');
+      },
+    });
+}
+
     });
   }
 

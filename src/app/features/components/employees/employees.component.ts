@@ -20,6 +20,7 @@ import { EmployeeDetailsService } from '../../services/employee-details.service'
 import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-employees',
@@ -93,7 +94,7 @@ export class EmployeesComponent implements OnInit, OnDestroy{
           ? [{ codeCode: 'DELETE', screenName: 'Delete', actionType: '' }]
           : [{ codeCode: 'NA', screenName: 'NA', actionType: '' }];
 
-        console.log(params, 'Test');
+        // console.log(params, 'Test');
 
         return {
           actionLinks,
@@ -511,6 +512,35 @@ export class EmployeesComponent implements OnInit, OnDestroy{
         break;
       }
 
+      case 'UPDATE': {
+        if (this.detailsForm?.dirty) {
+          const formData = this.detailsForm.value;
+          this.employeeDetailsService
+            .updateEmployeeDetails(formData)
+            .subscribe({
+              next: (res) => {
+                const index = this.allRowData.findIndex(
+                  (emp) => emp.empPk === res.empPk
+                );
+                if (index > -1) this.allRowData[index] = res;
+                this.toggleActiveFilter(this.filterType);
+                this.isEdit = false;
+                this.detailsForm.disable();
+                this.toastr.success(
+                  'Employee Detail Updated Successfully',
+                  'Success'
+                );
+                this.detailsForm.markAsPristine();
+                //     error: (err) => {
+                //   console.error('Update error:', err);
+                //   this.toastr.error('Failed to update employee details', 'Error');
+                // },
+              },
+            });
+        }
+        return;
+      }
+
       case 'VIEW_OR_EDIT': {
         const { mode, detailsForm } = event.value;
         this.currentMode = mode;
@@ -535,7 +565,7 @@ export class EmployeesComponent implements OnInit, OnDestroy{
               editModal.close();
             }
           });
-        } else if (mode === 'Edit') {
+        } else if (mode === 'Edit' && this.detailsForm.dirty) {
           const saveModal = this.modalService.open(CoreModalComponent, {
             backdrop: 'static',
             size: 'md',
@@ -583,6 +613,8 @@ export class EmployeesComponent implements OnInit, OnDestroy{
               saveModal.close();
             }
           });
+        } else{
+          this.isEdit = false;
         }
         break;
       }

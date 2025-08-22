@@ -28,10 +28,8 @@ export class LeaveManagementServiceService {
     return this.http.post(`${this.appUrl}/api/LeaveManagement/apply`,userData).pipe(
     map((data:any)=>(data)))}
 
-  getEmployeeLeaveHistory(p0: string): Observable<LeaveRecord[]> {
-   let queryParams = new HttpParams();
-   queryParams=queryParams.append('empCode',p0)
-  return this.http.get<LeaveRecord[]>(`${this.appUrl}/api/LeaveManagement/my-history`,{params:queryParams});
+  getEmployeeLeaveHistory(empCode:any): Observable<LeaveRecord[]> {
+  return this.http.get<LeaveRecord[]>(`${this.appUrl}/api/LeaveManagement/my-history/${empCode}`);
 }
 
   getUsersLeaveHistory(empCode:any):Observable<any>{
@@ -47,7 +45,7 @@ export class LeaveManagementServiceService {
   }
 
   getUsersLeaveRequestHistory(empCode:any):Observable<any>{
-    return this.http.get(`${this.appUrl}/api/LeaveManagement/leave-action/${empCode}`);
+    return this.http.get(`${this.appUrl}/api/LeaveManagement/leave-request/${empCode}`);
   }
 
   userLeaveRequestActionUpdate(userData:{ LeavePK: number; Action: string }){
@@ -55,9 +53,7 @@ export class LeaveManagementServiceService {
       map((data:any)=>(data)))}
   
   getMyLeaveSummary(empCode: string): Observable<any> {
-  return this.http.get(`${this.appUrl}/api/LeaveManagement/my-leave-summary`, {
-    params: { empCode }
-  });
+  return this.http.get(`${this.appUrl}/api/LeaveManagement/my-leave-summary/${empCode}`);
 }
 
 }

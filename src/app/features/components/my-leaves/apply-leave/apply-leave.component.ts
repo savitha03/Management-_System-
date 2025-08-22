@@ -7,6 +7,7 @@ import {
   AbstractControl,
   ValidationErrors,
   Validators,
+  ValidatorFn,
 } from '@angular/forms';
 import { distinctUntilChanged, Observable, of, Subject, takeUntil } from 'rxjs';
 import { FeatureCommonServiceService } from '../../../services/feature-common-service.service';
@@ -31,6 +32,8 @@ import { ValidationCoreModelComponent } from '../../../../shared/modals/validati
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.css'],
 })
+
+
 export class ApplyLeaveComponent implements OnInit, OnDestroy {
   @Input() leaveData: any;
   @Input() leaveFormObject: any;
@@ -49,6 +52,8 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
   time$!: Observable<any>;
   public _destroyed$: any = new Subject();
 
+    
+
   constructor(
     private fb: FormBuilder,
     private featureCommonService: FeatureCommonServiceService,
@@ -64,8 +69,10 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
         this.loggedInUser = user;
       }
     });
-  }
 
+    
+  }
+  
   ngOnInit(): void {
     this.loadDropdowns();
     this.formBuilder();
@@ -106,7 +113,11 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
 
   formBuilder() {
     this.buildForm();
-    this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
+    this.leaveForm.setValidators([
+      this.toDateAfterFromDateValidator(),
+      this.sameTimeNotAllowedValidator()
+    ]);
+    
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
       this.checkDateEquality();
@@ -141,6 +152,31 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
       return null;
     };
   }
+
+sameTimeNotAllowedValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const fromDate = group.get('fromDate')?.value;
+    const toDate = group.get('toDate')?.value;
+    const fromTime = group.get('fromTime')?.value;
+    const toTime = group.get('toTime')?.value;
+
+    if (fromDate && toDate && fromDate === toDate) {
+      if (fromTime && toTime && fromTime === toTime) {
+        group.get('toTime')?.setErrors({ sameTimeNotAllowed: true });
+        return { sameTimeNotAllowed: true };
+      }
+    }
+
+    // Remove error if condition not met
+    if (group.get('toTime')?.hasError('sameTimeNotAllowed')) {
+      group.get('toTime')?.setErrors(null);
+    }
+
+    return null;
+  };
+}
+
+
 
   checkDateEquality() {
     const fromDate = this.leaveForm.get('fromDate')?.value;
@@ -284,6 +320,15 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
           this.leaveFormEntity
         );
 
+        const toDateControl = this.leaveForm.get('toDate');
+          if (toDateControl?.hasError('dateBeforeFromDate')) {
+            validationMessages.push({ content: 'To Date cannot be before From Date.' });
+          }
+        
+           if (this.leaveForm.hasError('sameTimeNotAllowed')) {
+            validationMessages.push({ content: 'From Time and To Time cannot be the same' });
+          }
+
       const uniqueMessages = validationMessages
         .filter(
           (item, index, array) =>
@@ -331,18 +376,7 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
     }
 
   }
-  // enableEditing() {
-  //   this.isEditable = !this.isEditable;
-  //   if (this.isEditable) {
-  //     this.leaveForm.enable();
-  //   } else {
-  //     this.buildForm();
-  //     this.leaveForm.reset();
-  //     this.leaveForm.disable();
-  //     this.sharedService.setIsValidation(false);
-  //     this.showTimeFields = false;
-  //   }
-  // }
+
 
   buildForm() {
     this.leaveForm = this.formUtilServiceService.buildReactiveForm(
@@ -364,6 +398,8 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
     this._destroyed$.next();
     this._destroyed$.complete();
   }
+
+
 }
 
 @Component({
@@ -411,9 +447,9 @@ export class ApplyLeaveComponent implements OnInit, OnDestroy {
       <input type="date" id="toDate" class="form-control" formControlName="toDate"
         [min]="leaveForm.get('fromDate')?.value"
         [ngClass]="{ required: leaveForm.controls['toDate'].errors && leaveForm.controls['toDate']}" />
-      <small class="text-danger" *ngIf="leaveForm.get('toDate')?.hasError('dateBeforeFromDate')">
+      <!-- <small class="text-danger" *ngIf="leaveForm.get('toDate')?.hasError('dateBeforeFromDate')">
         To Date cannot be before From Date.
-      </small>
+      </small> -->
     </div>
 
     <!-- From Time -->
@@ -532,7 +568,10 @@ export class UpdateLeaveComponent implements OnInit {
     this.leaveForm = this.formUtilServiceService.buildReactiveForm(
       this.leaveFormEnitity
     );
-    this.leaveForm.setValidators(this.toDateAfterFromDateValidator());
+    this.leaveForm.setValidators([
+      this.toDateAfterFromDateValidator(),
+      this.sameTimeNotAllowedValidator()
+    ]);
 
     this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
       this.checkDateEquality();
@@ -554,6 +593,29 @@ export class UpdateLeaveComponent implements OnInit {
       this.calculateDuration();
     });
   }
+
+  sameTimeNotAllowedValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const fromDate = group.get('fromDate')?.value;
+    const toDate = group.get('toDate')?.value;
+    const fromTime = group.get('fromTime')?.value;
+    const toTime = group.get('toTime')?.value;
+
+    if (fromDate && toDate && fromDate === toDate) {
+      if (fromTime && toTime && fromTime === toTime) {
+        group.get('toTime')?.setErrors({ sameTimeNotAllowed: true });
+        return { sameTimeNotAllowed: true };
+      }
+    }
+
+    // Remove error if condition not met
+    if (group.get('toTime')?.hasError('sameTimeNotAllowed')) {
+      group.get('toTime')?.setErrors(null);
+    }
+
+    return null;
+  };
+}
 
   toDateAfterFromDateValidator() {
     return (group: AbstractControl): ValidationErrors | null => {
@@ -688,6 +750,14 @@ export class UpdateLeaveComponent implements OnInit {
           this.leaveForm.controls,
           this.leaveFormEnitity
         );
+      
+     const toDateControl = this.leaveForm.get('toDate');
+          if (toDateControl?.hasError('dateBeforeFromDate')) {
+            validationMessages.push({ content: 'To Date cannot be before From Date.' });
+          }
+          if (this.leaveForm.hasError('sameTimeNotAllowed')) {
+            validationMessages.push({ content: 'From Time and To Time cannot be the same' });
+          }
 
       const uniqueMessages = validationMessages
         .filter(
@@ -720,38 +790,6 @@ export class UpdateLeaveComponent implements OnInit {
     }
   }
 close() {
-  if (this.leaveForm.dirty) {
-       if (this.leaveForm.invalid) {
-      const validationMessages = this.formUtilServiceService.parseValidationErrors(
-        this.leaveForm.controls,
-        this.leaveFormEnitity
-      );
-
-      const uniqueMessages = validationMessages
-        .filter(
-          (item, index, array) =>
-            index === array.findIndex((el) => el.content === item.content)
-        )
-        .map((err) => err.content);
-
-      this.sharedService.setValidationSubject(uniqueMessages);
-
-      this.validationErrors$ = this.sharedService.getValidationSubject();
-      this.validationErrors$?.subscribe((data: any) => {
-        this.validationErrors = data;
-      });
-
-      const validationModal = this.modalService.open(ValidationCoreModelComponent, {
-        backdrop: 'static',
-        keyboard: false
-      });
-
-      validationModal.componentInstance.header = "Validations";
-      validationModal.componentInstance.errors = this.validationErrors;
-
-      // Stop here, do not proceed to discard confirmation
-      return;
-    }
     const modalRef = this.modalService.open(CoreModalComponent, {
       backdrop: 'static',
       keyboard: false,
@@ -763,17 +801,12 @@ close() {
 
     modalRef.componentInstance.eventHandler$.subscribe((result: string) => {
       if (result === 'Proceed') {
-        // Reset the form to default values
-        this.leaveForm.reset(this.leaveData); // restoring original data
-        this.activeModal.close('Close click'); // close the modal
+        this.leaveForm.reset(this.leaveData); 
+        this.activeModal.close('Close click'); 
       }
       modalRef.close();
-
-      // If user selects NO, just close confirmation popup and stay
     });
-  } else {
-    this.activeModal.close('Close click');
-  }
+  } 
 }
 
-}
+

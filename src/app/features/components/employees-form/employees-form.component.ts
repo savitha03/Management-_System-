@@ -13,6 +13,8 @@ import { Observable } from 'rxjs';
 import { CoreModalComponent } from '../../../shared/modals/core-modal/core-modal.component';
 import { selectAuthUser } from '../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
+import { EmployeeDetailsService } from '../../services/employee-details.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employees-form',
@@ -46,20 +48,26 @@ export class EmployeesFormComponent implements OnInit {
   employmentTabEnabled: boolean = false;
   currentMode: 'Edit' | 'View' = 'View';
   form!: FormGroup
+  allRowData: any[] = [];
   
 
 
 
-  constructor(private modalService: NgbModal, private store: Store,private fb: FormBuilder) {}
+  constructor(
+    private modalService: NgbModal,
+    private store: Store,
+    private fb: FormBuilder,
+    private employeeDetailsService: EmployeeDetailsService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {}
-  navButtons(value: any) {
+navButtons(value: any) {
   if (value === 'next') {
     this.activeTab = 'employment';
   } else if (value === 'previous') {
     this.activeTab = 'personal';
   } else if (value === 'save') {
-    // Direct save
     const event: any = {
       name: 'SAVE',
       component: 'EmployeesFormComponent',
@@ -68,33 +76,19 @@ export class EmployeesFormComponent implements OnInit {
     this.handleAppEvent.emit(event);
 
   } else if (value === 'update') {
-    const updateModal = this.modalService.open(CoreModalComponent, {
-      backdrop: 'static',
-      size: 'md',
-      keyboard: false,
-    });
-
-    updateModal.componentInstance.header = 'Confirmation';
-    updateModal.componentInstance.content = `Do you want to update employee details?`;
-    updateModal.componentInstance.isYesOrNo = true;
-
-    updateModal.componentInstance.eventHandler$.subscribe((data: any) => {
-      if (data === 'Proceed') {
-        const event: any = {
-          name: 'UPDATE',
-          component: 'EmployeesFormComponent',
-          value: this.detailsForm.value,
-        };
-        this.handleAppEvent.emit(event);
-
-        this.detailsForm.markAsPristine(); // reset dirty state
-        updateModal.close();
-      }
-    });
+    const event:any={
+      name:'UPDATE',
+      component:'EmployeesFormComponent',
+      value:this.detailsForm.value,
+    };
+    this.handleAppEvent.emit(event);
+   
   }
 
   this.activeTabEmitter(value);
 }
+
+
 
 
   activeTabEmitter(value: any) {
@@ -140,3 +134,4 @@ onEmpCodeInput(event: Event) {
   this.detailsForm.get('empCode')?.setValue(upperValue, { emitEvent: false });
 }
 }
+

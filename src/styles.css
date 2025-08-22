@@ -67,6 +67,22 @@ body {
   background-repeat: no-repeat;
   z-index: -1; /* ✅ Make sure your content is above this */
 }
+.toast-container .ngx-toastr {
+  font-size: 12px;        /* Reduce text size */
+  padding: 6px 10px;      /* Reduce padding */
+  min-width: 200px;       /* Optional: control width */
+  max-width: 250px;       /* Optional: restrict width */
+}
+
+.toast-container .toast-title {
+  font-size: 16px;        /* Title size */
+  font-weight: 600;
+}
+
+.toast-container .toast-message {
+  font-size: 14px;        /* Message size */
+}
+
 
 /* Import fonts from Google Fonts */
 

@@ -4,6 +4,7 @@ import { AsyncDetection, NgScrollbar } from "ngx-scrollbar";
 import { LeaveManagementServiceService } from '../../../services/leave-management-service.service';
 import { selectAuthUser } from '../../../../auth/store/auth/login.selectors';
 import { Store } from '@ngrx/store';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-users-leave-requests',
@@ -23,7 +24,10 @@ export class UsersLeaveRequestsComponent implements OnInit {
   activePopover: any = null;
 
 
-  constructor(private leaveManagementService: LeaveManagementServiceService, private store: Store) {
+  constructor(
+    private leaveManagementService: LeaveManagementServiceService,
+    private store: Store ,
+    private toastr: ToastrService,) {
      this.store.select(selectAuthUser).subscribe((user:any) => {
               if(user){
                 this.loggedInUser= user;
@@ -66,25 +70,26 @@ export class UsersLeaveRequestsComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  onLeaveAction(leavePK: number, action:'APPROVED'|'CANCELLED') {
-    const payload = {
-      LeavePK: leavePK,
-      Action: action,
-      EmpCode:this.loggedInUser.empCode
-    };
+ onLeaveAction(leavePK: number, action: 'APPROVED' | 'CANCELLED') {
+  const payload = {
+    LeavePK: leavePK,
+    Action: action,
+    EmpCode: this.loggedInUser.empCode
+  };
 
-    this.leaveManagementService
-      .userLeaveRequestActionUpdate(payload)
-      .subscribe({
-        next: (res) => {
-          console.log('Leave action successful:', res);
-          this.loadUsersLeaveRequests(this.loggedInUser.empCode); // Refresh the list
-        },
-        error: (err) => {
-          console.error('Leave action failed:', err);
-        },
-      });
-  }
+  this.leaveManagementService.userLeaveRequestActionUpdate(payload)
+    .subscribe({
+      next: (res) => {
+        this.toastr.success(`Leave ${action} successfully!`, 'Success');
+        this.loadUsersLeaveRequests(this.loggedInUser.empCode);
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!', 'Error');
+        console.error('Leave action failed:', err);
+      }
+    });
+}
+
 
  get filteredRequests(): any[] {
   return this.activeTab === 'requestPending'
