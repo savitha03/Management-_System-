@@ -26,6 +26,7 @@ export class EmployeesFormComponent implements OnInit {
   @Input() detailsForm: any;
   @Input() activeTab!: string;
   @Input() isEdit: any;
+  @Input() isNewEmployee:any;
 
   @Input() genderList$!: Observable<any>;
   @Input() empStatus$!: Observable<any>;
