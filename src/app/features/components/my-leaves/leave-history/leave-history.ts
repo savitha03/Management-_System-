@@ -46,6 +46,9 @@ export class LeaveHistory implements OnInit {
       headerName: 'Leave Type',
       field: 'leaveType',
       width: 140,
+      cellRenderer: (params: any) =>{
+        return 
+      }
       },
     {
       headerName: 'From Date',
@@ -220,6 +223,7 @@ export class LeaveHistory implements OnInit {
       },
       error: (err: any) => {
         const errorMessage =
+          err?.error?.errorMessage
           err?.error?.message ||
           'Something went wrong while updating leave';
         this.toastr.error(errorMessage, 'Error');
@@ -252,6 +256,7 @@ export class LeaveHistory implements OnInit {
           .DeleteEmployeeLeaveRequest(deleteUser)
           .subscribe((data) => {
             if (data) {
+              this.toastr.success('Leave Deleted Successfully!', 'Success');
               this.loadLeaveHistory();
               deleteModal.close();
             }

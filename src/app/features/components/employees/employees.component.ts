@@ -40,11 +40,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   selectedRow: any = null;
   currentMode: 'Edit' | 'View' = 'View';
 
-  //   resetFormState() {
-  //   this.isNewEmployee = false;
-  //   this.isEdit = false;
-  //   this.detailsForm.disable();
-  // }
+
 
   filterType: 'all' | 'active' | 'closed' = 'all';
 
@@ -231,13 +227,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
           }
           break;
         }
-        case 'DICE_MENU_CLICK': {
-          // console.log('Existing row clicked', data.value);
-          // handle existing row menu click here
-          break;
-        }
-
-        default:
+          default:
           return;
       }
     });
@@ -247,7 +237,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     this.employeeDetailsService.getEmployeeDetails().subscribe((data: any) => {
       this.allRowData = data;
       this.rowData = [...this.allRowData];
-      // console.log(data);
       this.selectFirstRowAndShowDetails();
     });
   }
@@ -272,7 +261,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         const firstNode = this.gridApi?.getDisplayedRowAtIndex(0);
         if (firstNode) {
           firstNode?.setSelected(true); // highlights the row
-          // this.emitRowClicked(firstNode.data); // send data upward
           this.onRowSelected(firstNode.data);
         }
       }, 100);
@@ -295,31 +283,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     this.activeRowId = row.empPk;
     if (this.isEdit && this.detailsForm.dirty && !this.isNewEmployee) {
       const formData = this.detailsForm.getRawValue();
-
-      // this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
-      //   next: (res) => {
-      //     // console.log('Auto-saved changes:', res);
-      //     const index = this.allRowData.findIndex(
-      //       (emp) => emp.empCode === res.empCode
-      //     );
-      //     const formData = {
-      //       ...res,
-      //       dateOfBirth: this.selectedRow.dateOfBirth
-      //         ? this.selectedRow.dateOfBirth.split('T')[0]
-      //         : '',
-      //       joinedDate: this.selectedRow.joinedDate
-      //         ? this.selectedRow.joinedDate.split('T')[0]
-      //         : '',
-      //     };
-      //     if (index > -1) this.allRowData[index] = formData;
-      //     this.rowData = [...this.allRowData];
-      //     this.selectedRow = row;
-      //   },
-      //   error: (err) => {
-      //     console.error('Auto-save failed:', err);
-      //   },
-      // });
-
       this.updateEmployees(formData);
     }
 
@@ -351,10 +314,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
   handleAppEvent(event: any) {
     switch (event.name) {
-      // case 'ROW_CLICKED': {
-      //   this.onRowSelected(event.value.selectedRow);
-      //   break;
-      // }
       case 'ROW_CLICKED': {
         const selectedRow = event.value.selectedRow;
 
@@ -413,38 +372,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
               if (data === 'Proceed') {
                 if (this.detailsForm.valid) {
                   const formData = this.detailsForm.getRawValue();
-                  // this.employeeDetailsService
-                  //   .updateEmployeeDetails(formData)
-                  //   .subscribe({
-                  //     next: (res) => {
-                  //       const index = this.allRowData.findIndex(
-                  //         (emp) => emp.empPk === res.empPk
-                  //       );
-                  //       if (index > -1) this.allRowData[index] = res;
-                  //       this.rowData = [...this.allRowData];
-                  //       this.toggleActiveFilter(this.filterType);
-
-                  //       this.isEdit = false; // Switch to view
-                  //       this.activeViewOrEdit(this.isEdit);
-                  //       this.detailsForm.disable();
-
-                  //       this.toastr.success(
-                  //         'Employee Detail Updated Successfully',
-                  //         'Success'
-                  //       );
-                  //       saveModal.close();
-
-                  //       this.detailsForm.reset(res);
-                  //       this.detailsForm.markAsPristine();
-
-                  //       // this.gridApi.forEachNode((node: any) => {
-                  //       //   if (node.data.empPk === res.empPk) {
-                  //       //     node.setSelected(true);
-                  //       //   }
-                  //       // });
-                  //     },
-                  //     error: (err) => console.error('Update error:', err),
-                  //   });
                   this.updateEmployees(formData, saveModal);
                 } else {
                   // ✅ If invalid → show validation slider
@@ -464,16 +391,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
                   this.openValidationSlider(uniqueMessages);
                   saveModal.close();
-
-                  // ✅ Reset selected row back
-                  // setTimeout(() => {
-                  //   this.gridApi.forEachNode((node: any) => {
-                  //     if (node.data.empPk === this.activeRowId) {
-                  //       node.setSelected(true);
-                  //     }
-                  //   });
-                  // });
-                }
+                 }
               } else {
                 // ✅ Cancel → reset selected row back
                 setTimeout(() => {
@@ -569,7 +487,73 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
         break;
       }
-      case 'SAVE': {
+      // case 'SAVE': {
+      //   if (this.detailsForm.invalid) {
+      //     const invalidControls = this.getInvalidControls(this.detailsForm);
+      //     this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+      //       this.detailsForm.controls,
+      //       this.detailsFormEntity
+      //     );
+      //     this.pageErrors = this.pageErrors.filter(
+      //       (item, index, array) =>
+      //         index ===
+      //         array.findIndex((element) => element.content === item.content)
+      //     );
+
+      //     const validationErrors = this.pageErrors.map(
+      //       (error) => error.content
+      //     );
+      //     if (validationErrors.length > 0) {
+      //       this.openValidationSlider(validationErrors);
+      //     }
+      //     return;
+      //   }
+
+      //   const formData = this.detailsForm.getRawValue();
+
+      //   if (this.isNewEmployee) {
+      //     this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+      //       next: (res) => {
+      //         this.allRowData = [res, ...this.allRowData];
+      //         this.rowData=this.allRowData;
+      //         // ✅ Select the newly added row
+      //         setTimeout(() => {
+      //           this.gridApi.forEachNode((node: any) => {
+      //             if (node.data.empPk === res.empPk) {
+      //               node.setSelected(true);
+      //             }
+      //           });
+      //         }, 100);
+
+      //         this.isNewEmployee = false;
+      //         this.isEdit = false;
+      //         this.detailsForm.disable();
+      //         this.detailsForm.reset(res);
+      //         this.detailsForm.markAsPristine();
+      //         this.clearValidation();
+      //         this.selectFirstRowAndShowDetails();
+      //         this.toastr.success(
+      //           'New Employee Added Successfully!',
+      //           'Success'
+      //         );
+      //       },
+      //       error: (error:any) => {
+      //         const errorMessage =
+      //         error?.error?.errorMessage ||
+      //         error?.error?.message ||
+      //         error?.message ||
+      //         'Failed to save employee.'
+      //         this.toastr.error(errorMessage, 'Error');
+      //       },
+      //     });
+      //   } else {
+      //     this.updateEmployees(formData);
+      //   }
+
+      //   break;
+      // }
+
+            case 'SAVE': {
         if (this.detailsForm.invalid) {
           const invalidControls = this.getInvalidControls(this.detailsForm);
           this.pageErrors = this.formUtilServiceService.parseValidationErrors(
@@ -668,31 +652,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       case 'UPDATE': {
         if (this.detailsForm?.dirty) {
           const formData = this.detailsForm.value;
-          // this.employeeDetailsService
-          //   .updateEmployeeDetails(formData)
-          //   .subscribe({
-          //     next: (res) => {
-          //       const index = this.allRowData.findIndex(
-          //         (emp) => emp.empPk === res.empPk
-          //       );
-          //       if (index > -1) this.allRowData[index] = res;
-          //       this.allRowData = [...this.allRowData];
-          //       this.rowData = [...this.allRowData];
-          //       this.toggleActiveFilter('all');
-          //       this.isEdit = false;
-          //       this.detailsForm.disable();
-          //       this.toastr.success(
-          //         'Employee Detail Updated Successfully',
-          //         'Success'
-          //       );
-          //       this.detailsForm.markAsPristine();
-          //       //     error: (err) => {
-          //       //   console.error('Update error:', err);
-          //       //   this.toastr.error('Failed to update employee details', 'Error');
-          //       // },
-          //     },
-          //   });
-
           this.updateEmployees(formData);
         }
         return;
@@ -701,12 +660,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       case 'VIEW_OR_EDIT': {
         const { mode, detailsForm } = event.value;
         this.currentMode = mode;
-
-        // if (this.isNewEmployee) {
-        // this.toastr.warning('Please save the new employee before editing.', 'Warning');
-        // return;
-        // }
-
         if (mode === 'View') {
           const editModal = this.modalService.open(CoreModalComponent, {
             backdrop: 'static',
@@ -745,44 +698,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
               if (data === 'Proceed') {
                 if (this.detailsForm.valid) {
                   const formData = this.detailsForm.getRawValue();
-                  // this.employeeDetailsService
-                  //   .updateEmployeeDetails(formData)
-                  //   .subscribe({
-                  //     next: (res) => {
-                  //       const index = this.allRowData.findIndex(
-                  //         (emp) => emp.empPk === res.empPk
-                  //       );
-                  //       if (index > -1) this.allRowData[index] = res;
-                  //       this.rowData = [...this.allRowData];
-                  //       this.toggleActiveFilter(this.filterType);
-
-                  //       this.isEdit = false; // Switch to view
-                  //       this.activeViewOrEdit(this.isEdit);
-                  //       this.detailsForm.disable();
-
-                  //       this.toastr.success(
-                  //         'Employee Detail Updated Successfully',
-                  //         'Success'
-                  //       );
-                  //       saveModal.close();
-
-                  //       this.detailsForm.reset(res);
-                  //       this.detailsForm.markAsPristine();
-
-                  //       if (this.gridApi) {
-                  //         this.gridApi.refreshClientSideRowModel();
-                  //         setTimeout(() => {
-                  //           const firstNode =
-                  //             this.gridApi?.getDisplayedRowAtIndex(index);
-                  //           if (firstNode) {
-                  //             firstNode?.setSelected(true);
-                  //             this.onRowSelected(firstNode.data);
-                  //           }
-                  //         }, 100);
-                  //       }
-                  //     },
-                  //     error: (err) => console.error('Update error:', err),
-                  //   });
                   this.updateEmployees(formData, saveModal);
                 } else {
                   // ✅ Show validation slider
@@ -968,27 +883,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         (data: any) => {
           if (data === 'Proceed') {
             const formData = this.detailsForm.getRawValue();
-            // this.employeeDetailsService
-            //   .updateEmployeeDetails(formData)
-            //   .subscribe({
-            //     next: (res) => {
-            //       const index = this.allRowData.findIndex(
-            //         (emp) => emp.empCode === res.empCode
-            //       );
-            //       if (index > -1) this.allRowData[index] = res;
-            //       this.rowData = [...this.allRowData];
-            //       this.toggleActiveFilter(this.filterType);
-            //       this.isEdit = false;
-            //       this.detailsForm.disable();
-            //       this.toastr.success(
-            //         'Employee Detail Updated Successfully',
-            //         'Success'
-            //       );
-            //       this.detailsForm.reset(res);
-            //       this.detailsForm.markAsPristine();
-            //     },
-            //     error: (err) => console.error('Update error:', err),
-            //   });
             this.updateEmployees(formData, saveChangesModal);
             this.detailsForm.markAsPristine(); // clear dirty state
             this.sharedService.setIsValidation(false);
