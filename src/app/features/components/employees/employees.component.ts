@@ -523,7 +523,8 @@ export class EmployeesComponent implements OnInit, OnDestroy{
                   (emp) => emp.empPk === res.empPk
                 );
                 if (index > -1) this.allRowData[index] = res;
-                this.toggleActiveFilter(this.filterType);
+                this.allRowData = [...this.allRowData];
+                this.toggleActiveFilter('all');
                 this.isEdit = false;
                 this.detailsForm.disable();
                 this.toastr.success(
@@ -607,15 +608,13 @@ export class EmployeesComponent implements OnInit, OnDestroy{
                   },
                   error: (err) => console.error('Update error:', err),
                 });
-            } else {
-              this.isEdit = true;
-              this.activeViewOrEdit(this.isEdit);
-              saveModal.close();
-            }
+            } 
           });
-        } else{
-          this.isEdit = false;
-        }
+        }else if(this.detailsForm.touched && this.detailsForm.untouched) {
+              this.isEdit = false;
+              this.activeViewOrEdit(this.isEdit);
+              this.detailsForm.disable();
+            }
         break;
       }
     }
