@@ -4,7 +4,6 @@ import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import * as AuthActions from './login.actions';
 import { Auth } from '../../../core/auth/auth';
 import { Router } from '@angular/router';
-import { logout } from './login.actions';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
@@ -64,9 +63,9 @@ export class LoginEffects {
   logout$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(logout),
+        ofType(AuthActions.logout),
         tap(() => {
-          localStorage.clear();
+          this.authService.logout();
           this.toastr.info('You have been logged out', 'Info');
           this.router.navigate(['/login']);
         })

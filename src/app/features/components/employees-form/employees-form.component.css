@@ -56,7 +56,7 @@ input[type="date"] {
 .tab-btn.active {
   background-color: #289ee4;
   color: white;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 /* .tab-btn:hover {
@@ -116,8 +116,8 @@ background-color:#f99700 !important;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.04), transparent);
 }
 
-.save{
-  /* background-color: #f99700 !important; */
-  /* color: white; */
+/* .save{
+    height: 36px;
+    width: 45px;
 
-}
+} */

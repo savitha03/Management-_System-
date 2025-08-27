@@ -56,7 +56,7 @@ export class DiceComponentComponent implements ICellRendererAngularComp {
 onActionClick(actionLinks: any[]) {
   const event: IApplicationEvent = {
     name: 'DICE_MENU_CLICK',
-    component: 'EmployeesComponent',
+    component: 'DiceComponentComponent',
     value: {
       item: this.item,
       rowNode: this.params?.node, // keep rowNode so delete works
@@ -70,7 +70,7 @@ triggerEvent(link: any) {
   if (link.codeCode === 'DELETE') {
     const event: IApplicationEvent = {
       name: 'DELETE_NEW_ROW',
-      component: 'EmployeesComponent',
+      component: 'DiceComponentComponent',
       value: { item: this.item, rowNode: this.params?.node }
     };
     this.sharedService.emitAnEvent(event);

@@ -161,10 +161,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     }
     this.sharedService.appEvent$
       .pipe(
-        takeUntil(this._destroyed$),
-        distinctUntilChanged(
-          (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-        )
+        takeUntil(this._destroyed$)
       )
       .subscribe((data: any) => {
         switch (data.name) {
@@ -413,7 +410,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         }
         break;
       }
-
       case 'TOGGLE_ACTIVE': {
         this.toggleActiveFilter(event.value.filterType);
         break;
@@ -552,7 +548,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
         break;
       }
-
       case 'UPDATE': {
         if (this.detailsForm?.dirty) {
           const formData = this.detailsForm.value;
@@ -624,7 +619,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
       case 'INSTANT_SAVE':{
          
-          if (this.detailsForm.invalid && this.detailsForm.dirty) {
+          if (this.detailsForm.invalid) {
           const invalidControls = this.getInvalidControls(this.detailsForm);
           this.pageErrors = this.formUtilServiceService.parseValidationErrors(
             this.detailsForm.controls,
@@ -819,7 +814,10 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         this.detailsForm.disable();
 
         this.toastr.success('Employee Detail Updated Successfully', 'Success');
-        saveModal.close();
+
+        if(saveModal){
+          saveModal.close();
+        }
 
         this.detailsForm.reset(res);
         this.detailsForm.markAsPristine();

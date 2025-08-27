@@ -48,10 +48,10 @@ export class FeatureContainer implements OnInit , OnDestroy {
   emitter(event: any) {
     switch (event.type) {
       case 'LOGOUT': {
-        this.authService.logout();
+        // this.authService.logout();
+        this.store.dispatch(logout());
         this.router.navigate(['auth']);
         break;
-
       }
     }
   }
