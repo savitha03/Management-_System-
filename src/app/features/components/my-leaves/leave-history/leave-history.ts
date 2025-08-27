@@ -46,9 +46,17 @@ export class LeaveHistory implements OnInit {
       headerName: 'Leave Type',
       field: 'leaveType',
       width: 140,
-      cellRenderer: (params: any) =>{
-        return 
-      }
+      cellRenderer: (params: any) => {
+      const leaveTypeLabels: { [key: string]: string } = {
+      CASUAL: 'Casual Leave',
+      LOSSOFPAY: 'Loss Of Pay',
+      COMPENSATORYOFF: 'Comp Off',
+      OVERTIME: 'OverTime',
+    };
+
+    return leaveTypeLabels[params.value] || '';
+  }
+
       },
     {
       headerName: 'From Date',

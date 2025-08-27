@@ -790,7 +790,8 @@ export class UpdateLeaveComponent implements OnInit {
     }
   }
 close() {
-    const modalRef = this.modalService.open(CoreModalComponent, {
+    if(this.leaveForm.dirty){
+      const modalRef = this.modalService.open(CoreModalComponent, {
       backdrop: 'static',
       keyboard: false,
     });
@@ -806,6 +807,10 @@ close() {
       }
       modalRef.close();
     });
+    }else{
+      this.activeModal.close();
+    }
+
   } 
 }
 
