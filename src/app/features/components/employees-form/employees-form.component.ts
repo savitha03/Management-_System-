@@ -119,7 +119,15 @@ navButtons(value: any) {
     this.handleAppEvent.emit(event);
   }
   
+instanceSave(){
+  const event={
+    name:'INSTANT_SAVE',
+    component:'EmployeesFormComponent',
+    value:''
+  };
+   this.handleAppEvent.emit(event);
 
+}
 onSave() {
   // Save logic here
   this.handleAppEvent.emit({ type: 'EMPLOYEE_SAVED' });

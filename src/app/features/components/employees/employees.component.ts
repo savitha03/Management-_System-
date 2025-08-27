@@ -487,73 +487,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
         break;
       }
-      // case 'SAVE': {
-      //   if (this.detailsForm.invalid) {
-      //     const invalidControls = this.getInvalidControls(this.detailsForm);
-      //     this.pageErrors = this.formUtilServiceService.parseValidationErrors(
-      //       this.detailsForm.controls,
-      //       this.detailsFormEntity
-      //     );
-      //     this.pageErrors = this.pageErrors.filter(
-      //       (item, index, array) =>
-      //         index ===
-      //         array.findIndex((element) => element.content === item.content)
-      //     );
-
-      //     const validationErrors = this.pageErrors.map(
-      //       (error) => error.content
-      //     );
-      //     if (validationErrors.length > 0) {
-      //       this.openValidationSlider(validationErrors);
-      //     }
-      //     return;
-      //   }
-
-      //   const formData = this.detailsForm.getRawValue();
-
-      //   if (this.isNewEmployee) {
-      //     this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
-      //       next: (res) => {
-      //         this.allRowData = [res, ...this.allRowData];
-      //         this.rowData=this.allRowData;
-      //         // ✅ Select the newly added row
-      //         setTimeout(() => {
-      //           this.gridApi.forEachNode((node: any) => {
-      //             if (node.data.empPk === res.empPk) {
-      //               node.setSelected(true);
-      //             }
-      //           });
-      //         }, 100);
-
-      //         this.isNewEmployee = false;
-      //         this.isEdit = false;
-      //         this.detailsForm.disable();
-      //         this.detailsForm.reset(res);
-      //         this.detailsForm.markAsPristine();
-      //         this.clearValidation();
-      //         this.selectFirstRowAndShowDetails();
-      //         this.toastr.success(
-      //           'New Employee Added Successfully!',
-      //           'Success'
-      //         );
-      //       },
-      //       error: (error:any) => {
-      //         const errorMessage =
-      //         error?.error?.errorMessage ||
-      //         error?.error?.message ||
-      //         error?.message ||
-      //         'Failed to save employee.'
-      //         this.toastr.error(errorMessage, 'Error');
-      //       },
-      //     });
-      //   } else {
-      //     this.updateEmployees(formData);
-      //   }
-
-      //   break;
-      // }
-
-            case 'SAVE': {
+      case 'SAVE': {
         if (this.detailsForm.invalid) {
           const invalidControls = this.getInvalidControls(this.detailsForm);
           this.pageErrors = this.formUtilServiceService.parseValidationErrors(
@@ -581,7 +515,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
           this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
             next: (res) => {
               this.allRowData = [res, ...this.allRowData];
-
+              this.rowData=this.allRowData;
               // ✅ Select the newly added row
               setTimeout(() => {
                 this.gridApi.forEachNode((node: any) => {
@@ -597,52 +531,22 @@ export class EmployeesComponent implements OnInit, OnDestroy {
               this.detailsForm.reset(res);
               this.detailsForm.markAsPristine();
               this.clearValidation();
+              this.getEmployees();
               this.toastr.success(
                 'New Employee Added Successfully!',
                 'Success'
               );
             },
-            error: (err) => {
-              console.error('Save error:', err);
-              this.toastr.error('Failed to save employee.', 'Error');
+            error: (error:any) => {
+              const errorMessage =
+              error?.error?.errorMessage ||
+              error?.error?.message ||
+              error?.message ||
+              'Failed to save employee.'
+              this.toastr.error(errorMessage, 'Error');
             },
           });
         } else {
-          // this.employeeDetailsService
-          //   .updateEmployeeDetails(formData)
-          //   .subscribe({
-          //     next: (res) => {
-          //       // ✅ Update only that row, not full refresh
-          //       const index = this.allRowData.findIndex(
-          //         (emp) => emp.empPk === res.empPk
-          //       );
-          //       if (index > -1) {
-          //         this.allRowData[index] = res;
-          //       }
-          //       this.rowData = [...this.allRowData];
-          //       // refresh grid data binding
-
-          //       // ✅ Keep the same row selected
-          //       setTimeout(() => {
-          //         this.gridApi.forEachNode((node: any) => {
-          //           if (node.data.empPk === res.empPk) {
-          //             node.setSelected(true);
-          //           }
-          //         });
-          //       }, 100);
-
-          //       this.isEdit = false;
-          //       this.detailsForm.reset(res);
-          //       this.detailsForm.markAsPristine();
-          //       this.detailsForm.disable();
-
-          //       this.toastr.success(
-          //         'Employee Detail Updated Successfully',
-          //         'Success'
-          //       );
-          //     },
-          //     error: (err) => console.error('Update error:', err),
-          //   });
           this.updateEmployees(formData);
         }
 
@@ -714,6 +618,74 @@ export class EmployeesComponent implements OnInit, OnDestroy {
             this.activeViewOrEdit(this.isEdit);
             this.detailsForm.disable();
           }
+        }
+        break;
+      }
+
+      case 'INSTANT_SAVE':{
+         
+          if (this.detailsForm.invalid && this.detailsForm.dirty) {
+          const invalidControls = this.getInvalidControls(this.detailsForm);
+          this.pageErrors = this.formUtilServiceService.parseValidationErrors(
+            this.detailsForm.controls,
+            this.detailsFormEntity
+          );
+          this.pageErrors = this.pageErrors.filter(
+            (item, index, array) =>
+              index ===
+              array.findIndex((element) => element.content === item.content)
+          );
+
+          const validationErrors = this.pageErrors.map(
+            (error) => error.content
+          );
+          if (validationErrors.length > 0) {
+            this.openValidationSlider(validationErrors);
+          }
+          return;
+        }
+        const formData = this.detailsForm.getRawValue();
+        if(this.detailsForm.dirty && !formData.empPk){
+          this.employeeDetailsService.saveEmployeeDetails(formData).subscribe({
+            next:(res)=>{
+              this.toastr.success('Employee saved successfully!','Success');
+              this.detailsForm.reset(res);
+              this.detailsForm.markAsPristine();
+              this.isNewEmployee=false;
+              this.isEdit=false;
+              this.detailsForm.disable();
+              this.getEmployees();
+              this.clearValidation();
+            },
+            error:(error:any)=>{
+              const errorMessage=
+              error?.error?.errorMessage||
+              error?.error.message||
+              error?.message||
+              'Failed to save employee.';
+              this.toastr.error(errorMessage,'Error')
+            },
+          });
+        }else if (this.detailsForm.dirty && formData.empPk){
+          this.employeeDetailsService.updateEmployeeDetails(formData).subscribe({
+            next:(res)=>{
+              this.toastr.success('Employee details updated successfully!','Success');
+              this.detailsForm.reset(res);
+              this.detailsForm.markAsPristine();
+              this.isEdit=false;
+              this.detailsForm.disable();
+              this.getEmployees();
+              this.clearValidation();
+          },
+          error:(error:any)=>{
+            const errorMessage=
+            error?.error?.errorMessage||
+            error?.error.message||
+            error?.message||
+            'Failed to save employee.';
+            this.toastr.error(errorMessage,'Error')
+          }
+        });
         }
         break;
       }
