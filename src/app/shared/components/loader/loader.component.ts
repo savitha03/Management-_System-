@@ -1,31 +1,48 @@
-// src/app/components/loader/loader.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Subscription } from 'rxjs';
 import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-loader',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
+  imports: [CommonModule],
   template: `
-    <div class="overlay" *ngIf="loaderService.isLoading$ | async">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <div class="loader-overlay" *ngIf="isLoading">
+      <div class="spinner"></div>
     </div>
   `,
   styles: [`
-    .overlay {
+    .loader-overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(255,255,255,0.6);
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
+      background: rgba(0, 0, 0, 0.3);
       z-index: 9999;
     }
+    .spinner {
+      width: 50px; height: 50px;
+      border: 5px solid #ccc;
+      border-top-color: #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
   `]
 })
-export class LoaderComponent {
-  constructor(public loaderService: LoaderService) {}
+export class LoaderComponent implements OnInit, OnDestroy {
+  isLoading = false;
+  private subscription!: Subscription;
+
+  constructor(private loaderService: LoaderService) {}
+
+  ngOnInit(): void {
+    this.subscription = this.loaderService.loading$.subscribe(
+      isLoading => this.isLoading = isLoading
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }

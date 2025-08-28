@@ -1,28 +1,32 @@
-// src/app/services/loader.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class LoaderService {
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading$ = this.loadingSubject.asObservable();
+
   private requestCount = 0;
-  private _isLoading$ = new BehaviorSubject<boolean>(false);
+  private delayTimeout: any;
 
-  // Expose loader state as observable
-  isLoading$ = this._isLoading$.asObservable();
-
-  show() {
+show() {
     this.requestCount++;
-    if (this.requestCount === 1) {
-      this._isLoading$.next(true);
+    if (!this.delayTimeout) {
+      this.delayTimeout = setTimeout(() => {
+        this.loadingSubject.next(true);
+        this.delayTimeout = null;
+      }, 300); // 200ms delay
     }
   }
 
-  hide() {
-    if (this.requestCount > 0) {
-      this.requestCount--;
-      if (this.requestCount === 0) {
-        this._isLoading$.next(false);
-      }
+   hide() {
+    this.requestCount--;
+    if (this.requestCount === 0) {
+      clearTimeout(this.delayTimeout);
+      this.delayTimeout = null;
+      this.loadingSubject.next(false);
     }
   }
 }

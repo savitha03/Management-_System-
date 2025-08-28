@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <label>Gender</label>
-                    <select formControlName="gender" [ngClass]="{ required: employeeForm.controls['gender'].errors }">
+                    <select formControlName="gender" >
                         <option value="" disabled>--Select Gender Type--</option>
                         <option *ngFor="let gender of genderList$ | async" [ngValue]="gender.code">
                             {{gender.screenName}}
@@ -42,8 +42,7 @@
                 </div>
                  <div>
                             <label>Marital Status</label>
-                            <select formControlName="maritalStatus"
-                                [ngClass]="{ required: employeeForm.controls['maritalStatus'].errors }">
+                            <select formControlName="maritalStatus">
                                 <option value="" disabled>--Select Marital Status--</option>
                                 <option *ngFor="let maritalStatus of maritalStatus$ | async" [ngValue]="maritalStatus.code">
                                     {{maritalStatus.screenName}}
