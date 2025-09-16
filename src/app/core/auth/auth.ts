@@ -18,10 +18,10 @@ export class Auth {
     return this.http
       .post(`${this.loginApi}`, payLoad)
       .pipe(
-        map((data: any) => {
-          if (data) {
-            this.setsessionStorage(data);
-            return data;
+        map((response: any) => {
+          if (response.status === 2) {
+            this.setsessionStorage(response.data);
+            return response.data;
           }
           return null;
         })
