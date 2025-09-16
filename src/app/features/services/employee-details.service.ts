@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { map } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,12 @@ export class EmployeeDetailsService {
   constructor( private http:HttpClient) { }
 
   getEmployeeDetails(){
-    return this.http.get(`${this.appUrl}/api/Employee/view-employee-details`);
+    return this.http.get(`${this.appUrl}/api/Employee/view-employee-details`).pipe(
+         map((response: any) =>
+          response.status === 2 ? response.data : throwError(() => new Error(response.message)),
+            ),
+            catchError((error: any) => throwError(error)),
+          );
   }
 
   saveEmployeeDetails(userData:any){

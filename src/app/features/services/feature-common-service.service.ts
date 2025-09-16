@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +12,30 @@ export class FeatureCommonServiceService {
   constructor(private http: HttpClient) {}
 
   getDropdownLists(code: string) {
-    return this.http.get(`${this.appUrl}/api/common/code-type/${code}`);
+    return this.http.get(`${this.appUrl}/api/common/code-type/${code}`).pipe(
+         map((response: any) =>
+          response.status === 2 ? response.data : throwError(() => new Error(response.message)),
+            ),
+            catchError((error: any) => throwError(error)),
+          );
   }
 
   getTeamDropdownLists(type:string){
-    return this.http.get(`${this.appUrl}/api/common/team-type/${type}`);
+    return this.http.get(`${this.appUrl}/api/common/team-type/${type}`).pipe(
+         map((response: any) =>
+          response.status === 2 ? response.data : throwError(() => new Error(response.message)),
+            ),
+            catchError((error: any) => throwError(error)),
+          );
   }
 
   getEmployeeNameDropdownLists(){
-    return this.http.get(`${this.appUrl}/api/common/names`)
+    return this.http.get(`${this.appUrl}/api/common/names`).pipe(
+         map((response: any) =>
+          response.status === 2 ? response.data : throwError(() => new Error(response.message)),
+            ),
+            catchError((error: any) => throwError(error)),
+          );
   }
 
   //   getEmployeeNameDropdownLists(p0:string): Observable<EmployeeName[]>{

@@ -5,7 +5,6 @@
 
         <!-- Without children -->
         <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
-        <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
           <a href="javascript:void(0)" (click)="handleMenuClick($event, item)" [ngClass]="{ 'active': isActive(item) }"
             class="nav-link d-flex align-items-center text-decoration-none">
             <i [class]="item.icon + ' me-2'"></i>
