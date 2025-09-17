@@ -20,7 +20,7 @@ export class LoginEffects {
         this.authService.login(payload).pipe(
           map((response) =>
             AuthActions.loginSuccess({
-              result: response.result,
+              result: response,
               status: response.status,
             })
           ),
