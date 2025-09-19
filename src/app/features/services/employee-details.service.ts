@@ -23,12 +23,20 @@ export class EmployeeDetailsService {
 
   saveEmployeeDetails(userData:any){
     return this.http.post(`${this.appUrl}/api/Employee/add-employee-details`,userData).pipe(
-      map((data:any)=>(data)))
+        map((response: any) =>
+          response.status === 2 ? response.data : throwError(response.message),
+        ),
+        catchError((error: any) => throwError(error)),
+      );
   }
 
   updateEmployeeDetails(userData:any){
     return this.http.put(`${this.appUrl}/api/Employee/update-employee-details`,userData).pipe(
-      map((data:any)=>(data)))
+        map((response: any) =>
+          response.status === 2 ? response.data : throwError(response.message),
+        ),
+        catchError((error: any) => throwError(error)),
+      );
   }
 
 }

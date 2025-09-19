@@ -25,8 +25,13 @@ export class LeaveManagementServiceService {
   constructor(private http:HttpClient) { }
 
   saveEmployeeLeaveRequest(userData:any){
-    return this.http.post(`${this.appUrl}/api/LeaveManagement/apply`,userData).pipe(
-    map((data:any)=>(data)))}
+    return this.http.post(`${this.appUrl}/api/LeaveManagement/leave/apply`,userData).pipe(
+       map((response: any) =>
+        response.status === 2 ? response.data : throwError(() => new Error(response.message)),
+          ),
+          catchError((error: any) => throwError(error)),
+        );
+      }
 
   getEmployeeLeaveHistory(empCode:any): Observable<LeaveRecord[]> {
   return this.http.get<LeaveRecord[]>(`${this.appUrl}/api/LeaveManagement/my-history/${empCode}`).pipe(
@@ -47,11 +52,21 @@ export class LeaveManagementServiceService {
   }
 
   UpdateEmployeeLeaveRequest(updateUser:any){
-    return this.http.put(`${this.appUrl}/api/LeaveManagement/update-leave`,updateUser);
+    return this.http.put(`${this.appUrl}/api/LeaveManagement/update-leave`,updateUser).pipe(
+        map((response: any) =>
+          response.status === 2 ? response.data : throwError(response.message),
+        ),
+        catchError((error: any) => throwError(error)),
+      );
   }
 
   DeleteEmployeeLeaveRequest(deleteUser:any){
-    return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`,deleteUser);
+    return this.http.put(`${this.appUrl}/api/LeaveManagement/delete-leave`,deleteUser).pipe(
+        map((response: any) =>
+          response.status === 2 ? response.data : throwError(response.message),
+        ),
+        catchError((error: any) => throwError(error)),
+      );;
   }
 
   getUsersLeaveRequestHistory(empCode:any):Observable<any>{
